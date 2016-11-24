@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JSPlumb</title>
+</head>
+<body>
+	<style>
+        #diagramContainer {
+            padding: 20px;
+            width:80%; height: 200px;
+            border: 1px solid gray;
+        }
+        
+        .item {
+            position: absolute;
+        }
+        .jtk-connector { z-index:4; }
+		.jtk-endpoint { z-index:5; }
+		.jtk-overlay { z-index:6; }
+
+		.endPoint {
+			fillStyle: red;
+		}
+    </style>
+ 
+	<div id="diagramContainer">
+	    <div id="db" class="item">
+	    	<img src="img/db.png">
+	    </div>
+	    <div id="api-manager" class="item" style="left:350px;">
+	    	<img src="img/api-manager.png">
+	    </div>
+	    <div id="load-balancer" class="item" style="left:250px;">
+	    	<img src="img/load-balancer.png">
+	    </div>
+	    <div id="svn" class="item" style="left:250px;">
+	    	<img src="img/svn.png">
+	    </div>
+	</div>
+	 
+	<script src="jquery-1.9.1.min.js"></script>
+	<script src="jquery-ui-1.9.2.min.js"></script>
+	<script src="jquery.jsPlumb-1.4.1-all-min.js"></script>
+	 
+	<script>
+		var common = {
+			isSource:true,
+			isTarget:true,
+			connector:"Straight",
+			endpoint:"Dot",
+			paintStyle:{ fillStyle:"lightblue", outlineWidth:1 },
+			hoverPaintStyle:{ fillStyle:"lightblue" },
+			connectorStyle:{ strokeStyle:"blue", lineWidth:2 },
+			connectorHoverStyle:{ lineWidth:3 }
+        };
+
+	    jsPlumb.ready(function() {
+	    	//Enable dragging all item class elements
+	    	jsPlumb.draggable($(".item"), {});
+
+	        // jsPlumb.connect({
+	        //     source:"db",
+	        //     target:"api-manager",
+	        //     endpoint: ["Dot", {
+	        //     	radius:10,
+	        //     	cssClass:"endPoint"
+	        //     }],
+	        //     connector: ["Straight"],
+	        //     anchor:[ "Perimeter", { shape:"Circle" } ],
+	        //     paintStyle:{ strokeStyle:"gray", lineWidth:5 },
+         //        // endpointStyle:{ fillStyle:"lightgray", outlineColor:"gray" },
+         //        overlays:[ 
+         //            ["Arrow" , { width:20, length:20, location:0.97 }]
+         //        ]
+	        // });
+
+	        jsPlumb.addEndpoint($(".item"), {
+				endpoint:"Dot",
+				anchor:[ "Perimeter", { shape:"Circle" } ],
+				// anchors:[
+				// 	["Bottom"], 
+				// 	["Top"], 
+				// 	["Left"], 
+				// 	["Right"]
+				// ]
+			}, common);
+
+			jsPlumb.makeSource($(".item"), {
+				endpoint:"Dot",
+				maxConnections:3
+			}, common);    
+
+			jsPlumb.makeTarget($(".item"), {
+				endpoint:"Dot",
+				anchor:[ "Perimeter", { shape:"Circle" } ],
+				maxConnections:3
+			}, common);
+
+	    });
+	</script>
+</body>
+</html>
