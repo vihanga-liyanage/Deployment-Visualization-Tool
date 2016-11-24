@@ -21,19 +21,23 @@
 		.endPoint {
 			fillStyle: red;
 		}
+		.endpointHover {
+			fill: red;
+		}
+
     </style>
  
 	<div id="diagramContainer">
 	    <div id="db" class="item">
 	    	<img src="img/db.png">
 	    </div>
-	    <div id="api-manager" class="item" style="left:350px;">
+	    <div id="api-manager" class="item" style="left:450px;">
 	    	<img src="img/api-manager.png">
 	    </div>
 	    <div id="load-balancer" class="item" style="left:250px;">
 	    	<img src="img/load-balancer.png">
 	    </div>
-	    <div id="svn" class="item" style="left:250px;">
+	    <div id="svn" class="item" style="left:250px; top: 200px">
 	    	<img src="img/svn.png">
 	    </div>
 	</div>
@@ -44,57 +48,63 @@
 	 
 	<script>
 		var common = {
-			isSource:true,
-			isTarget:true,
-			connector:"Straight",
-			endpoint:"Dot",
-			paintStyle:{ fillStyle:"lightblue", outlineWidth:1 },
-			hoverPaintStyle:{ fillStyle:"lightblue" },
-			connectorStyle:{ strokeStyle:"blue", lineWidth:2 },
-			connectorHoverStyle:{ lineWidth:3 }
+			connector:["Bezier", {curviness: 50}], //"Straight",
+            endpoint: ["Dot", {
+                radius:5,
+                cssClass:"endPoint",
+				hoverClass:"endpointHover"
+            }],
+			paintStyle:{ fillStyle:"#234198", outlineWidth:1 },
+//			hoverPaintStyle:{ fillStyle:"lightblue" },
+			connectorStyle:{ strokeStyle:"grey", lineWidth:2 },
+			connectorHoverStyle:{ lineWidth:3 },
+			maxConnections: 3
         };
 
 	    jsPlumb.ready(function() {
 	    	//Enable dragging all item class elements
 	    	jsPlumb.draggable($(".item"), {});
 
-	        // jsPlumb.connect({
-	        //     source:"db",
-	        //     target:"api-manager",
-	        //     endpoint: ["Dot", {
-	        //     	radius:10,
-	        //     	cssClass:"endPoint"
-	        //     }],
-	        //     connector: ["Straight"],
-	        //     anchor:[ "Perimeter", { shape:"Circle" } ],
-	        //     paintStyle:{ strokeStyle:"gray", lineWidth:5 },
-         //        // endpointStyle:{ fillStyle:"lightgray", outlineColor:"gray" },
-         //        overlays:[ 
-         //            ["Arrow" , { width:20, length:20, location:0.97 }]
-         //        ]
-	        // });
+
+            jsPlumb.Defaults.Overlays = [
+                [ "Arrow", {
+                    location:1,
+                    id:"arrow",
+                    length:14,
+                    foldback:0.8
+                } ]
+            ];
+
+//	         jsPlumb.connect({
+//	             source:"db",
+//	             target:"api-manager",
+//	             endpoint: ["Dot", {
+//	             	radius:10,
+//	             	cssClass:"endPoint"
+//	             }],
+//	             connector: ["Straight"],
+//	             anchor:[ "Perimeter", { shape:"Circle" } ],
+//	             paintStyle:{ strokeStyle:"gray", lineWidth:5 },
+//               endpointStyle:{ fillStyle:"lightgray", outlineColor:"gray" },
+//				 overlays:[
+//					 ["Arrow" , { width:20, length:20, location:0.97 }]
+//				 ]
+//	         });
 
 	        jsPlumb.addEndpoint($(".item"), {
-				endpoint:"Dot",
-				anchor:[ "Perimeter", { shape:"Circle" } ],
-				// anchors:[
-				// 	["Bottom"], 
-				// 	["Top"], 
-				// 	["Left"], 
-				// 	["Right"]
-				// ]
+                isSource:true,
+				anchor:["Right"]
 			}, common);
-
-			jsPlumb.makeSource($(".item"), {
-				endpoint:"Dot",
-				maxConnections:3
-			}, common);    
 
 			jsPlumb.makeTarget($(".item"), {
-				endpoint:"Dot",
-				anchor:[ "Perimeter", { shape:"Circle" } ],
-				maxConnections:3
+                isTarget:true,
+                anchor:["Left"]
 			}, common);
+
+//			jsPlumb.addEndpoint($(".item"), {
+//                isTarget:true,
+//				anchor:["Left"]
+//			}, common);
 
 	    });
 	</script>

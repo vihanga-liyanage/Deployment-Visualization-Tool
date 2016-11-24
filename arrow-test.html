@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html ng-app="">
+<head>
+    <style>
+        #diagramContainer {
+            padding: 20px;
+            width:80%; height: 400px;
+            border: 1px solid gray;
+        }
+
+        .item {
+            height:80px; width: 80px;
+            border: 1px solid blue;
+            float: left;
+            position: absolute;
+        }
+    </style>
+    <script src="jquery-1.9.1.min.js"></script>
+    <script src="jquery-ui-1.9.2.min.js"></script>
+    <script src="jquery.jsPlumb-1.4.1-all-min.js"></script>
+</head>
+<body>
+
+<div id="diagramContainer">
+    <div id="item_left" class="item"></div>
+    <div id="item_right" class="item" style="left:250px;"></div>
+</div>
+
+
+<script>
+    jsPlumb.ready(function() {
+        jsPlumb.draggable($(".item"), {});
+
+        var common = {
+            connector: ["Straight"],
+            endpoint:"Dot",
+            overlays:[
+                ["Arrow" , { width:12, length:12, location:0.67 }]
+            ]
+        };
+
+        jsPlumb.connect({
+            source:"item_left",
+            target:"item_right",
+            paintStyle:{ strokeStyle:"lightgray", lineWidth:3 },
+            endpointStyle:{ fillStyle:"lightgray", outlineColor:"gray" },
+
+        }, common);
+
+        jsPlumb.addEndpoint($(".item"), {
+            isSource: true,
+            anchor: ["Right"],
+            connector: {
+                overlays: [
+                    ["Arrow", {width: 12, length: 12, location: 0.67}]
+                ]
+            }
+        });
+
+        jsPlumb.addEndpoint($(".item"), {
+            isTarget: true,
+            anchor: ["Left"]
+        });
+    });
+</script>
+
+</body>
+</html>
