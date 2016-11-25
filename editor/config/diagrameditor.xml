@@ -31,13 +31,6 @@
 				</mxCell>
 			</Container>
 		</add>
-		<add as="rectangle">
-			<Rect label="Rectangle" href="">
-				<mxCell vertex="1">	
-					<mxGeometry as="geometry" width="80" height="40"/>
-				</mxCell>
-			</Rect>
-		</add>
 		<add as="text">
 			<Text label="Text Here" href="">
 				<mxCell vertex="1" style="text">	
@@ -45,47 +38,84 @@
 				</mxCell>
 			</Text>
 		</add>
-		<add as="image">
+
+		//custom templates
+		<add as="Dashboard">
 			<Image label="" href="">
-				<mxCell vertex="1" style="image">	
+				<mxCell vertex="1" style="dashboard">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
 		</add>
-		<add as="rounded">
-			<Roundrect label="Rounded" href="">
-				<mxCell vertex="1" style="image">
+		<add as="Data_Storage">
+			<Image label="" href="">
+				<mxCell vertex="1" style="data_storage">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
-			</Roundrect>
+			</Image>
 		</add>
-		<add as="shape">
-			<Shape label="Shape" href="">
-				<mxCell vertex="1" style="ellipse">		
-					<mxGeometry as="geometry" width="60" height="60"/>
+		<add as="Database">
+			<Image label="" href="">
+				<mxCell vertex="1" style="database">
+					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
-			</Shape>
+			</Image>
 		</add>
-		<add as="actor">
-			<Shape label="Shape" href="">
-				<mxCell vertex="1" style="actor">		
-					<mxGeometry as="geometry" width="40" height="60"/>
+		<add as="Mobile_Phone">
+			<Image label="" href="">
+				<mxCell vertex="1" style="mobile_phone">
+					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
-			</Shape>
+			</Image>
 		</add>
-		<add as="cloud">
-			<Shape label="Shape" href="">
-				<mxCell vertex="1" style="cloud">		
-					<mxGeometry as="geometry" width="80" height="60"/>
+		<add as="User">
+			<Image label="" href="">
+				<mxCell vertex="1" style="user">
+					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
-			</Shape>
+			</Image>
 		</add>
-		<add as="hline">
-			<Shape label="" href="">
-				<mxCell vertex="1" style="ellipse">		
-					<mxGeometry as="geometry" width="60" height="10"/>
+		<add as="Web_Page">
+			<Image label="" href="">
+				<mxCell vertex="1" style="web_page">
+					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
-			</Shape>
+			</Image>
+		</add>
+		<add as="WSO2_API_Manager">
+			<Image label="" href="">
+				<mxCell vertex="1" style="wso2_api_manager">
+					<mxGeometry as="geometry" width="100" height="100"/>
+				</mxCell>
+			</Image>
+		</add>
+		<add as="WSO2_Complex_Event_Processor">
+			<Image label="" href="">
+				<mxCell vertex="1" style="wso2_complex_event_processor">
+					<mxGeometry as="geometry" width="100" height="100"/>
+				</mxCell>
+			</Image>
+		</add>
+		<add as="WSO2_Enterprise_Service_Bus">
+			<Image label="" href="">
+				<mxCell vertex="1" style="wso2_enterprise_service_bus">
+					<mxGeometry as="geometry" width="100" height="100"/>
+				</mxCell>
+			</Image>
+		</add>
+		<add as="WSO2_Identity_Server">
+			<Image label="" href="">
+				<mxCell vertex="1" style="wso2_identity_server">
+					<mxGeometry as="geometry" width="100" height="100"/>
+				</mxCell>
+			</Image>
+		</add>
+		<add as="WSO2_Machine_Learner">
+			<Image label="" href="">
+				<mxCell vertex="1" style="wso2_machine_learner">
+					<mxGeometry as="geometry" width="100" height="100"/>
+				</mxCell>
+			</Image>
 		</add>
 	</Array>
 	<mxGraph as="graph" alternateEdgeStyle="verticalConnector" allowLoops="1" dropEnabled="1">
@@ -151,18 +181,18 @@
 				<add as="strokeColor" value="gray"/>
 				<add as="dashed" value="1"/>
 			</add>
-			<add as="defaultEdge">
-				<add as="shape" value="connector"/>
-				<add as="fontSize" value="10"/>
-				<add as="align" value="center"/>
-				<add as="verticalAlign" value="middle"/>
-				<add as="rounded" value="1"/>
-				<add as="labelBackgroundColor" value="white"/>
-				<add as="strokeColor" value="#36393D"/>
-				<add as="strokeWidth" value="1"/>
-				<add as="edgeStyle" value="elbowEdgeStyle"/>
-				<add as="endArrow" value="classic"/>
-			</add>
+			<!--<add as="defaultEdge">-->
+				<!--<add as="shape" value="connector"/>-->
+				<!--<add as="fontSize" value="10"/>-->
+				<!--<add as="align" value="center"/>-->
+				<!--<add as="verticalAlign" value="middle"/>-->
+				<!--<add as="rounded" value="1"/>-->
+				<!--<add as="labelBackgroundColor" value="white"/>-->
+				<!--<add as="strokeColor" value="#36393D"/>-->
+				<!--<add as="strokeWidth" value="1"/>-->
+				<!--<add as="edgeStyle" value="elbowEdgeStyle"/>-->
+				<!--<add as="endArrow" value="classic"/>-->
+			<!--</add>-->
 			<add as="verticalConnector">
 				<add as="elbow" value="vertical"/>
 			</add>
@@ -186,67 +216,62 @@
 				<add as="strokeColor" value="#EEEEEE"/>
 				<add as="fillColor" value="#D4D4D4"/>
 			</add>
-			<add as="rounded">
-				<add as="rounded" value="1"/>
-			</add>
-			<add as="ellipse">
-				<add as="shape" value="ellipse"/>
-				<add as="perimeter" value="ellipsePerimeter"/>
-				<add as="strokeColor" value="#CDEB8B"/>
-				<add as="fillColor" value="#CDEB8B"/>
-			</add>
-			<add as="doubleEllipse" extend="ellipse">
-				<add as="shape" value="doubleEllipse"/>
-			</add>
-			<add as="rhombus">
-				<add as="shape" value="rhombus"/>
-				<add as="perimeter" value="rhombusPerimeter"/>
-				<add as="strokeColor" value="#FFCF8A"/>
-				<add as="fillColor" value="#FFCF8A"/>
-			</add>
-			<add as="triangle" extend="rhombus">
-				<add as="shape" value="triangle"/>
-				<add as="perimeter" value="trianglePerimeter"/>
-				<add as="align" value="left"/>
-			</add>
-			<add as="hexagon">
-				<add as="shape" value="hexagon"/>
-			</add>
-			<add as="actor">
-				<add as="shape" value="actor"/>
-				<add as="strokeColor" value="#FFC7C7"/>
-				<add as="fillColor" value="#FFC7C7"/>
-			</add>
-			<add as="cloud">
-				<add as="shape" value="cloud"/>
-				<add as="perimeter" value="ellipsePerimeter"/>
-				<add as="strokeColor" value="#CDEB8B"/>
-				<add as="fillColor" value="#CDEB8B"/>
-			</add>
-			<add as="cylinder">
-				<add as="shape" value="cylinder"/>
-				<add as="spacingTop" value="10"/>
-				<add as="strokeColor" value="#4096EE"/>
-				<add as="fillColor" value="#4096EE"/>
-			</add>
-			<add as="hline">
-				<add as="shape" value="line"/>
-				<add as="strokeWidth" value="3"/>
-				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="fontColor" value="black"/>
-				<add as="fontSize" value="10"/>
-				<add as="align" value="center"/>
-				<add as="verticalAlign" value="bottom"/>
-				<add as="strokeColor" value="#36393D"/>
-				<add as="image" value="images/draw/mxlogo.jpg"/>
-			</add>
-			<add as="image">
+
+			//custom styles
+			<add as="dashboard">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="fontSize" value="10"/>
-				<add as="align" value="center"/>
-				<add as="verticalAlign" value="middle"/>
-				<add as="image" value="icons/dashboard.png"/>
+				<add as="image" value="images/wso2/Dashboard.png"/>
+			</add>
+			<add as="data_storage">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/Data_Storage.png"/>
+			</add>
+			<add as="database">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/Database.png"/>
+			</add>
+			<add as="mobile_phone">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/Mobile_Phone.png"/>
+			</add>
+			<add as="user">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/User.png"/>
+			</add>
+			<add as="web_page">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/Web_Page.png"/>
+			</add>
+			<add as="wso2_api_manager">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/WSO2_API_Manager.png"/>
+			</add>
+			<add as="wso2_complex_event_processor">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/WSO2_Complex_Event_Processor.png"/>
+			</add>
+			<add as="wso2_enterprise_service_bus">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/WSO2_Enterprise_Service_Bus.png"/>
+			</add>
+			<add as="wso2_identity_server">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/WSO2_Identity_Server.png"/>
+			</add>
+			<add as="wso2_machine_leaner">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/WSO2_Machine_Learner.png"/>
 			</add>
 		</mxStylesheet>
 		<mxGraphModel as="model">
@@ -316,19 +341,18 @@
 			}
 		]]></add>
 		<br/><br/>
-		<add as="Image" template="image" icon="icons/dashboard.png"/>
-		<add as="Text" template="text" icon="images/text.gif"/>
-		<add as="Container" template="container" icon="images/swimlane.gif"/>
-		<add as="Rectangle" template="rectangle" icon="images/rectangle.gif"/>
-		<add as="Rounded" template="rounded" icon="images/rounded.gif"/>
-		<add as="Ellipse" template="shape" style="ellipse" icon="images/ellipse.gif"/>
-		<add as="Double Ellipse" template="shape" style="doubleEllipse" icon="images/doubleellipse.gif"/>
-		<add as="Rhombus" template="shape" style="rhombus" icon="images/rhombus.gif"/>
-		<add as="Triangle" template="actor" style="triangle" icon="images/triangle.gif"/>
-		<add as="Hexagon" template="cloud" style="hexagon" icon="images/hexagon.gif"/>
-		<add as="Actor" template="actor" style="actor" icon="images/actor.gif"/>
-		<add as="Cylinder" template="shape" style="cylinder" icon="images/cylinder.gif"/>
-		<add as="Cloud" template="cloud" style="cloud" icon="images/cloud.gif"/>
-		<add as="Line" template="hline" style="hline" icon="icons/dashboard.png"/>
+
+		<add as="Dashboard" template="Dashboard" icon="images/wso2/Dashboard.png"/>
+		<add as="Data_Storage" template="Data_Storage" icon="images/wso2/Data_Storage.png"/>
+		<add as="Database" template="Database" icon="images/wso2/Database.png"/>
+		<add as="Mobile_Phone" template="Mobile_Phone" icon="images/wso2/Mobile_Phone.png"/>
+		<add as="User" template="User" icon="images/wso2/User.png"/>
+		<add as="Web_Page" template="Web_Page" icon="images/wso2/Web_Page.png"/>
+		<add as="WSO2_API_Manager" template="WSO2_API_Manager" icon="images/wso2/WSO2_API_Manager.png"/>
+		<add as="WSO2_Complex_Event_Processor" template="WSO2_Complex_Event_Processor" icon="images/wso2/WSO2_Complex_Event_Processor.png"/>
+		<add as="WSO2_Enterprise_Service_Bus" template="WSO2_Enterprise_Service_Bus" icon="images/wso2/WSO2_Enterprise_Service_Bus.png"/>
+		<add as="WSO2_Identity_Server" template="WSO2_Identity_Server" icon="images/wso2/WSO2_Identity_Server.png"/>
+		<add as="WSO2_Machine_Learner" template="WSO2_Machine_Learner" icon="images/wso2/WSO2_Machine_Learner.png"/>
+
 	</mxDefaultToolbar>
 </mxEditor>
