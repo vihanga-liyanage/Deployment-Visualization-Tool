@@ -54,7 +54,7 @@
 		</add>
 		<add as="rounded">
 			<Roundrect label="Rounded" href="">
-				<mxCell vertex="1" style="rounded">		
+				<mxCell vertex="1" style="image">
 					<mxGeometry as="geometry" width="80" height="40"/>
 				</mxCell>
 			</Roundrect>
@@ -246,7 +246,7 @@
 				<add as="fontSize" value="10"/>
 				<add as="align" value="center"/>
 				<add as="verticalAlign" value="middle"/>
-				<add as="image" value="images/wso2/api-manager.png"/>
+				<add as="image" value="http://www.w3schools.com/css/trolltunga.jpg"/>
 			</add>
 		</mxStylesheet>
 		<mxGraphModel as="model">
@@ -316,6 +316,7 @@
 			}
 		]]></add>
 		<br/><br/>
+		<add as="Image" template="image" icon="http://www.w3schools.com/css/trolltunga.jpg"/>
 		<add as="Text" template="text" icon="images/text.gif"/>
 		<add as="Container" template="container" icon="images/swimlane.gif"/>
 		<add as="Rectangle" template="rectangle" icon="images/rectangle.gif"/>
@@ -329,6 +330,5 @@
 		<add as="Cylinder" template="shape" style="cylinder" icon="images/cylinder.gif"/>
 		<add as="Cloud" template="cloud" style="cloud" icon="images/cloud.gif"/>
 		<add as="Line" template="hline" style="hline" icon="images/hline.gif"/>
-		<add as="Image" template="image" icon="images/image.gif"/>
 	</mxDefaultToolbar>
 </mxEditor>
