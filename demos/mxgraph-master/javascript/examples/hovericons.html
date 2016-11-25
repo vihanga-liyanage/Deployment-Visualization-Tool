@@ -155,74 +155,74 @@
 
                 // Shows icons if the mouse is over a cell
                 graph.addMouseListener(
-                    {
-                        currentState: null,
-                        currentIconSet: null,
-                        mouseDown: function(sender, me)
-                        {
-                            // Hides icons on mouse down
-                            if (this.currentState != null)
-                            {
-                                this.dragLeave(me.getEvent(), this.currentState);
-                                this.currentState = null;
-                            }
-                        },
-                        mouseMove: function(sender, me)
-                        {
-                            if (this.currentState != null && (me.getState() == this.currentState ||
-                                me.getState() == null))
-                            {
-                                var tol = iconTolerance;
-                                var tmp = new mxRectangle(me.getGraphX() - tol,
-                                    me.getGraphY() - tol, 2 * tol, 2 * tol);
+				{
+					currentState: null,
+					currentIconSet: null,
+					mouseDown: function(sender, me)
+					{
+						// Hides icons on mouse down
+						if (this.currentState != null)
+						{
+							this.dragLeave(me.getEvent(), this.currentState);
+							this.currentState = null;
+						}
+					},
+					mouseMove: function(sender, me)
+					{
+						if (this.currentState != null && (me.getState() == this.currentState ||
+							me.getState() == null))
+						{
+							var tol = iconTolerance;
+							var tmp = new mxRectangle(me.getGraphX() - tol,
+								me.getGraphY() - tol, 2 * tol, 2 * tol);
 
-                                if (mxUtils.intersects(tmp, this.currentState))
-                                {
-                                    return;
-                                }
-                            }
+							if (mxUtils.intersects(tmp, this.currentState))
+							{
+								return;
+							}
+						}
 
-                            var tmp = graph.view.getState(me.getCell());
+						var tmp = graph.view.getState(me.getCell());
 
-                            // Ignores everything but vertices
-                            if (graph.isMouseDown || (tmp != null && !graph.getModel().isVertex(tmp.cell)))
-                            {
-                                tmp = null;
-                            }
+						// Ignores everything but vertices
+						if (graph.isMouseDown || (tmp != null && !graph.getModel().isVertex(tmp.cell)))
+						{
+							tmp = null;
+						}
 
-                            if (tmp != this.currentState)
-                            {
-                                if (this.currentState != null)
-                                {
-                                    this.dragLeave(me.getEvent(), this.currentState);
-                                }
+						if (tmp != this.currentState)
+						{
+							if (this.currentState != null)
+							{
+								this.dragLeave(me.getEvent(), this.currentState);
+							}
 
-                                this.currentState = tmp;
+							this.currentState = tmp;
 
-                                if (this.currentState != null)
-                                {
-                                    this.dragEnter(me.getEvent(), this.currentState);
-                                }
-                            }
-                        },
-                        mouseUp: function(sender, me) { },
-                        dragEnter: function(evt, state)
-                        {
-                            if (this.currentIconSet == null)
-                            {
-                                this.currentIconSet = new mxIconSet(state);
-                                popupIconTitle = state.cell.value;
-                            }
-                        },
-                        dragLeave: function(evt, state)
-                        {
-                            if (this.currentIconSet != null)
-                            {
-                                this.currentIconSet.destroy();
-                                this.currentIconSet = null;
-                            }
-                        }
-                    });
+							if (this.currentState != null)
+							{
+								this.dragEnter(me.getEvent(), this.currentState);
+							}
+						}
+					},
+					mouseUp: function(sender, me) { },
+					dragEnter: function(evt, state)
+					{
+						if (this.currentIconSet == null)
+						{
+							this.currentIconSet = new mxIconSet(state);
+							popupIconTitle = state.cell.value;
+						}
+					},
+					dragLeave: function(evt, state)
+					{
+						if (this.currentIconSet != null)
+						{
+							this.currentIconSet.destroy();
+							this.currentIconSet = null;
+						}
+					}
+				});
 
                 // Enables rubberband selection
                 new mxRubberband(graph);
@@ -236,7 +236,8 @@
                 try
                 {
                     var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-                    var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 60, 'image');
+                    var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 80, 'dashboard');
+                    var v3 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 80, 'user-group');
                     var e1 = graph.insertEdge(parent, null, '', v1, v2);
                 }
                 finally
@@ -252,10 +253,17 @@
         {
             var style = new Object();
             style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
-            style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+            style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
             style[mxConstants.STYLE_IMAGE] = 'images/dashboard.png';
             style[mxConstants.STYLE_FONTCOLOR] = '#FFFFFF';
-            graph.getStylesheet().putCellStyle('image', style);
+            graph.getStylesheet().putCellStyle('dashboard', style);
+
+            var style = new Object();
+            style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
+            style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
+            style[mxConstants.STYLE_IMAGE] = 'images/user-group.png';
+            style[mxConstants.STYLE_FONTCOLOR] = '#FFFFFF';
+            graph.getStylesheet().putCellStyle('user-group', style);
 
             style = mxUtils.clone(style);
             style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_LABEL;

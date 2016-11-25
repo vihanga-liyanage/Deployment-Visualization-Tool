@@ -31,5 +31,5 @@ var showDialog  =  function() {
 // };
 
 var addListeners = function (editor) {
-    alert("dagdga")
+    // alert("dagdga")
 }
