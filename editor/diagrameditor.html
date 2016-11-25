@@ -63,6 +63,10 @@
 			// Clones the source if new connection has no target
 			editor.graph.connectionHandler.setCreateTarget(true);
 
+			//Custom highlight
+            var highlight = new mxCellHighlight(graph, '#ff0000', 2);
+            highlight.highlight(editor.graph.view);
+
 			// Updates the title if the root changes
 			var title = document.getElementById('title');
 			
