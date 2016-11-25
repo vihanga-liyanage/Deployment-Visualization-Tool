@@ -246,7 +246,7 @@
 				<add as="fontSize" value="10"/>
 				<add as="align" value="center"/>
 				<add as="verticalAlign" value="middle"/>
-				<add as="image" value="images/draw/mxlogo.jpg"/>
+				<add as="image" value="images/wso2/api-manager.png"/>
 			</add>
 		</mxStylesheet>
 		<mxGraphModel as="model">
