@@ -20,9 +20,9 @@ var showComponentInfo  =  function(state,evt) {
 
 
 var setDetails = function(component,type){
+    $('#detail_view_img').attr("src","./images/wso2/"+component+".png");
     $('#detail_view_title').text(product_details[component].title);
     $('#detail_view_content').html(product_details[component].description);
-    $('#detail_view_img').attr("src","./images/wso2/"+component+".png");
     console.log("setDetails"+component+'-'+type);
 }
 
