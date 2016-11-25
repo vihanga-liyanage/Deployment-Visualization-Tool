@@ -3,7 +3,6 @@
 	<title>mxDraw Example</title>
 	<!--Jquery all-->
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<link rel="stylesheet" href="/resources/demos/style.css">
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -56,8 +55,8 @@
             img.style.cursor = 'pointer';
             img.style.width = '16px';
             img.style.height = '16px';
-            img.style.left = (state.x + state.width) + 'px';
-            img.style.top = (state.y + state.height) + 'px';
+            img.style.left = (state.x + state.width - 36) + 'px';
+            img.style.top = (state.y - 16) + 'px';
 
             mxEvent.addGestureListeners(img,
                 mxUtils.bind(this, function(evt)
@@ -79,7 +78,7 @@
             img.style.cursor = 'pointer';
             img.style.width = '16px';
             img.style.height = '16px';
-            img.style.left = (state.x + state.width) + 'px';
+            img.style.left = (state.x + state.width -16) + 'px';
             img.style.top = (state.y - 16) + 'px';
 
             mxEvent.addGestureListeners(img,
@@ -112,8 +111,8 @@
             img.style.cursor = 'pointer';
             img.style.width = '16px';
             img.style.height = '16px';
-            img.style.left = (state.x + (state.width / 2) - (16 / 2)) + 'px';
-            img.style.top = (state.y - 30) + 'px';
+            img.style.left = (state.x + state.width - 56) + 'px';
+            img.style.top = (state.y - 16) + 'px';
 
             mxEvent.addGestureListeners(img,
                 mxUtils.bind(this, function(evt)
@@ -182,7 +181,7 @@
 			editor.graph.setConnectable(true);
 
 			// Clones the source if new connection has no target
-			editor.graph.connectionHandler.setCreateTarget(true);
+//			editor.graph.connectionHandler.setCreateTarget(true);
 
 			// Updates the title if the root changes
 			var title = document.getElementById('title');
