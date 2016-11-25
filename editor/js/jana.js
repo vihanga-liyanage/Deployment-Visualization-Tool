@@ -29,3 +29,7 @@ var showDialog  =  function() {
 //     loc[0] = e.clientX;
 //     loc[1] = e.clientY;
 // };
+
+var addListeners = function (editor) {
+    alert("dagdga")
+}
