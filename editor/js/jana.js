@@ -19,31 +19,26 @@ var showComponentInfo  =  function(state,evt) {
 };
 
 
-var setDetails = function(component){
-    $('#details_view').text(component);
+var setDetails = function(component,type){
+    $('#details_view').text(component+'-'+type);
     console.log("setDetails");
 }
 
 var getImageNameFromPath = function(path){
     var name = path.split('/')
     name = name[name.length-1]
-    return name.substring(0,name.length-4);
+    return name.substring(0,name.length-4).toLowerCase();
 }
 
 setTimeout(function () {
     $('img').on( "click", function (evt) {
-        setDetails(getImageNameFromPath(evt.target.src));
+        setDetails(getImageNameFromPath(evt.target.src), 'toolbox');
     } );
 } ,1000);
 
 
 
-// var mouseLoc = [0,0]
-//
-// window.onmousemove = function (e) {
-//     loc[0] = e.clientX;
-//     loc[1] = e.clientY;
-// };
+// Mouse Move ----------------------------------------------------------------
 
 var addListeners = function (editor) {
     var graph = editor.graph
@@ -57,7 +52,7 @@ var addListeners = function (editor) {
                 {
                     this.dragLeave(me.getEvent(), this.currentState);
                     this.currentState = null;
-                    setDetails(getImageNameFromPath(sender.stylesheet.styles.image.image));
+                    setDetails(me.state.cell.getStyle(), 'graph');
                 }
             },
             mouseMove: function(sender, me)
@@ -127,4 +122,35 @@ var addListeners = function (editor) {
                 }
             }
         });
+
+
+
+
+
+//--------------------------------- Drop
+    mxEvent.addListener(document.getElementById('graph'), 'drop', function(evt)
+    {
+        console.log("drop");
+        if (graph.isEnabled())
+        {
+            // evt.stopPropagation();
+            // evt.preventDefault();
+            //
+            // // Gets drop location point for vertex
+            // var pt = mxUtils.convertPoint(graph.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+            // var tr = graph.view.translate;
+            // var scale = graph.view.scale;
+            // var x = pt.x / scale - tr.x;
+            // var y = pt.y / scale - tr.y;
+            //
+            // // Converts local images to data urls
+            // var filesArray = evt.dataTransfer.files;
+            //
+            // for (var i = 0; i < filesArray.length; i++)
+            // {
+            //     handleDrop(graph, filesArray[i], x + i * 10, y + i * 10);
+            // }
+        }
+    });
 }
+

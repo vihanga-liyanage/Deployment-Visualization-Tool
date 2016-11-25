@@ -268,7 +268,7 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/WSO2_Identity_Server.png"/>
 			</add>
-			<add as="wso2_machine_leaner">
+			<add as="wso2_machine_learner">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/WSO2_Machine_Learner.png"/>
