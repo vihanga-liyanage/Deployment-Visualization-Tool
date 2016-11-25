@@ -19,6 +19,24 @@ var showComponentInfo  =  function(state,evt) {
 };
 
 
+var setDetails = function(component){
+    $('#details_view').text(component);
+    console.log("setDetails");
+}
+
+var getImageNameFromPath = function(path){
+    var name = path.split('/')
+    name = name[name.length-1]
+    return name.substring(0,name.length-4);
+}
+
+setTimeout(function () {
+    $('img').on( "click", function (evt) {
+        setDetails(getImageNameFromPath(evt.target.src));
+    } );
+} ,1000);
+
+
 
 // var mouseLoc = [0,0]
 //
@@ -39,6 +57,7 @@ var addListeners = function (editor) {
                 {
                     this.dragLeave(me.getEvent(), this.currentState);
                     this.currentState = null;
+                    setDetails(getImageNameFromPath(sender.stylesheet.styles.image.image));
                 }
             },
             mouseMove: function(sender, me)

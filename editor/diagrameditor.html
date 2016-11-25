@@ -501,9 +501,10 @@
 		window.onbeforeunload = function() { return mxResources.get('changesLost'); };
 
 
-        $( "g" ).on( "click", function() {
-            console.log( "dsgasg");
-        });
+
+
+
+
 	</script>
 </head>
 <body onload="mxApplication('config/diagrameditor.xml');">
@@ -518,9 +519,10 @@
 		</div>
 		<div id="zoomActions" style="width:100%;padding-left:54px;padding-top:4px;">
 		</div>
-		<table border="0" width="1200px">
+		<table border="0" width="100%">
 			<tr>
-				<td id="toolbar"  style="width:120px;padding-left:20px;" valign="top">
+
+				<td id="toolbar"  style="width:80px;padding-left:20px;" valign="top">
 					<!-- Toolbar Here -->				
 				</td>
 				<td valign="top" style="border-width:1px;border-style:solid;border-color:black;">
@@ -531,6 +533,11 @@
 						</center>
 					</div>
 					<textarea id="xml" style="height:480px;width:684px;display:none;border-style:none;"></textarea>
+				</td>
+
+				<td   style="width:400px;padding-left:20px;" valign="top">
+					Details
+					<div id="details_view"></div>
 				</td>
 			</tr>
 		</table>
