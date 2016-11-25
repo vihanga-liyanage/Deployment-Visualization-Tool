@@ -2,7 +2,7 @@
 body {
 	font-size: 62.5%; /* Resets 1em to 10px */
 	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
-	background: #d5d6d7 url('../images/draw/drawbgcolor.jpg');
+	/*background: #d5d6d7 url('../images/draw/drawbgcolor.jpg');*/
 	color: #333;
 	text-align: center;
 	}
@@ -14,7 +14,7 @@ body {
 	}
 
 #header {
-	background: #73a0c5 url('../images/draw/drawheader.jpg') no-repeat bottom center;
+	/*background: #73a0c5 url('../images/draw/drawheader.jpg') no-repeat bottom center;*/
 	}
 
 #headerimg 	{ 
@@ -56,7 +56,7 @@ pre {
 }
 
 #footer {
-	background: #eee url('../images/draw/drawfooter.jpg') no-repeat top; 
+	/*background: #eee url('../images/draw/drawfooter.jpg') no-repeat top; */
 	border: none;
 	}
 
@@ -202,7 +202,7 @@ body {
 	background-color: white;
 	margin: 20px auto;
 	padding: 0;
-	width: 760px;
+	width: 1200px;
 	border: 1px solid #959596;
 	}
 
@@ -211,7 +211,7 @@ body {
 	margin: 0 0 0 1px; 
 	padding: 0; 
 	height: 70px;
-	width: 758px;
+	width: 100%;
 	}
 
 #headerimg {

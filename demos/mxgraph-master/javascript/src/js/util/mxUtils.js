@@ -4113,7 +4113,7 @@ var mxUtils =
 	 * }
 	 * 
 	 * var img = document.createElement('img');
-	 * img.setAttribute('src', 'editors/images/rectangle.gif');
+	 * img.setAttribute('src', 'editor/images/rectangle.gif');
 	 * img.style.position = 'absolute';
 	 * img.style.left = '0px';
 	 * img.style.top = '0px';
