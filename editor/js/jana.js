@@ -19,13 +19,13 @@ $( function() {
 } );
 
 var showDialog  =  function() {
-
+    // alert("dffsg")
     $( "#dialog" ).dialog( "open" );
 };
 
-var mouseLoc = [0,0]
-
-window.onmousemove = function (e) {
-    loc[0] = e.clientX;
-    loc[1] = e.clientY;
-};
+// var mouseLoc = [0,0]
+//
+// window.onmousemove = function (e) {
+//     loc[0] = e.clientX;
+//     loc[1] = e.clientY;
+// };
