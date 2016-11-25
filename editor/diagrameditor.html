@@ -38,6 +38,7 @@
         var mxLanguage = urlParams['lang'];
 	</script>
 	<script type="text/javascript" src="js/jana.js"></script>
+	<script type="text/javascript" src="js/data.js"></script>
 	<script type="text/javascript" src="js/mxClient.js"></script>
 	<script type="text/javascript" src="js/mxApplication.js"></script>
 	<script type="text/javascript">
@@ -534,9 +535,12 @@
 					<textarea id="xml" style="height:480px;width:684px;display:none;border-style:none;"></textarea>
 				</td>
 
-				<td   style="width:400px;padding-left:20px;" valign="top">
-					Details
-					<div id="details_view"></div>
+				<td  style="width:400px;padding-left:20px;" valign="top">
+					<div id="detail_view">
+					<img id="detail_view_img" src="./icons/dashboard.png" width="200px">
+						<h4 id="detail_view_title"></h4>
+						<p id="detail_view_content"></p>
+					</div>
 				</td>
 			</tr>
 		</table>
