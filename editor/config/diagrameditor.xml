@@ -221,57 +221,57 @@
 			<add as="dashboard">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/Dashboard.png"/>
+				<add as="image" value="images/wso2/dashboard.png"/>
 			</add>
 			<add as="data_storage">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/Data_Storage.png"/>
+				<add as="image" value="images/wso2/data_storage.png"/>
 			</add>
 			<add as="database">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/Database.png"/>
+				<add as="image" value="images/wso2/database.png"/>
 			</add>
 			<add as="mobile_phone">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/Mobile_Phone.png"/>
+				<add as="image" value="images/wso2/mobile_phone.png"/>
 			</add>
 			<add as="user">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/User.png"/>
+				<add as="image" value="images/wso2/user.png"/>
 			</add>
 			<add as="web_page">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/Web_Page.png"/>
+				<add as="image" value="images/wso2/web_page.png"/>
 			</add>
 			<add as="wso2_api_manager">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/WSO2_API_Manager.png"/>
+				<add as="image" value="images/wso2/wso2_api_manager.png"/>
 			</add>
 			<add as="wso2_complex_event_processor">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/WSO2_Complex_Event_Processor.png"/>
+				<add as="image" value="images/wso2/wso2_complex_event_processor.png"/>
 			</add>
 			<add as="wso2_enterprise_service_bus">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/WSO2_Enterprise_Service_Bus.png"/>
+				<add as="image" value="images/wso2/wso2_enterprise_service_bus.png"/>
 			</add>
 			<add as="wso2_identity_server">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/WSO2_Identity_Server.png"/>
+				<add as="image" value="images/wso2/wso2_identity_server.png"/>
 			</add>
-			<add as="wso2_machine_leaner">
+			<add as="wso2_machine_learner">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/WSO2_Machine_Learner.png"/>
+				<add as="image" value="images/wso2/wso2_machine_learner.png"/>
 			</add>
 		</mxStylesheet>
 		<mxGraphModel as="model">
@@ -342,17 +342,17 @@
 		]]></add>
 		<br/><br/>
 
-		<add as="Dashboard" template="Dashboard" icon="images/wso2/Dashboard.png"/>
-		<add as="Data_Storage" template="Data_Storage" icon="images/wso2/Data_Storage.png"/>
-		<add as="Database" template="Database" icon="images/wso2/Database.png"/>
-		<add as="Mobile_Phone" template="Mobile_Phone" icon="images/wso2/Mobile_Phone.png"/>
-		<add as="User" template="User" icon="images/wso2/User.png"/>
-		<add as="Web_Page" template="Web_Page" icon="images/wso2/Web_Page.png"/>
-		<add as="WSO2_API_Manager" template="WSO2_API_Manager" icon="images/wso2/WSO2_API_Manager.png"/>
-		<add as="WSO2_Complex_Event_Processor" template="WSO2_Complex_Event_Processor" icon="images/wso2/WSO2_Complex_Event_Processor.png"/>
-		<add as="WSO2_Enterprise_Service_Bus" template="WSO2_Enterprise_Service_Bus" icon="images/wso2/WSO2_Enterprise_Service_Bus.png"/>
-		<add as="WSO2_Identity_Server" template="WSO2_Identity_Server" icon="images/wso2/WSO2_Identity_Server.png"/>
-		<add as="WSO2_Machine_Learner" template="WSO2_Machine_Learner" icon="images/wso2/WSO2_Machine_Learner.png"/>
+		<add as="Dashboard" template="Dashboard" icon="images/wso2/dashboard.png"/>
+		<add as="Data_Storage" template="Data_Storage" icon="images/wso2/data_storage.png"/>
+		<add as="Database" template="Database" icon="images/wso2/database.png"/>
+		<add as="Mobile_Phone" template="Mobile_Phone" icon="images/wso2/mobile_phone.png"/>
+		<add as="User" template="User" icon="images/wso2/user.png"/>
+		<add as="Web_Page" template="Web_Page" icon="images/wso2/web_page.png"/>
+		<add as="WSO2_API_Manager" template="WSO2_API_Manager" icon="images/wso2/wso2_api_manager.png"/>
+		<add as="WSO2_Complex_Event_Processor" template="WSO2_Complex_Event_Processor" icon="images/wso2/wso2_complex_event_processor.png"/>
+		<add as="WSO2_Enterprise_Service_Bus" template="WSO2_Enterprise_Service_Bus" icon="images/wso2/wso2_enterprise_service_bus.png"/>
+		<add as="WSO2_Identity_Server" template="WSO2_Identity_Server" icon="images/wso2/wso2_identity_server.png"/>
+		<add as="WSO2_Machine_Learner" template="WSO2_Machine_Learner" icon="images/wso2/wso2_machine_learner.png"/>
 
 	</mxDefaultToolbar>
 </mxEditor>
