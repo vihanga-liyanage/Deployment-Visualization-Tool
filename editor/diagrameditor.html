@@ -11,27 +11,27 @@
  	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<script type="text/javascript">
-		var mxBasePath = './lib';
-		
-		var urlParams = (function(url)
-		{
-			var result = new Object();
-			var params = window.location.search.slice(1).split('&');
-			
-			for (var i = 0; i < params.length; i++)
-			{
-				idx = params[i].indexOf('=');
-				
-				if (idx > 0)
-				{
-					result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
-				}
-			}
-			
-			return result;
-		})(window.location.href);
-		
-		var mxLanguage = urlParams['lang'];
+        var mxBasePath = './lib';
+
+        var urlParams = (function(url)
+        {
+            var result = new Object();
+            var params = window.location.search.slice(1).split('&');
+
+            for (var i = 0; i < params.length; i++)
+            {
+                idx = params[i].indexOf('=');
+
+                if (idx > 0)
+                {
+                    result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
+                }
+            }
+
+            return result;
+        })(window.location.href);
+
+        var mxLanguage = urlParams['lang'];
 	</script>
 	<script type="text/javascript" src="js/jana.js"></script>
 	<script type="text/javascript" src="js/mxClient.js"></script>
@@ -399,14 +399,10 @@
 	</script>
 </head>
 <body onload="mxApplication('config/diagrameditor.xml');">
-	<div id="page">
-		<div id="header">
-			<div id="headerimg" style="overflow:hidden;">
-				<h1 id="title">mxDraw</h1>
-			</div>
-		</div>
-		<div id="mainActions"
-			style="width:100%;padding-top:8px;padding-left:24px;padding-bottom:8px;">
+<div id="page">
+	<div id="header">
+		<div id="headerimg" style="overflow:hidden;">
+			<h1 id="title">mxDraw</h1>
 		</div>
 		<div id="selectActions" style="width:100%;padding-left:54px;padding-bottom:4px;">
 		</div>
