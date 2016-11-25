@@ -21,7 +21,3 @@
 .popup_visible #slide {
     transform: translateX(0) translateY(0);
 }
-
-body {
-    font-size: 100%;
-}

@@ -126,7 +126,7 @@
             mxEvent.addListener(img, 'click',
                 mxUtils.bind(this, function(evt)
                 {
-                    alert("info goes here");
+                    showComponentInfo(state,evt);
                     mxEvent.consume(evt);
                     this.destroy();
                 })
@@ -548,7 +548,8 @@
 
 	<div style="display: none">
 	<div id="slide" title="Basic dialog" class="well popup_content">
-		<p>This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+		<h4 id="slide_header">Haha Lol</h4>
+		<p id="slide_content">This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
 	</div>
 
 	</div>

@@ -3,15 +3,22 @@
  */
 
 
-var showDialog  =  function() {
-    // alert("dffsg")
+var showComponentInfo  =  function(state,evt) {
+    // console.log(state.style.image)
+    // console.log(evt);
+    $("#slide_header").text(state.style.image);
+    $("#slide_content").text(state.style.image+"Content");
+
     $('#slide').popup({
         outline: true, // optional
         focusdelay: 400, // optional
-        vertical: 'top', //optional
-        autoopen:true
+        vertical: 'center', //optional
+        autoopen:true,
+
     });
 };
+
+
 
 // var mouseLoc = [0,0]
 //
@@ -73,7 +80,7 @@ var addListeners = function (editor) {
                     this.previousStyle = state.style;
                     state.style = mxUtils.clone(state.style);
                     // updateStyle(state, true);
-                    showDialog();
+                    // showDialog();
                     state.shape.apply(state);
                     state.shape.redraw();
 
