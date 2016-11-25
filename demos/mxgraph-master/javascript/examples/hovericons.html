@@ -85,6 +85,36 @@
 
             state.view.graph.container.appendChild(img);
             this.images.push(img);
+
+            // Info
+            var img = mxUtils.createImage('images/information.png');
+            img.setAttribute('title', 'More Info');
+            img.style.position = 'absolute';
+            img.style.cursor = 'pointer';
+            img.style.width = '16px';
+            img.style.height = '16px';
+            img.style.left = (state.x + (state.width / 2) - (16 / 2)) + 'px';
+            img.style.top = (state.y - 30) + 'px';
+
+            mxEvent.addGestureListeners(img,
+                mxUtils.bind(this, function(evt)
+                {
+                    // Disables dragging the image
+                    mxEvent.consume(evt);
+                })
+            );
+
+            mxEvent.addListener(img, 'click',
+                mxUtils.bind(this, function(evt)
+                {
+                    alert("info goes here");
+                    mxEvent.consume(evt);
+                    this.destroy();
+                })
+            );
+
+            state.view.graph.container.appendChild(img);
+            this.images.push(img);
         };
 
         mxIconSet.prototype.destroy = function()
@@ -118,79 +148,81 @@
                 var graph = new mxGraph(container);
                 graph.setConnectable(true);
 
+                configureStylesheet(graph);
+
                 // Defines the tolerance before removing the icons
                 var iconTolerance = 20;
 
                 // Shows icons if the mouse is over a cell
                 graph.addMouseListener(
-                    {
-                        currentState: null,
-                        currentIconSet: null,
-                        mouseDown: function(sender, me)
-                        {
-                            // Hides icons on mouse down
-                            if (this.currentState != null)
-                            {
-                                this.dragLeave(me.getEvent(), this.currentState);
-                                this.currentState = null;
-                            }
-                        },
-                        mouseMove: function(sender, me)
-                        {
-                            if (this.currentState != null && (me.getState() == this.currentState ||
-                                me.getState() == null))
-                            {
-                                var tol = iconTolerance;
-                                var tmp = new mxRectangle(me.getGraphX() - tol,
-                                    me.getGraphY() - tol, 2 * tol, 2 * tol);
+				{
+					currentState: null,
+					currentIconSet: null,
+					mouseDown: function(sender, me)
+					{
+						// Hides icons on mouse down
+						if (this.currentState != null)
+						{
+							this.dragLeave(me.getEvent(), this.currentState);
+							this.currentState = null;
+						}
+					},
+					mouseMove: function(sender, me)
+					{
+						if (this.currentState != null && (me.getState() == this.currentState ||
+							me.getState() == null))
+						{
+							var tol = iconTolerance;
+							var tmp = new mxRectangle(me.getGraphX() - tol,
+								me.getGraphY() - tol, 2 * tol, 2 * tol);
 
-                                if (mxUtils.intersects(tmp, this.currentState))
-                                {
-                                    return;
-                                }
-                            }
+							if (mxUtils.intersects(tmp, this.currentState))
+							{
+								return;
+							}
+						}
 
-                            var tmp = graph.view.getState(me.getCell());
+						var tmp = graph.view.getState(me.getCell());
 
-                            // Ignores everything but vertices
-                            if (graph.isMouseDown || (tmp != null && !graph.getModel().isVertex(tmp.cell)))
-                            {
-                                tmp = null;
-                            }
+						// Ignores everything but vertices
+						if (graph.isMouseDown || (tmp != null && !graph.getModel().isVertex(tmp.cell)))
+						{
+							tmp = null;
+						}
 
-                            if (tmp != this.currentState)
-                            {
-                                if (this.currentState != null)
-                                {
-                                    this.dragLeave(me.getEvent(), this.currentState);
-                                }
+						if (tmp != this.currentState)
+						{
+							if (this.currentState != null)
+							{
+								this.dragLeave(me.getEvent(), this.currentState);
+							}
 
-                                this.currentState = tmp;
+							this.currentState = tmp;
 
-                                if (this.currentState != null)
-                                {
-                                    this.dragEnter(me.getEvent(), this.currentState);
-                                }
-                            }
-                        },
-                        mouseUp: function(sender, me) { },
-                        dragEnter: function(evt, state)
-                        {
-                            if (this.currentIconSet == null)
-                            {
-                                this.currentIconSet = new mxIconSet(state);
-                                popupIconTitle = state.cell.value;
-                            }
-                        },
-                        dragLeave: function(evt, state)
-                        {
-                            if (this.currentIconSet != null)
-                            {
-                                this.currentIconSet.destroy();
-                                this.currentIconSet = null;
-                            }
-                        }
-                    });
+							if (this.currentState != null)
+							{
+								this.dragEnter(me.getEvent(), this.currentState);
+							}
+						}
+					},
+					mouseUp: function(sender, me) { },
+					dragEnter: function(evt, state)
+					{
+						if (this.currentIconSet == null)
+						{
+							this.currentIconSet = new mxIconSet(state);
+							popupIconTitle = state.cell.value;
+						}
+					},
+					dragLeave: function(evt, state)
+					{
+						if (this.currentIconSet != null)
+						{
+							this.currentIconSet.destroy();
+							this.currentIconSet = null;
+						}
+					}
+				});
 
                 // Enables rubberband selection
                 new mxRubberband(graph);
@@ -204,7 +236,8 @@
                 try
                 {
                     var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-                    var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
+                    var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 80, 'dashboard');
+                    var v3 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 80, 'user-group');
                     var e1 = graph.insertEdge(parent, null, '', v1, v2);
                 }
                 finally
@@ -213,6 +246,61 @@
                     graph.getModel().endUpdate();
                 }
             }
+        };
+
+        //Node styles
+        function configureStylesheet(graph)
+        {
+            var style = new Object();
+            style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
+            style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
+            style[mxConstants.STYLE_IMAGE] = 'images/dashboard.png';
+            style[mxConstants.STYLE_FONTCOLOR] = '#FFFFFF';
+            graph.getStylesheet().putCellStyle('dashboard', style);
+
+            var style = new Object();
+            style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_IMAGE;
+            style[mxConstants.STYLE_PERIMETER] = mxPerimeter.EllipsePerimeter;
+            style[mxConstants.STYLE_IMAGE] = 'images/user-group.png';
+            style[mxConstants.STYLE_FONTCOLOR] = '#FFFFFF';
+            graph.getStylesheet().putCellStyle('user-group', style);
+
+            style = mxUtils.clone(style);
+            style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_LABEL;
+            style[mxConstants.STYLE_STROKECOLOR] = '#000000';
+            style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+            style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+            style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_CENTER;
+            style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = mxConstants.ALIGN_TOP;
+            style[mxConstants.STYLE_IMAGE] = 'images/icons48/gear.png';
+            style[mxConstants.STYLE_IMAGE_WIDTH] = '48';
+            style[mxConstants.STYLE_IMAGE_HEIGHT] = '48';
+            style[mxConstants.STYLE_SPACING_TOP] = '56';
+            style[mxConstants.STYLE_SPACING] = '8';
+            graph.getStylesheet().putCellStyle('bottom', style);
+
+            style = mxUtils.clone(style);
+            style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = mxConstants.ALIGN_BOTTOM;
+            style[mxConstants.STYLE_IMAGE] = 'images/icons48/server.png';
+            delete style[mxConstants.STYLE_SPACING_TOP];
+            graph.getStylesheet().putCellStyle('top', style);
+
+            style = mxUtils.clone(style);
+            style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_LEFT;
+            style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_LEFT;
+            style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+            style[mxConstants.STYLE_IMAGE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+            style[mxConstants.STYLE_IMAGE] = 'images/icons48/earth.png';
+            style[mxConstants.STYLE_SPACING_LEFT] = '55';
+            style[mxConstants.STYLE_SPACING] = '4';
+            graph.getStylesheet().putCellStyle('right', style);
+
+            style = mxUtils.clone(style);
+            style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_RIGHT;
+            style[mxConstants.STYLE_IMAGE_ALIGN] = mxConstants.ALIGN_RIGHT;
+            delete style[mxConstants.STYLE_SPACING_LEFT];
+            style[mxConstants.STYLE_SPACING_RIGHT] = '55';
+            graph.getStylesheet().putCellStyle('left', style);
         };
 	</script>
 </head>

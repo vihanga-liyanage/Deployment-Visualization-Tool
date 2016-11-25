@@ -48,14 +48,14 @@
 		<add as="image">
 			<Image label="" href="">
 				<mxCell vertex="1" style="image">	
-					<mxGeometry as="geometry" width="80" height="50"/>
+					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="rounded">
 			<Roundrect label="Rounded" href="">
 				<mxCell vertex="1" style="image">
-					<mxGeometry as="geometry" width="80" height="40"/>
+					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Roundrect>
 		</add>
@@ -246,7 +246,7 @@
 				<add as="fontSize" value="10"/>
 				<add as="align" value="center"/>
 				<add as="verticalAlign" value="middle"/>
-				<add as="image" value="http://www.w3schools.com/css/trolltunga.jpg"/>
+				<add as="image" value="icons/dashboard.png"/>
 			</add>
 		</mxStylesheet>
 		<mxGraphModel as="model">
@@ -316,7 +316,7 @@
 			}
 		]]></add>
 		<br/><br/>
-		<add as="Image" template="image" icon="http://www.w3schools.com/css/trolltunga.jpg"/>
+		<add as="Image" template="image" icon="icons/dashboard.png"/>
 		<add as="Text" template="text" icon="images/text.gif"/>
 		<add as="Container" template="container" icon="images/swimlane.gif"/>
 		<add as="Rectangle" template="rectangle" icon="images/rectangle.gif"/>
@@ -329,6 +329,6 @@
 		<add as="Actor" template="actor" style="actor" icon="images/actor.gif"/>
 		<add as="Cylinder" template="shape" style="cylinder" icon="images/cylinder.gif"/>
 		<add as="Cloud" template="cloud" style="cloud" icon="images/cloud.gif"/>
-		<add as="Line" template="hline" style="hline" icon="images/hline.gif"/>
+		<add as="Line" template="hline" style="hline" icon="icons/dashboard.png"/>
 	</mxDefaultToolbar>
 </mxEditor>
