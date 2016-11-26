@@ -160,7 +160,8 @@ var product_suggestions = {
     web_page:[],
     publisher:[],
     wso2_das:[],
-    wso2_iot_server:[]
+    wso2_iot_server:[],
+    arrow:[]
 }
 
 
