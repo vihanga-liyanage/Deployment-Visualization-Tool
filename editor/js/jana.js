@@ -12,7 +12,7 @@ var showComponentInfo  =  function(state,evt) {
     $('#slide_img').attr("src","./images/wso2/" + component + ".png");
     $("#slide_content").html("Loading");
 
-    getSuggests(component);
+    getSuggests(component,'popup');
 
     $('#slide').popup({
         outline: true, // optional
@@ -30,10 +30,11 @@ var setDetails = function(component, type){
     $('#detail_view_title').text(product_details[component].title)
     if(type === 'toolbox'){;
         $('#detail_view_content').html(product_details[component].description);
+        getSuggests(component, 'toolbox');
     }
     else if(type==='graph'){
         $('#detail_view_content').html("Here are some suggestions to connect "+product_details[component].title +".<br/><br/>")
-
+        $('#links_details').html("");
         var suggestListContent = "<ul class='list-group'>"
         product_suggestions[component].forEach( function (item) {
             suggestListContent+=generateSuggestions(item);
@@ -181,7 +182,7 @@ var addListeners = function (editor) {
 
 
 
-var getSuggests = function (component) {
+var getSuggests = function (component, place) {
     $.getJSON( "http://10.100.4.196:5000/article_suggest/"+component, function( data ) {
         // $( ".result" ).html( data );
         // if(Object.keys(data))
@@ -191,6 +192,10 @@ var getSuggests = function (component) {
         });
         txtSlideContent+="</ul>"
         $("#slide_content").html(txtSlideContent);
+        if(place=='toolbox')
+            $('#links_details').html(txtSlideContent);
+        else
+            $('#links_details').html("");
         console.log(data )
 
     });
