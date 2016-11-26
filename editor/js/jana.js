@@ -74,15 +74,7 @@ var addListeners = function (editor) {
         {
             currentState: null,
             previousStyle: null,
-            mouseDown: function(sender, me)
-            {
-                if (this.currentState != null)
-                {
-                    this.dragLeave(me.getEvent(), this.currentState);
-                    this.currentState = null;
-                    setDetails(me.state.cell.getStyle(), 'graph');
-                }
-            },
+            mouseDown: function(sender, me) { },
             mouseMove: function(sender, me)
             {
                 if (this.currentState != null && me.getState() == this.currentState)
@@ -114,7 +106,14 @@ var addListeners = function (editor) {
                     }
                 }
             },
-            mouseUp: function(sender, me) { },
+            mouseUp: function(sender, me) {
+                if (this.currentState != null)
+                {
+                    this.dragLeave(me.getEvent(), this.currentState);
+                    this.currentState = null;
+                    setDetails(me.state.cell.getStyle(), 'graph');
+                }
+            },
             dragEnter: function(evt, state)
             {
                 if (state != null)

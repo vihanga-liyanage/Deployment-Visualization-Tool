@@ -165,11 +165,7 @@
 				var label = cell.getAttribute('label');
 				var style = cell.getStyle();
 			
-				return ((label != null) ? ('<b>' + label +
-						'</b> (' + cell.getId() + ')<br>') : '') +
-						((style != null) ? ('<br>Style: ' + style + '<br>') : '') +
-						'Connections: ' + cell.getEdgeCount()+
-						'<br>Children: ' + cell.getChildCount();
+				return '';
 			}
 		]]></add>
 		<add as="convertValueToString"><![CDATA[
