@@ -380,7 +380,7 @@
 			<!--}-->
 		<!--]]></add>-->
 		<br/>
-		<add as="connect" mode="connect" icon="images/arrow.gif"><![CDATA[
+		<add as="connect" mode="connect" icon="images/wso2/arrow.png"><![CDATA[
 			function (editor)
 			{
 				if (editor.defaultEdge != null)
