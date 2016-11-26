@@ -135,7 +135,7 @@ var product_suggestions = {
         },
         {
             component: 'ml_model',
-            description:'Insert a Machine Learning Model to test a data stream.'
+            description:'To test a data stream.'
         }
     ],
     ml_model:[

@@ -271,16 +271,14 @@
 				}
 			});
 
-            //adding drop listener
-            editor.graph.addListener(
-			{
-				drop: function (sender, me) {
-                    console.log("drop");
-				}
+
+            //add listener for drop icon event to trigger suggestions
+            editor.graph.addListener(mxEvent.ADD_CELLS, function (sender, me) {
+//				console.log(me);
+				if (me.properties.cells[0].isVertex() == true) {
+                    setDetails(me.properties.cells[0].getStyle(), 'graph');
+                }
 			});
-//            mxEvent.addListener(editor, 'drop', function(evt) {
-//                console.log("drop");
-//            });
 
 			// Defines a new action to switch between
 			// XML and graphical display

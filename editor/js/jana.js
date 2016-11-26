@@ -56,6 +56,7 @@ var getImageNameFromPath = function(path){
 
 setTimeout(function () {
     $('img').on( "click", function (evt) {
+        console.log( 'click');
         setDetails(getImageNameFromPath(evt.target.src), 'toolbox');
     } );
 } ,1000);
