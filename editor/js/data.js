@@ -120,7 +120,13 @@ var product_suggestions = {
             component: 'database',
             description:'Do further data analytics'
         }
-    ]
+    ],
+    ml_model:[
+        {
+            component:'wso2_complex_event_processor',
+            description:'Output processed data stream or prediction results'
+        }
+    ],
 }
 
 
