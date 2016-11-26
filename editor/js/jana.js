@@ -28,11 +28,24 @@ var setDetails = function(component,type){
         $('#detail_view_content').html(product_details[component].description);
     }
     else if(type==='graph'){
-        $('#detail_view_content').html("Here is some suggestions to connect to "+product_details[component].title)
-        // for()
-        // $('#detail_view_content').appendChild("<div> <h5> " +
-        //     "</h5> </div>");
+        $('#detail_view_content').html("Here is some suggestions to connect to "+product_details[component].title +".<br>")
+
+        var suggestListContent = "<ul class='list-group'>"
+        product_suggestions[component].forEach( function (item) {
+            suggestListContent+=generateSuggestions(item);
+        });
+        suggestListContent+="</ul>"
+        $('#detail_view_content').append(suggestListContent);
     }
+}
+
+var generateSuggestions = function (item) {
+    var component = item.component;
+    return "<li class='list-group-item'>" +
+        "<img class='suggest_img'  src='"+"./images/wso2/"+component+".png' /> <b> " +product_details[component].title+  "</b>" +
+        "<p>" +item.description+
+        "</p></li>";
+
 }
 
 var getImageNameFromPath = function(path){

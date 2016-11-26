@@ -79,12 +79,12 @@ var product_suggestions = {
        }],
     wso2_machine_learner:[
         {
-            component: 'wso2_das',
-            description:'Do further data analytics'
-        },
-        {
             component:'wso2_complex_event_processor',
             description:'Output as a data stream'
+        },
+        {
+            component: 'data_storage',
+            description:'Do further data analytics'
         }
     ]
 }
