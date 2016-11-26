@@ -211,4 +211,55 @@ $(document).ready(function() {
         $('#contact_popup_img').html(svg );
     })
 
+    $('#final_form_submit').on('click', function (event) {
+        event.preventDefault();
+        var formData = {
+            'name'              : $('#exampleName').val(),
+            'email'             : $('#exampleInputEmail1').val(),
+            'superheroAlias'    : $('input[name=superheroAlias]').val()
+        };
+
+        var rotiData = {
+            "event": {
+                "payloadData": {
+                    "FirstName": $('#exampleName').val(),
+                    "LastName": $('#exampleLast').val(),
+                    "Email": $('#exampleInputEmail').val(),
+                    "Title": $('#exampleJob').val(),
+                    "Company": $('#exampleCompany').val(),
+                    "Country": $('#exampleCountry').val(),
+                    "Ipaddress": "199.119.233.228",
+                    "Region": "ROW"
+                }
+            }
+        };
+
+        // process the form
+        $.ajax({
+            type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+            url         : 'http://10.100.4.196:9763/endpoints/input_listner', // the url where we want to POST
+            data        : rotiData, // our data object
+            dataType    : 'json', // what type of data do we expect back from the server
+            encode          : true
+        })
+        // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+
+                // here we will handle errors and validation messages
+            });
+
+        setTimeout(function () {
+            $('#contact_popup').popup( 'hide');
+            $('#success_popup').popup('show');
+            setTimeout(function () {
+                $('#success_popup').popup('hide');
+            }, 1000)
+            }, 500);
+
+
+    })
+
 });
