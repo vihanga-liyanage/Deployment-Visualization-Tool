@@ -25,7 +25,7 @@ var showComponentInfo  =  function(state,evt) {
 
 var setDetails = function(component, type){
 
-    console.log("setDetails-" + component + '-' + type);
+    // console.log("setDetails-" + component + '-' + type);
     $('#detail_view_img').attr("src","./images/wso2/" + component + ".png");
     $('#detail_view_title').text(product_details[component].title)
     if(type === 'toolbox'){;
