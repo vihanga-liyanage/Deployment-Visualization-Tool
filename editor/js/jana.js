@@ -113,6 +113,12 @@ var addListeners = function (editor) {
                     this.currentState = null;
                     setDetails(me.state.cell.getStyle(), 'graph');
                 }
+
+                //listener for click on edges
+                if (me.sourceState != null && me.sourceState.cell.isEdge() == true) {
+                    // console.log("clicked on edge");
+                }
+
             },
             dragEnter: function(evt, state)
             {
