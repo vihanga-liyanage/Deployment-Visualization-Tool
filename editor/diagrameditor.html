@@ -259,7 +259,6 @@
 					if (this.currentIconSet == null)
 					{
 						this.currentIconSet = new mxIconSet(state);
-						popupIconTitle = state.cell.value;
 					}
 				},
 				dragLeave: function(evt, state)
@@ -271,6 +270,17 @@
 					}
 				}
 			});
+
+            //adding drop listener
+            editor.graph.addListener(
+			{
+				drop: function (sender, me) {
+                    console.log("drop");
+				}
+			});
+//            mxEvent.addListener(editor, 'drop', function(evt) {
+//                console.log("drop");
+//            });
 
 			// Defines a new action to switch between
 			// XML and graphical display
