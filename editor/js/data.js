@@ -110,20 +110,41 @@ var product_suggestions = {
        [{
            component:'database',
            description:'Persist Data Through DAS. Analise collected data.'
-       }],
+       },
+       {
+           component:'dashboard',
+           description:'Create a view for the predicted/processed data.'
+       },
+       {
+           component:'data_stream',
+           description:'Input a data stream to test it with a Machine Learning Model.'
+       },
+       {
+           component:'data_stream',
+           description:'Input a data stream to run queries agains it Possible query types are Siddhi Queries and Spark Queries.'
+       }
+    ],
     wso2_machine_learner:[
         {
             component:'wso2_complex_event_processor',
-            description:'Output as a data stream'
+            description:'Output as a data stream.'
         },
         {
             component: 'database',
             description:'Do further data analytics'
+        },
+        {
+            component: 'ml_model',
+            description:'Insert a Machine Learning Model to test a data stream.'
         }
     ],
-    dashboard:[
-
+    ml_model:[
+        {
+            component:'wso2_complex_event_processor',
+            description:'Output processed data stream or prediction results.'
+        }
     ],
+    dashboard:[],
     data_storage:[],
     data_stream:[],
     database:[],
@@ -133,7 +154,6 @@ var product_suggestions = {
     user:[],
     mobile_phone:[],
     web_page:[],
-    ml_model:[],
     publisher:[],
     wso2_das:[],
     wso2_iot_server:[]
