@@ -20,14 +20,14 @@ var showComponentInfo  =  function(state,evt) {
 
 var setDetails = function(component, type){
 
-    console.log("setDetails-" + component + '-' + type);
+    // console.log("setDetails-" + component + '-' + type);
     $('#detail_view_img').attr("src","./images/wso2/" + component + ".png");
     $('#detail_view_title').text(product_details[component].title)
     if(type === 'toolbox'){;
         $('#detail_view_content').html(product_details[component].description);
     }
     else if(type==='graph'){
-        $('#detail_view_content').html("Here is some suggestions to connect to "+product_details[component].title +".<br/><br/>")
+        $('#detail_view_content').html("Here are some suggestions to connect to "+product_details[component].title +".<br/><br/>")
 
         var suggestListContent = "<ul class='list-group'>"
         product_suggestions[component].forEach( function (item) {

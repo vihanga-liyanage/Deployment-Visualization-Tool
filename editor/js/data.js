@@ -91,16 +91,24 @@ var product_details = {
     publisher:{
         title:"Publisher",
         description:"Repesent any data publisher"
+    },
+    wso2_das:{
+        title:"WSO2_DAS",
+        description:"WSO2 Data Analytics Server is a comprehensive enterprise data analytics platform; it fuses batch" +
+        " and real-time analytics of any source of data with predictive analytics via machine learning. It supports" +
+        " the demands of not just business, but Internet of Things solutions, mobile and Web apps."
+    },
+    wso2_iot_server:{
+        title:"WSO2_IoT_Server",
+        description:"With its modular, extensible, and customizable capabilities, WSO2 Internet of Things Server " +
+        "(IoT Server) offers a complete, secure, open source, enterprise-grade IoT device management solution."
     }
-
 }
-
-
 
 var product_suggestions = {
     wso2_complex_event_processor:
        [{
-           component:'data_storage',
+           component:'database',
            description:'Persist Data Through DAS. Analise collected data.'
        }],
     wso2_machine_learner:[
@@ -109,10 +117,26 @@ var product_suggestions = {
             description:'Output as a data stream'
         },
         {
-            component: 'data_storage',
+            component: 'database',
             description:'Do further data analytics'
         }
-    ]
+    ],
+    dashboard:[
+
+    ],
+    data_storage:[],
+    data_stream:[],
+    database:[],
+    wso2_api_manager:[],
+    wso2_enterprise_service_bus:[],
+    wso2_identity_server:[],
+    user:[],
+    mobile_phone:[],
+    web_page:[],
+    ml_model:[],
+    publisher:[],
+    wso2_das:[],
+    wso2_iot_server:[]
 }
 
 
