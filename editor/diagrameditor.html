@@ -271,24 +271,6 @@
 					}
 				}
 			});
-			
-//		    // Changes the zoom on mouseWheel events
-//		    mxEvent.addMouseWheelListener(function (evt, up)
-//		    {
-//			    if (!mxEvent.isConsumed(evt))
-//			    {
-//			    	if (up)
-//					{
-//			    		editor.execute('zoomIn');
-//					}
-//					else
-//					{
-//						editor.execute('zoomOut');
-//					}
-//
-//					mxEvent.consume(evt);
-//			    }
-//		    });
 
 			// Defines a new action to switch between
 			// XML and graphical display
@@ -500,11 +482,6 @@
 
 		window.onbeforeunload = function() { return mxResources.get('changesLost'); };
 
-
-
-
-
-
 	</script>
 </head>
 <body onload="mxApplication('config/diagrameditor.xml');">
@@ -519,20 +496,20 @@
 		</div>
 		<div id="zoomActions" style="width:100%;padding-left:54px;padding-top:4px;">
 		</div>
-		<table border="0" width="100%">
+		<table border="0" width="100%" height="675px">
 			<tr>
 
 				<td id="toolbar"  style="padding-left:20px;" valign="top">
 					<!-- Toolbar Here -->				
 				</td>
 				<td valign="top" style="border-width:1px;border-style:solid;border-color:black;">
-					<div id="graph" style="position:relative;height:1000px;width:100%;overflow:hidden;cursor:default;">
+					<div id="graph" style="position:relative;width:100%;overflow:hidden;cursor:default;">
 						<!-- Graph Here -->
 						<center id="splash" style="padding-top:230px;">
 							<img src="images/loading.gif">
 						</center>
 					</div>
-					<textarea id="xml" style="height:480px;width:684px;display:none;border-style:none;"></textarea>
+					<textarea id="xml" style="height:100%;width:684px;display:none;border-style:none;"></textarea>
 				</td>
 
 				<td  style="width:400px;padding-left:20px;" valign="top">
@@ -548,12 +525,7 @@
 			<input id="source" type="checkbox"/>Source
 		</span>
 
-		<div id="footer">
-			<p id="status">
-				<!-- Status Here -->Loading...
-			</p>
-			<br/>
-		</div>
+
 	</div>
 
 	<div style="display: none">

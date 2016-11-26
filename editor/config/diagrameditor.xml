@@ -49,7 +49,7 @@
 		</add>
 		<add as="Data_Storage">
 			<Image label="" href="">
-				<mxCell vertex="1" style="data_storage">
+				<mxCell vertex="1" style="data_stream">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
@@ -113,6 +113,20 @@
 		<add as="WSO2_Machine_Learner">
 			<Image label="" href="">
 				<mxCell vertex="1" style="wso2_machine_learner">
+					<mxGeometry as="geometry" width="100" height="100"/>
+				</mxCell>
+			</Image>
+		</add>
+		<add as="ML_Model">
+			<Image label="" href="">
+				<mxCell vertex="1" style="ml_model">
+					<mxGeometry as="geometry" width="100" height="100"/>
+				</mxCell>
+			</Image>
+		</add>
+		<add as="Publisher">
+			<Image label="" href="">
+				<mxCell vertex="1" style="publisher">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
@@ -223,10 +237,10 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/dashboard.png"/>
 			</add>
-			<add as="data_storage">
+			<add as="data_stream">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/data_storage.png"/>
+				<add as="image" value="images/wso2/data_stream.png"/>
 			</add>
 			<add as="database">
 				<add as="shape" value="image"/>
@@ -273,6 +287,16 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2_machine_learner.png"/>
 			</add>
+			<add as="ml_model">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/ml_model.png"/>
+			</add>
+			<add as="publisher">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/publisher.png"/>
+			</add>
 		</mxStylesheet>
 		<mxGraphModel as="model">
 			<add as="valueForCellChanged"><![CDATA[
@@ -313,24 +337,25 @@
 		</mxGraphModel>
 	</mxGraph>
 	<mxDefaultToolbar as="toolbar">
-		<add as="connect" mode="connect" icon="images/connect.gif"><![CDATA[
-			function (editor)
-			{
-				if (editor.defaultEdge != null)
-				{
-					editor.defaultEdge.style = null;
-				}
-			}
-		]]></add>
-		<add as="connect" mode="connect" icon="images/straight.gif"><![CDATA[
-			function (editor)
-			{
-				if (editor.defaultEdge != null)
-				{
-					editor.defaultEdge.style = 'straightConnector';
-				}
-			}
-		]]></add>
+		<!--<add as="connect" mode="connect" icon="images/connect.gif"><![CDATA[-->
+			<!--function (editor)-->
+			<!--{-->
+				<!--if (editor.defaultEdge != null)-->
+				<!--{-->
+					<!--editor.defaultEdge.style = null;-->
+				<!--}-->
+			<!--}-->
+		<!--]]></add>-->
+		<!--<add as="connect" mode="connect" icon="images/straight.gif"><![CDATA[-->
+			<!--function (editor)-->
+			<!--{-->
+				<!--if (editor.defaultEdge != null)-->
+				<!--{-->
+					<!--editor.defaultEdge.style = 'straightConnector';-->
+				<!--}-->
+			<!--}-->
+		<!--]]></add>-->
+		<br/>
 		<add as="connect" mode="connect" icon="images/arrow.gif"><![CDATA[
 			function (editor)
 			{
@@ -340,10 +365,9 @@
 				}
 			}
 		]]></add>
-		<br/><br/>
 
 		<add as="Dashboard" template="Dashboard" icon="images/wso2/dashboard.png"/>
-		<add as="Data_Storage" template="Data_Storage" icon="images/wso2/data_storage.png"/>
+		<add as="Data_Storage" template="Data_Storage" icon="images/wso2/data_stream.png"/>
 		<add as="Database" template="Database" icon="images/wso2/database.png"/>
 		<add as="Mobile_Phone" template="Mobile_Phone" icon="images/wso2/mobile_phone.png"/>
 		<add as="User" template="User" icon="images/wso2/user.png"/>
@@ -353,6 +377,8 @@
 		<add as="WSO2_Enterprise_Service_Bus" template="WSO2_Enterprise_Service_Bus" icon="images/wso2/wso2_enterprise_service_bus.png"/>
 		<add as="WSO2_Identity_Server" template="WSO2_Identity_Server" icon="images/wso2/wso2_identity_server.png"/>
 		<add as="WSO2_Machine_Learner" template="WSO2_Machine_Learner" icon="images/wso2/wso2_machine_learner.png"/>
+		<add as="ML_Model" template="ML_Model" icon="images/wso2/ml_model.png"/>
+		<add as="Publisher" template="Publisher" icon="images/wso2/publisher.png"/>
 
 	</mxDefaultToolbar>
 </mxEditor>
