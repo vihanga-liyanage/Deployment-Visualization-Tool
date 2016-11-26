@@ -27,7 +27,7 @@ var setDetails = function(component, type){
         $('#detail_view_content').html(product_details[component].description);
     }
     else if(type==='graph'){
-        $('#detail_view_content').html("Here is some suggestions to connect to "+product_details[component].title +".<br/><br/>")
+        $('#detail_view_content').html("Here are some suggestions to connect to "+product_details[component].title +".<br/><br/>")
 
         var suggestListContent = "<ul class='list-group'>"
         product_suggestions[component].forEach( function (item) {

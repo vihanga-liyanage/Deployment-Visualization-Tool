@@ -131,6 +131,20 @@
 				</mxCell>
 			</Image>
 		</add>
+		<add as="WSO2_DAS">
+			<Image label="" href="">
+				<mxCell vertex="1" style="wso2_das">
+					<mxGeometry as="geometry" width="100" height="100"/>
+				</mxCell>
+			</Image>
+		</add>
+		<add as="WSO2_IoT_Server">
+			<Image label="" href="">
+				<mxCell vertex="1" style="wso2_iot_server">
+					<mxGeometry as="geometry" width="100" height="100"/>
+				</mxCell>
+			</Image>
+		</add>
 	</Array>
 	<mxGraph as="graph" alternateEdgeStyle="verticalConnector" allowLoops="1" dropEnabled="1">
 		<add as="isAutoSizeCell"><![CDATA[
@@ -297,6 +311,16 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/publisher.png"/>
 			</add>
+			<add as="wso2_das">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/wso2_das.png"/>
+			</add>
+			<add as="wso2_iot_server">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/wso2_iot_server.png"/>
+			</add>
 		</mxStylesheet>
 		<mxGraphModel as="model">
 			<add as="valueForCellChanged"><![CDATA[
@@ -380,5 +404,7 @@
 		<add as="ML_Model" template="ML_Model" icon="images/wso2/ml_model.png"/>
 		<add as="Publisher" template="Publisher" icon="images/wso2/publisher.png"/>
 
+		<add as="WSO2_DAS" template="WSO2_DAS" icon="images/wso2/wso2_das.png"/>
+		<add as="WSO2_IoT_Server" template="WSO2_IoT_Server" icon="images/wso2/wso2_iot_server.png"/>
 	</mxDefaultToolbar>
 </mxEditor>
