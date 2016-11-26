@@ -92,6 +92,10 @@ var product_details = {
         title:"Publisher",
         description:"Repesent any data publisher"
     },
+    arrow: {
+        title: 'Arrow',
+        description: 'Use this arrow to show a relationships between two components.'
+    },
     wso2_das:{
         title:"WSO2_DAS",
         description:"WSO2 Data Analytics Server is a comprehensive enterprise data analytics platform; it fuses batch" +

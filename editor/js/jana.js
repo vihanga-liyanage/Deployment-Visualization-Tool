@@ -6,8 +6,13 @@
 var showComponentInfo  =  function(state,evt) {
     // console.log(state.style.image)
     // console.log(evt);
-    $("#slide_header").text(state.style.image);
-    $("#slide_content").text(state.style.image+"Content");
+
+    var component = getImageNameFromPath(state.style.image);
+    $("#slide_header").text(product_details[component].title);
+    $('#slide_img').attr("src","./images/wso2/" + component + ".png");
+    $("#slide_content").html("Loading");
+
+    getSuggests(component);
 
     $('#slide').popup({
         outline: true, // optional
@@ -27,7 +32,7 @@ var setDetails = function(component, type){
         $('#detail_view_content').html(product_details[component].description);
     }
     else if(type==='graph'){
-        $('#detail_view_content').html("Here are some suggestions to connect to "+product_details[component].title +".<br/><br/>")
+        $('#detail_view_content').html("Here are some suggestions to connect "+product_details[component].title +".<br/><br/>")
 
         var suggestListContent = "<ul class='list-group'>"
         product_suggestions[component].forEach( function (item) {
@@ -41,7 +46,7 @@ var setDetails = function(component, type){
 var generateSuggestions = function (item) {
     var component = item.component;
     return "<li class='list-group-item'>" +
-        "<table><tr><td><img class='suggest_img'  src='"+"./images/wso2/"+component+".png' /></td>" +
+        "<table><tr><td style='width: 80px;'><img class='suggest_img'  src='"+"./images/wso2/"+component+".png' /></td>" +
         "<td><b> " +product_details[component].title+  "</b>" +
         "<p>" +item.description+
         "</p></td></tr></table> </li>";
@@ -173,3 +178,28 @@ var addListeners = function (editor) {
     });
 }
 
+
+
+
+var getSuggests = function (component) {
+    $.getJSON( "http://10.100.4.196:5000/article_suggest/"+component, function( data ) {
+        // $( ".result" ).html( data );
+        // if(Object.keys(data))
+        var txtSlideContent = "<ul>";
+        Object.keys(data).forEach(function (key) {
+            txtSlideContent+="<li><a target='_blank' href='"+data[key]+"'>"+key+"</a></li>"
+        });
+        txtSlideContent+="</ul>"
+        $("#slide_content").html(txtSlideContent);
+        console.log(data )
+
+    });
+}
+
+
+$(document).ready(function() {
+
+    // Initialize the plugin
+    $('#contact_popup').popup();
+
+});
