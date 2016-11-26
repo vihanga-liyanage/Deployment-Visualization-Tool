@@ -201,4 +201,14 @@ $(document).ready(function() {
     // Initialize the plugin
     $('#contact_popup').popup();
 
+    $('.contact_popup_open').on('click', function (evt) {
+
+
+        // var canvas = document.getElementById("#drawing_pad");
+        // var img = canvas.toDataUR    L("image/png");
+        $('#contact_popup_img').html("")
+        var svg = $("svg").clone();
+        $('#contact_popup_img').html(svg );
+    })
+
 });

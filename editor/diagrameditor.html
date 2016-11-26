@@ -41,6 +41,9 @@
 	<script type="text/javascript" src="js/data.js"></script>
 	<script type="text/javascript" src="js/mxClient.js"></script>
 	<script type="text/javascript" src="js/mxApplication.js"></script>
+	<script type="text/javascript" src="http://canvg.github.io/canvg/rgbcolor.js"></script>
+	<script type="text/javascript" src="http://canvg.github.io/canvg/StackBlur.js"></script>
+	<script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
 	<script type="text/javascript">
 
         // Defines a new class for all icons
@@ -505,7 +508,6 @@
 		<div id="mainActions">
 		</div>
 		<div id="zoomActions">
-			<a href="#" class="contact_popup_open" >Contact us with your design.</a>
 		</div>
 		<table border="0" width="100%" height="675px">
 			<tr>
@@ -529,15 +531,20 @@
 						<h4 id="detail_view_title"></h4>
 						<p id="detail_view_content"></p>
 					</div>
+
 				</td>
 			</tr>
 		</table>
 		<span style="float:right;padding-right:36px;">
-			<input id="source" type="checkbox"/>Source
+			<input id="source" type="checkbox" style="display: none"/>
+
+			<a href="#" class="contact_popup_open" >Contact us with your design.</a>
 		</span>
 	</div>
 
 	<div style="display: none">
+		<canvas id="drawing_pad"></canvas>
+
 	<div id="slide" title="Basic dialog" class="well popup_content">
 		<table>
 			<tr>
@@ -563,18 +570,50 @@
 			<table>
 				<tr>
 					<td>
-						<img id="contact_popup_img" src="./icons/dashboard.png" width="100px" style="padding-right: 20px">
+						<div id="contact_popup_img" class="graph_final"></div>
+						<!--<img id="contact_popup_img" src="./icons/dashboard.png" width="800px" style="padding-right: 50px;padding-left: 50px;">-->
 					</td>
 					<td>
+
 						<h4 id="contact_popup_header">Product Name</h4>
+						<br>
+						<form action="http://google.com" id="">
+							<div class="form-group">
+								<label for="exampleInputEmail1">First Name</label>
+								<input type="text" class="form-control" id="exampleName" placeholder="First Name">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Last Name</label>
+								<input type="text" class="form-control" id="exampleLast" placeholder="Last Name">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Email address</label>
+								<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Contact Number</label>
+								<input type="text" class="form-control" id="exampleContact" placeholder="Contact Number">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Job Title</label>
+								<input type="text" class="form-control" id="exampleJob" placeholder="Job Title">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Company</label>
+								<input type="text" class="form-control" id="exampleCompany" placeholder="Company">
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">Country</label>
+								<input type="text" class="form-control" id="exampleCountry" placeholder="Country">
+							</div>
+
+							<button id="final_doc_submit" type="submit" class="btn  btn-success">Submit</button>
+						</form>
+
 					</td>
 				</tr>
 			</table>
-			<br>
-			<p id="contact_popup_content">Here is some links to data.</p>
 
-			<!-- Add an optional button to close the popup -->
-			<button class="contact_popup_close">Close</button>
 
 		</div>
 
