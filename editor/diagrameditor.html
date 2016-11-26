@@ -2,14 +2,14 @@
 <head>
 	<title>WSO2 PlayGround 2.0</title>
 	<!--Jquery all-->
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<link rel="stylesheet" href="css/jquery-ui.min.css">
+	<script src="js/jquery-1.12.4.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
 
-	<script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>
+	<script src="js/jquery.popupoverlay.js"></script>
 
 	<!--Bootstrap-->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="screen" />
 
  	<link rel="stylesheet" href="css/wordpress.css" type="text/css" media="screen" />
  	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
@@ -93,7 +93,7 @@
             mxEvent.addListener(img, 'click',
                 mxUtils.bind(this, function(evt)
                 {
-                    var res = confirm("Do you want to delete '" + popupIconTitle + "'?");
+                    var res = confirm("Please confirm node delete.");
                     if (res == true) {
                         graph.removeCells([state.cell]);
                     }
@@ -490,29 +490,29 @@
 		<div id="headerimg" style="overflow:hidden;">
 			<h1 id="title">WSO2 PlayGround 2.0</h1>
 		</div>
-		<div id="selectActions" style=" display:none; width:100%;padding-left:54px;padding-bottom:4px;">
+		<div id="selectActions">
 		</div>
-		<div id="mainActions" style="display:none; width:100%;padding-left:54px;padding-bottom:4px;">
+		<div id="mainActions">
 		</div>
-		<div id="zoomActions" style="width:100%;padding-left:54px;padding-top:4px;">
+		<div id="zoomActions">
 		</div>
 		<table border="0" width="100%" height="675px">
 			<tr>
 
-				<td id="toolbar"  style="padding-left:20px;" valign="top">
+				<td id="toolbar" valign="top" class="col-md-1">
 					<!-- Toolbar Here -->				
 				</td>
-				<td valign="top" style="border-width:1px;border-style:solid;border-color:black;">
-					<div id="graph" style="position:relative;width:100%;overflow:hidden;cursor:default;">
+				<td valign="top" id="graph_container" class="col-md-7">
+					<div id="graph">
 						<!-- Graph Here -->
-						<center id="splash" style="padding-top:230px;">
+						<center id="splash" style="padding-top:530px;">
 							<img src="images/loading.gif">
 						</center>
 					</div>
-					<textarea id="xml" style="height:100%;width:684px;display:none;border-style:none;"></textarea>
+					<textarea id="xml"></textarea>
 				</td>
 
-				<td  style="width:400px;padding-left:20px;" valign="top">
+				<td id="detail_container" valign="top">
 					<div id="detail_view">
 					<img id="detail_view_img" src="./icons/dashboard.png" width="200px">
 						<h4 id="detail_view_title"></h4>
@@ -524,8 +524,6 @@
 		<span style="float:right;padding-right:36px;">
 			<input id="source" type="checkbox"/>Source
 		</span>
-
-
 	</div>
 
 	<div style="display: none">
