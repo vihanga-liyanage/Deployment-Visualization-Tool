@@ -74,6 +74,20 @@ h4 {
 .popup_visible #slide {
     transform: translateX(0) translateY(0);
 }
+/*Slide Open*/
+#contact_popup_background {
+    transition: all 0.3s 0.3s;
+}
+#contact_popup,
+#contact_popup_wrapper {
+    transition: all 0.3s ease-out;
+}
+#contact_popup {
+    transform: translateX(0) translateY(-40%);
+}
+.popup_visible #contact_popup {
+    transform: translateX(0) translateY(0);
+}
 
 
 .mxToolbarModeSelected

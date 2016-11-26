@@ -46,7 +46,7 @@ var setDetails = function(component, type){
 var generateSuggestions = function (item) {
     var component = item.component;
     return "<li class='list-group-item'>" +
-        "<table><tr><td><img class='suggest_img'  src='"+"./images/wso2/"+component+".png' /></td>" +
+        "<table><tr><td style='width: 80px;'><img class='suggest_img'  src='"+"./images/wso2/"+component+".png' /></td>" +
         "<td><b> " +product_details[component].title+  "</b>" +
         "<p>" +item.description+
         "</p></td></tr></table> </li>";
@@ -194,3 +194,11 @@ var getSuggests = function (component) {
 
     });
 }
+
+
+$(document).ready(function() {
+
+    // Initialize the plugin
+    $('#contact_popup').popup();
+
+});
