@@ -18,17 +18,16 @@ var showComponentInfo  =  function(state,evt) {
     });
 };
 
+var setDetails = function(component, type){
 
-var setDetails = function(component,type){
-
-    console.log("setDetails-"+component+'-'+type);
-    $('#detail_view_img').attr("src","./images/wso2/"+component+".png");
+    console.log("setDetails-" + component + '-' + type);
+    $('#detail_view_img').attr("src","./images/wso2/" + component + ".png");
     $('#detail_view_title').text(product_details[component].title)
-    if(type==='toolbox'){;
+    if(type === 'toolbox'){;
         $('#detail_view_content').html(product_details[component].description);
     }
     else if(type==='graph'){
-        $('#detail_view_content').html("Here is some suggestions to connect to "+product_details[component].title +".<br>")
+        $('#detail_view_content').html("Here is some suggestions to connect to "+product_details[component].title +".<br/><br/>")
 
         var suggestListContent = "<ul class='list-group'>"
         product_suggestions[component].forEach( function (item) {
@@ -42,9 +41,10 @@ var setDetails = function(component,type){
 var generateSuggestions = function (item) {
     var component = item.component;
     return "<li class='list-group-item'>" +
-        "<img class='suggest_img'  src='"+"./images/wso2/"+component+".png' /> <b> " +product_details[component].title+  "</b>" +
+        "<table><tr><td><img class='suggest_img'  src='"+"./images/wso2/"+component+".png' /></td>" +
+        "<td><b> " +product_details[component].title+  "</b>" +
         "<p>" +item.description+
-        "</p></li>";
+        "</p></td></tr></table> </li>";
 
 }
 
@@ -59,8 +59,6 @@ setTimeout(function () {
         setDetails(getImageNameFromPath(evt.target.src), 'toolbox');
     } );
 } ,1000);
-
-
 
 // Mouse Move ----------------------------------------------------------------
 
@@ -146,10 +144,6 @@ var addListeners = function (editor) {
                 }
             }
         });
-
-
-
-
 
 //--------------------------------- Drop
     mxEvent.addListener(document.getElementById('graph'), 'drop', function(evt)

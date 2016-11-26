@@ -1,12 +1,65 @@
+#selectActions {
+    display:none;
+    width:100%;
+    padding-left:54px;
+    padding-bottom:4px;
+}
+
+#mainActions {
+    display:none;
+    width:100%;
+    padding-left:54px;
+    padding-bottom:4px;
+}
+
+#zoomActions {
+    width:100%;
+    padding-left:54px;
+    padding-top:4px;
+}
+
 #toolbar{
     width:172px;
+    border: 1px solid;
+    padding-left:20px;
+}
+
+#graph_container {
+    border-width:1px;
+    border-style:solid;
+    border-color:black;
+}
+
+#graph {
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    cursor:default;
+    height: 675px;
+}
+
+#detail_container {
+    width:400px;
+    padding:20px;
+    border: 1px solid;
+    font-family: monospace;
+    font-size: large;
+}
+
+#xml {
+    height:100%;
+    width:684px;
+    display:none;
+    border-style:none;
 }
 
 .mxToolbarMode {
     width: 70px;
 }
 
-
+h4 {
+    font-weight: 600;
+}
 /*Slide Open*/
 #slide_background {
     transition: all 0.3s 0.3s;
@@ -60,4 +113,5 @@
 
 .suggest_img{
     width: 80px;
+    padding-right: 10px;
 }

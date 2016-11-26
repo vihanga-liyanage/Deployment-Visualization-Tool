@@ -27,7 +27,7 @@
 		<add as="container">
 			<Container label="Container" href="">
 				<mxCell vertex="1" style="swimlane" connectable="0">
-					<mxGeometry as="geometry" width="200" height="200"/>
+					<mxGeometry as="geometry" width="500" height="500"/>
 				</mxCell>
 			</Container>
 		</add>
