@@ -12,7 +12,7 @@ var showComponentInfo  =  function(state,evt) {
     $('#slide_img').attr("src","./images/wso2/" + component + ".png");
     $("#slide_content").html("Loading");
 
-    getSuggests(component);
+    getSuggests(component,'popup');
 
     $('#slide').popup({
         outline: true, // optional
@@ -30,10 +30,11 @@ var setDetails = function(component, type){
     $('#detail_view_title').text(product_details[component].title)
     if(type === 'toolbox'){;
         $('#detail_view_content').html(product_details[component].description);
+        getSuggests(component, 'toolbox');
     }
     else if(type==='graph'){
         $('#detail_view_content').html("Here are some suggestions to connect "+product_details[component].title +".<br/><br/>")
-
+        $('#links_details').html("");
         var suggestListContent = "<ul class='list-group'>"
         product_suggestions[component].forEach( function (item) {
             suggestListContent+=generateSuggestions(item);
@@ -186,7 +187,7 @@ var addListeners = function (editor) {
 
 
 
-var getSuggests = function (component) {
+var getSuggests = function (component, place) {
     $.getJSON( "http://10.100.4.196:5000/article_suggest/"+component, function( data ) {
         // $( ".result" ).html( data );
         // if(Object.keys(data))
@@ -196,6 +197,10 @@ var getSuggests = function (component) {
         });
         txtSlideContent+="</ul>"
         $("#slide_content").html(txtSlideContent);
+        if(place=='toolbox')
+            $('#links_details').html(txtSlideContent);
+        else
+            $('#links_details').html("");
         console.log(data )
 
     });
@@ -206,5 +211,66 @@ $(document).ready(function() {
 
     // Initialize the plugin
     $('#contact_popup').popup();
+
+    $('.contact_popup_open').on('click', function (evt) {
+
+
+        // var canvas = document.getElementById("#drawing_pad");
+        // var img = canvas.toDataUR    L("image/png");
+        $('#contact_popup_img').html("")
+        var svg = $("svg").clone();
+        $('#contact_popup_img').html(svg );
+    })
+
+    $('#final_form_submit').on('click', function (event) {
+        event.preventDefault();
+        var formData = {
+            'name'              : $('#exampleName').val(),
+            'email'             : $('#exampleInputEmail1').val(),
+            'superheroAlias'    : $('input[name=superheroAlias]').val()
+        };
+
+        var rotiData = {
+            "event": {
+                "payloadData": {
+                    "FirstName": $('#exampleName').val(),
+                    "LastName": $('#exampleLast').val(),
+                    "Email": $('#exampleInputEmail').val(),
+                    "Title": $('#exampleJob').val(),
+                    "Company": $('#exampleCompany').val(),
+                    "Country": $('#exampleCountry').val(),
+                    "Ipaddress": "199.119.233.228",
+                    "Region": "ROW"
+                }
+            }
+        };
+
+        // process the form
+        $.ajax({
+            type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+            url         : 'http://10.100.4.196:9763/endpoints/input_listner', // the url where we want to POST
+            data        : rotiData, // our data object
+            dataType    : 'json', // what type of data do we expect back from the server
+            encode          : true
+        })
+        // using the done promise callback
+            .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+
+                // here we will handle errors and validation messages
+            });
+
+        setTimeout(function () {
+            $('#contact_popup').popup( 'hide');
+            $('#success_popup').popup('show');
+            setTimeout(function () {
+                $('#success_popup').popup('hide');
+            }, 1000)
+            }, 500);
+
+
+    })
 
 });
