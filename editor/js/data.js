@@ -91,6 +91,10 @@ var product_details = {
     publisher:{
         title:"Publisher",
         description:"Repesent any data publisher"
+    },
+    arrow:{
+        title:'Arrow',
+        description:'Use this arrow to show a relationships between two components.'
     }
 
 }
