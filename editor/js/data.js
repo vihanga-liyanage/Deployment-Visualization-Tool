@@ -20,7 +20,7 @@ var product_details = {
     },
     database:{
         title:'Database',
-        description:'lol'
+        description:'Database can be an any kind of modern database. Ex:- MySQL, MongoDB, H2'
     },
     wso2_api_manager:{
         title:'WSO2 API Manager',
@@ -33,14 +33,39 @@ var product_details = {
     },
     wso2_enterprise_service_bus:{
         title:'WSO2 Enterprise Service Bus(ESB)',
-        description:"Can as a service gateway, mediation engine across SAP, Salesforce, and as healthcare hub or in IoT scenarios," +
+        description:"Can use as a service gateway, mediation engine across SAP, Salesforce, and as healthcare hub or in IoT scenarios," +
         " made possible by variety of transports such as Apache Kafka and MQTT.<br/>" +
         " ESB mediates, enriches and transforms messages across a variety of systems, including legacy applications, SaaS applications, as well as services and APIs.<br/>" +
         " Offers intuitive and visually supported development tools that provide a smooth experience in development environments and production deployments."
     },
-    // wso2_identity_server:{
-    //     title:
-    // }
+    wso2_identity_server:{
+        title:"WSO2 Identity Server",
+        description:"Connects and manages multiple identities across applications, APIs, the cloud, mobile, and Internet of Things devices, regardless of the standards on which they are based.<br/>" +
+        " The multi-tenant WSO2 Identity Server can be deployed directly on servers or in the cloud," +
+        " and has the ability to propagate identities across geographical and enterprise borders in a connected business environment."
+    },
+    wso2_machine_learner:{
+        title:"WSO2 Machine Learner",
+        description:"WSO2 Machine Learner takes data one step further," +
+        " pairing data gathering and analytics with predictive intelligence: this helps you understand not just the present," +
+        " but to predict scenarios and generate solutions for the future." +
+        "<ul><li>Predicting business scenarios</li>" +
+        "<li>Anomaly Detection</li>" +
+        "<li>Predictive Maintenance</li></ul>"
+    },
+    user:{
+        title:"User",
+        description:"This component rempresent an end user of the system."
+    },
+    mobile_phone:{
+        title:"Mobile Phone",
+        description:"Mobile Devices:<br/>" +
+        "   Examples:- Mobile Phones, Tabs, etc. "
+    },
+    web_page:{
+        title:"Web Page",
+        description:""
+    }
 
 }
 
@@ -50,6 +75,18 @@ var product_suggestions = {
     wso2_complex_event_processor:
        [{
            component:'data_storage',
-           description:''
-       }]
+           description:'Persist Data Through DAS. Analise collected data.'
+       }],
+    wso2_machine_learner:[
+        {
+            component: 'wso2_das',
+            description:'Do further data analytics'
+        },
+        {
+            component:'wso2_complex_event_processor',
+            description:'Output as a data stream'
+        }
+    ]
 }
+
+
