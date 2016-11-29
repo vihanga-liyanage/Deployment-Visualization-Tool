@@ -49,5 +49,20 @@
 		"profiles":[
 			"am-analytics"
 		]
+	},
+	{
+		"id":4,
+		"type":"wso2esb",
+		"name":"ESB",
+		"image":"docker.wso2.com/wso2esb:4.0.0",
+		"ports":[],
+		"links":[
+			{
+				"service-id":1,
+				"type":"database",
+				"port":"3306"
+			}
+		],
+		"profiles":[]
 	}
 ]}

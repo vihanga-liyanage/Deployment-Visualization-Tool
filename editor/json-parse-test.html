@@ -27,24 +27,51 @@
             // Parse JSON string into object
             var actual_JSON = JSON.parse(response);
             var services = actual_JSON.services;
-            var out;
+
+            var out = "<table>" +
+                        "<thead>" +
+                        "<tr>" +
+                        "<td>ID</td>" +
+                        "<td>type</td>" +
+                        "<td>name</td>" +
+                        "<td>image</td>" +
+                        "<td>ports</td>" +
+                        "<td>links</td>" +
+                        "<td>profile</td>" +
+                        "</tr>" +
+                        "</thead>" +
+                        "<tbody>" +
+                        "<tr>";
+
             for (i in services) {
-                // console.log(services[i]);
+                 console.log(services[i].name);
                 var service = services[i];
                 for (j in service) {
                     console.log(service[j]);
-                    out += service[j] + "&nbsp;";
+                    out += "<td>" + service[j] + "</td>";
                 }
-                out += "<br>";
+                out += "</tr><tr>";
 
             }
+            out += "</tr>" +
+                "</tbody>" +
+                "</table>";
             document.getElementById("canvas").innerHTML = out;
         });
 
     </script>
+
+    <style>
+        td {
+            border: 1px solid;
+            padding: 2px;
+        }
+    </style>
 </head>
 <body>
-    <div id="canvas" style="text-align: left;padding: 20px;font-size: 18px;">
+    <div id="canvas" style="text-align: left;padding: 20px;font-size: 18px; font-family: 'Open Sans', sans-serif">
+
+
 
 
     </div>
