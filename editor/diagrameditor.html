@@ -1,19 +1,24 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Deployment Visualizer</title>
+
 	<!--Jquery all-->
 	<link rel="stylesheet" href="css/jquery-ui.min.css">
 	<script src="js/jquery-1.12.4.min.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
-
-	<script src="js/jquery.popupoverlay.js"></script>
 
 	<!--Bootstrap-->
 	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="screen" />
 
  	<link rel="stylesheet" href="css/wordpress.css" type="text/css" media="screen" />
  	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<script type="text/javascript" src="js/custom.js"></script>
+	<script type="text/javascript" src="js/mxClient.js"></script>
+	<script type="text/javascript" src="js/mxApplication.js"></script>
+
 	<script type="text/javascript">
         var mxBasePath = './lib';
 
@@ -37,13 +42,7 @@
 
         var mxLanguage = urlParams['lang'];
 	</script>
-	<script type="text/javascript" src="js/custom.js"></script>
-	<script type="text/javascript" src="js/data.js"></script>
-	<script type="text/javascript" src="js/mxClient.js"></script>
-	<script type="text/javascript" src="js/mxApplication.js"></script>
-	<script type="text/javascript" src="http://canvg.github.io/canvg/rgbcolor.js"></script>
-	<script type="text/javascript" src="http://canvg.github.io/canvg/StackBlur.js"></script>
-	<script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
+
 	<script type="text/javascript">
 
         // Defines a new class for all icons
@@ -333,10 +332,6 @@
 			
 			editor.addAction('switchView', funct);
 
-            //To add listeners -> call for external JS file
-            addListeners(editor);
-            //---------------------------------------------------------------------------------------------------
-
 			// Defines a new action to switch between
 			// XML and graphical display
 			mxEvent.addListener(sourceInput, 'click', function()
@@ -491,6 +486,10 @@
 
 
 			//Generating sample graph
+            var jsonModelPath = "http://localhost:63342/Deployment-Visualization-Tool/editor/model.json";
+            generateConfigXML(jsonModelPath);
+
+
 			var configXML =
 				'<mxGraphModel>' +
                 '<root>' +
@@ -569,7 +568,6 @@
 		</div>
 		<div id="zoomActions" style="font-family: monospace;">
 		</div>
-
 		<table>
 			<tbody>
 				<tr>
@@ -676,5 +674,6 @@
 		</div>
 
 	</div>
+</div>
 </body>
 </html>

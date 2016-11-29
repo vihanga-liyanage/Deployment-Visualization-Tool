@@ -1,0 +1,52 @@
+<html lang="en">
+<head>
+    <meta charset=UTF-8">
+    <title>Test</title>
+
+    <!--Jquery all-->
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="screen" />
+
+    <link rel="stylesheet" href="css/wordpress.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
+
+    <script type="text/javascript" src="js/custom.js"></script>
+    <script type="text/javascript" src="js/mxClient.js"></script>
+    <script type="text/javascript" src="js/mxApplication.js"></script>
+
+    <script type="text/javascript">
+        //Generating sample graph
+        var jsonModelPath = "http://localhost:63342/Deployment-Visualization-Tool/editor/model.json";
+        var out = generateConfigXML(jsonModelPath);
+
+        loadJSON(jsonModelPath, function(response) {
+            // Parse JSON string into object
+            var actual_JSON = JSON.parse(response);
+            var services = actual_JSON.services;
+            var out;
+            for (i in services) {
+                // console.log(services[i]);
+                var service = services[i];
+                for (j in service) {
+                    console.log(service[j]);
+                    out += service[j] + "&nbsp;";
+                }
+                out += "<br>";
+
+            }
+            document.getElementById("canvas").innerHTML = out;
+        });
+
+    </script>
+</head>
+<body>
+    <div id="canvas" style="text-align: left;padding: 20px;font-size: 18px;">
+
+
+    </div>
+</body>
+</html>
