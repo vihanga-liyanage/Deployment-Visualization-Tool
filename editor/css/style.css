@@ -19,15 +19,20 @@
 }
 
 #toolbar{
-    width:146px;
+    /*width:146px;*/
     border: 1px solid;
     padding-left:30px;
+}
+
+#toolbar img:first-child {
+    border: red !important;
 }
 
 #graph_container {
     border-width:1px;
     border-style:solid;
     border-color:black;
+    padding: 15px;
 }
 
 #graph {
@@ -35,27 +40,48 @@
     width:100%;
     overflow:hidden;
     cursor:default;
-    height: 675px;
-}
-
-#detail_container {
-    width:400px;
-    padding:20px;
-    border: 1px solid;
-    font-family: monospace;
-    font-size: large;
-    position: relative;
+    min-height: 670px;
+    background-color: white;
 }
 
 #xml {
-    height:100%;
-    width:684px;
+    min-height: 670px;
+    width:100%;
     display:none;
     border-style:none;
 }
 
 .mxToolbarMode {
+    width: 80px;
+    margin: 17px !important;
+}
+
+.mxToolbarModeSelected
+{
+    margin: 21px !important;
     width: 70px;
+    height: 70px;
+    border:2px #fdff00 solid !important;
+    background-color: white !important;
+
+    /*zooming image*/
+    -webkit-transition: all 0.25s ease-in-out;
+    -moz-transition: all 0.25s ease-in-out;
+    transition: all 0.25s ease-in-out;
+    cursor: -webkit-zoom-in;
+    cursor: -moz-zoom-in;
+    cursor: zoom-in;
+    -ms-transform: scale(1.5);
+    -moz-transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+    -o-transform: scale(1.5);
+    transform: scale(1.5);
+    position:relative;
+    z-index:100;
+
+    /*-webkit-box-shadow: -13px 10px 25px -2px rgba(0,0,0,1);*/
+    /*-moz-box-shadow: -13px 10px 25px -2px rgba(0,0,0,1);*/
+    /*box-shadow: -13px 10px 25px -2px rgba(0,0,0,1);*/
 }
 
 h4 {
@@ -90,40 +116,21 @@ h4 {
     transform: translateX(0) translateY(0);
 }
 
-
-.mxToolbarModeSelected
-{
-    width: 70px;
-    height: 70px;
-    border:2px #fdff00 solid !important;
-    background-color: white !important;
-
-    /*zooming image*/
-    -webkit-transition: all 0.25s ease-in-out;
-    -moz-transition: all 0.25s ease-in-out;
-    transition: all 0.25s ease-in-out;
-    cursor: -webkit-zoom-in;
-    cursor: -moz-zoom-in;
-    cursor: zoom-in;
-    -ms-transform: scale(1.5);
-    -moz-transform: scale(1.5);
-    -webkit-transform: scale(1.5);
-    -o-transform: scale(1.5);
-    transform: scale(1.5);
-    position:relative;
-    z-index:100;
-
-    /*-webkit-box-shadow: -13px 10px 25px -2px rgba(0,0,0,1);*/
-    /*-moz-box-shadow: -13px 10px 25px -2px rgba(0,0,0,1);*/
-    /*box-shadow: -13px 10px 25px -2px rgba(0,0,0,1);*/
-}
-
 #page{
     margin: 0px auto;
 }
 
 #header{
     background-color: #000C;
+}
+
+#headerimg {
+    color: wheat;
+    font-size: 25px;
+    font-family: 'Lato', sans-serif;
+    overflow: hidden;
+    text-align: center;
+    padding-top: 18px;
 }
 
 .suggest_img{

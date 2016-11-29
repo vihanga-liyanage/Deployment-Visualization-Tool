@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>WSO2 PlayGround 2.0</title>
+	<title>Deployment Visualizer</title>
 	<!--Jquery all-->
 	<link rel="stylesheet" href="css/jquery-ui.min.css">
 	<script src="js/jquery-1.12.4.min.js"></script>
@@ -37,7 +37,7 @@
 
         var mxLanguage = urlParams['lang'];
 	</script>
-	<script type="text/javascript" src="js/jana.js"></script>
+	<script type="text/javascript" src="js/custom.js"></script>
 	<script type="text/javascript" src="js/data.js"></script>
 	<script type="text/javascript" src="js/mxClient.js"></script>
 	<script type="text/javascript" src="js/mxApplication.js"></script>
@@ -333,10 +333,9 @@
 			
 			editor.addAction('switchView', funct);
 
-            //------------------------------------------------------------------------------------------To add listeners
+            //To add listeners -> call for external JS file
             addListeners(editor);
             //---------------------------------------------------------------------------------------------------
-
 
 			// Defines a new action to switch between
 			// XML and graphical display
@@ -489,6 +488,69 @@
 			mxUtils.linkAction(node, 'Actual', editor, 'actualSize');
 			mxUtils.write(node, ', ');
 			mxUtils.linkAction(node, 'Fit', editor, 'fit');
+
+
+			//Generating sample graph
+			var configXML =
+				'<mxGraphModel>' +
+                '<root>' +
+                '<Diagram label="My Diagram" href="http://www.jgraph.com/" id="0">' +
+				'<mxCell/>' +
+				'</Diagram>' +
+				'<Layer label="Default Layer" id="1">' +
+				'<mxCell parent="0"/>' +
+				'</Layer>' +
+				'<Image label="" href="" id="2">' +
+				'<mxCell style="wso2_identity_server" parent="1" vertex="1">' +
+				'<mxGeometry x="60" y="140" width="100" height="100" as="geometry"/>' +
+				'</mxCell>' +
+				'</Image>' +
+				'<Image label="" href="" id="6">' +
+				'<mxCell style="wso2_api_manager" parent="1" vertex="1">' +
+				'<mxGeometry x="460" y="90" width="100" height="100" as="geometry"/>' +
+				'</mxCell>' +
+				'</Image>' +
+				'<Image label="" href="" id="7">' +
+				'<mxCell style="wso2_enterprise_service_bus" parent="1" vertex="1">' +
+				'<mxGeometry x="420" y="470" width="100" height="100" as="geometry"/>' +
+				'</mxCell>' +
+				'</Image>' +
+				'<Connector label="Hello" href="" id="8">' +
+				'<mxCell parent="1" source="2" target="6" edge="1">' +
+				'<mxGeometry relative="1" as="geometry"/>' +
+				'</mxCell>' +
+				'</Connector>' +
+				'<Connector label="" href="" id="9">' +
+				'<mxCell parent="1" source="11" target="7" edge="1">' +
+				'<mxGeometry relative="1" as="geometry"/>' +
+				'</mxCell>' +
+				'</Connector>' +
+				'<Connector label="" href="" id="10">' +
+				'<mxCell edge="1" parent="1" source="7" target="6">' +
+				'<mxGeometry relative="1" as="geometry"/>' +
+				'</mxCell>' +
+				'</Connector>' +
+				'<Image label="" href="" id="11">' +
+				'<mxCell style="mobile_phone" vertex="1" parent="1">' +
+				'<mxGeometry x="249.6666717529297" y="410" width="100" height="100" as="geometry"/>' +
+				'</mxCell>' +
+				'</Image>' +
+				'<Connector label="" href="" id="12">' +
+				'<mxCell edge="1" parent="1" source="2" target="11">' +
+				'<mxGeometry relative="1" as="geometry">' +
+				'<mxPoint x="160" y="190" as="sourcePoint"/>' +
+				'<mxPoint x="420" y="520" as="targetPoint"/>' +
+				'</mxGeometry>' +
+				'</mxCell>' +
+				'</Connector>' +
+				'<Connector label="" href="" id="13">' +
+				'<mxCell edge="1" parent="1" source="11" target="6">' +
+				'<mxGeometry relative="1" as="geometry"/>' +
+				'</mxCell>' +
+				'</Connector>' +
+				'</root>' +
+				'</mxGraphModel>';
+            generateGraph(configXML, editor);
 		}
 
 		window.onbeforeunload = function() { return mxResources.get('changesLost'); };
@@ -498,8 +560,8 @@
 <body onload="mxApplication('config/diagrameditor.xml');" style="background: #f5f5f5b3;">
 <div id="page">
 	<div id="header">
-		<div id="headerimg" style="overflow:hidden;">
-			<img src="images/wso2/wso2_product_explorer.png" style="padding: 10px;width: 285px;">
+		<div id="headerimg">
+			WSO2 Deployment Visualizer
 		</div>
 		<div id="selectActions">
 		</div>
@@ -507,41 +569,28 @@
 		</div>
 		<div id="zoomActions" style="font-family: monospace;">
 		</div>
-		<table border="0" width="100%" height="675px">
-			<tr>
 
-				<td id="toolbar" valign="top">
-					<!-- Toolbar Here -->				
-				</td>
-				<td valign="top" id="graph_container" class="col-md-7">
-					<div id="graph">
-						<!-- Graph Here -->
-						<center id="splash" style="padding-top:530px;">
-							<img src="images/loading.gif">
-						</center>
-					</div>
-					<textarea id="xml"></textarea>
-				</td>
-
-				<td id="detail_container" valign="top">
-					<div id="detail_view">
-					<img id="detail_view_img" src="images/wso2/wso2_product_explorer.png" width="200px">
-						<h4 id="detail_view_title">
-							Welcome to WSO2 Product Explorer!
-						</h4>
-						<p id="detail_view_content">
-							Try drag and drop components from left side bar...
-						</p>
-						<div id="links_details"></div>
-					</div>
-					<span style="float:right;padding-right:36px;position: absolute;bottom: 0;padding: 10px;">
-						<input id="source" type="checkbox" style="display: none"/>
-
-						<a href="#" class="contact_popup_open" >Contact us with your design.</a>
-					</span>
-				</td>
-			</tr>
+		<table>
+			<tbody>
+				<tr>
+					<td id="toolbar" valign="top" class="col-md-3">
+						<!-- Toolbar Here -->
+					</td>
+					<td id="graph_container" valign="top" class="col-md-9">
+						<div id="graph">
+							<!-- Graph Here -->
+							<center id="splash" style="padding-top:530px;">
+								<img src="images/loading.gif">
+							</center>
+						</div>
+						<textarea id="xml"></textarea>
+						<input id="source" type="checkbox"/>
+						View Source
+					</td>
+				</tr>
+			</tbody>
 		</table>
+
 
 	</div>
 

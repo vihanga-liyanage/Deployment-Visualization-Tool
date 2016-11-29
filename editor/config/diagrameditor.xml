@@ -47,7 +47,7 @@
 				</mxCell>
 			</Image>
 		</add>
-		<add as="Data_Storage">
+		<add as="Data_Stream">
 			<Image label="" href="">
 				<mxCell vertex="1" style="data_stream">
 					<mxGeometry as="geometry" width="100" height="100"/>
@@ -205,18 +205,19 @@
 				<add as="strokeColor" value="gray"/>
 				<add as="dashed" value="1"/>
 			</add>
-			<!--<add as="defaultEdge">-->
-				<!--<add as="shape" value="connector"/>-->
-				<!--<add as="fontSize" value="10"/>-->
-				<!--<add as="align" value="center"/>-->
-				<!--<add as="verticalAlign" value="middle"/>-->
-				<!--<add as="rounded" value="1"/>-->
-				<!--<add as="labelBackgroundColor" value="white"/>-->
-				<!--<add as="strokeColor" value="#36393D"/>-->
-				<!--<add as="strokeWidth" value="1"/>-->
-				<!--<add as="edgeStyle" value="elbowEdgeStyle"/>-->
-				<!--<add as="endArrow" value="classic"/>-->
-			<!--</add>-->
+			<add as="defaultEdge">
+				<add as="shape" value="connector"/>
+				<add as="fontSize" value="14"/>
+				<add as="align" value="center"/>
+				<add as="verticalAlign" value="middle"/>
+				<add as="rounded" value="1"/>
+				<add as="labelBackgroundColor" value="white"/>
+				<add as="strokeColor" value="#528cf2"/>
+				<add as="strokeWidth" value="2"/>
+				<!--<add as="edgeStyle" value="topToBottomEdgeStyle"/>-->
+				<add as="endArrow" value="classic"/>
+				<add as="dashed" value="1"/>
+			</add>
 			<add as="verticalConnector">
 				<add as="elbow" value="vertical"/>
 			</add>
@@ -227,7 +228,7 @@
 			</add>
 			<add as="arrowConnector">
 				<add as="shape" value="arrow"/>
-				<add as="fillColor" value="#C3D9FF"/>
+				<add as="fillColor" value="#e89a66"/>
 				<add as="endSize" value="20"/>
 				<remove as="edgeStyle"/>
 			</add>
@@ -275,7 +276,7 @@
 			<add as="wso2_api_manager">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/wso2_api_manager.png"/>
+				<add as="image" value="images/wso2/wso2-am.png"/>
 			</add>
 			<add as="wso2_complex_event_processor">
 				<add as="shape" value="image"/>
@@ -285,12 +286,12 @@
 			<add as="wso2_enterprise_service_bus">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/wso2_enterprise_service_bus.png"/>
+				<add as="image" value="images/wso2/wso2-esb.png"/>
 			</add>
 			<add as="wso2_identity_server">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/wso2_identity_server.png"/>
+				<add as="image" value="images/wso2/wso2-is.png"/>
 			</add>
 			<add as="wso2_machine_learner">
 				<add as="shape" value="image"/>
@@ -317,6 +318,10 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2_iot_server.png"/>
 			</add>
+			<add as="arrow_connector">
+				<add as="style" value="transform: scale(1);"/>
+			</add>
+
 		</mxStylesheet>
 		<mxGraphModel as="model">
 			<add as="valueForCellChanged"><![CDATA[
@@ -376,31 +381,32 @@
 			<!--}-->
 		<!--]]></add>-->
 		<br/>
-		<add as="connect" mode="connect" icon="images/wso2/arrow.png"><![CDATA[
-			function (editor)
-			{
-				if (editor.defaultEdge != null)
+		<add as="connect" mode="connect" icon="images/wso2/arrow.png">
+			<![CDATA[
+				function (editor)
 				{
-					editor.defaultEdge.style = 'arrowConnector';
+					if (editor.defaultEdge != null)
+					{
+						editor.defaultEdge.style = 'arrowConnector';
+					}
 				}
-			}
-		]]></add>
+			]]>
+		</add>
 
 		<add as="Dashboard" template="Dashboard" icon="images/wso2/dashboard.png"/>
-		<add as="Data_Storage" template="Data_Storage" icon="images/wso2/data_stream.png"/>
+		<add as="Data Stream" template="Data_Stream" icon="images/wso2/data_stream.png"/>
 		<add as="Database" template="Database" icon="images/wso2/database.png"/>
-		<add as="Mobile_Phone" template="Mobile_Phone" icon="images/wso2/mobile_phone.png"/>
+		<add as="Mobile Phone" template="Mobile_Phone" icon="images/wso2/mobile_phone.png"/>
 		<add as="User" template="User" icon="images/wso2/user.png"/>
-		<add as="Web_Page" template="Web_Page" icon="images/wso2/web_page.png"/>
-		<add as="WSO2_API_Manager" template="WSO2_API_Manager" icon="images/wso2/wso2_api_manager.png"/>
-		<add as="WSO2_Complex_Event_Processor" template="WSO2_Complex_Event_Processor" icon="images/wso2/wso2_complex_event_processor.png"/>
-		<add as="WSO2_Enterprise_Service_Bus" template="WSO2_Enterprise_Service_Bus" icon="images/wso2/wso2_enterprise_service_bus.png"/>
-		<add as="WSO2_Identity_Server" template="WSO2_Identity_Server" icon="images/wso2/wso2_identity_server.png"/>
-		<add as="WSO2_Machine_Learner" template="WSO2_Machine_Learner" icon="images/wso2/wso2_machine_learner.png"/>
-		<add as="ML_Model" template="ML_Model" icon="images/wso2/ml_model.png"/>
+		<add as="Web Page" template="Web_Page" icon="images/wso2/web_page.png"/>
+		<add as="WSO2 API Manager" template="WSO2_API_Manager" icon="images/wso2/wso2-am.png"/>
+		<add as="WSO2 Complex Event Processor" template="WSO2_Complex_Event_Processor" icon="images/wso2/wso2_complex_event_processor.png"/>
+		<add as="WSO2 Enterprise Service Bus" template="WSO2_Enterprise_Service_Bus" icon="images/wso2/wso2-esb.png"/>
+		<add as="WSO2 Identity Server" template="WSO2_Identity_Server" icon="images/wso2/wso2-is.png"/>
+		<add as="WSO2 Machine Learner" template="WSO2_Machine_Learner" icon="images/wso2/wso2_machine_learner.png"/>
+		<add as="ML Model" template="ML_Model" icon="images/wso2/ml_model.png"/>
 		<add as="Publisher" template="Publisher" icon="images/wso2/publisher.png"/>
-
-		<add as="WSO2_DAS" template="WSO2_DAS" icon="images/wso2/wso2_das.png"/>
-		<add as="WSO2_IoT_Server" template="WSO2_IoT_Server" icon="images/wso2/wso2_iot_server.png"/>
+		<add as="WSO2 Data Analytics Server" template="WSO2_DAS" icon="images/wso2/wso2_das.png"/>
+		<add as="WSO2 IoT Server" template="WSO2_IoT_Server" icon="images/wso2/wso2_iot_server.png"/>
 	</mxDefaultToolbar>
 </mxEditor>

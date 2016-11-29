@@ -62,130 +62,43 @@ var getImageNameFromPath = function(path){
 
 setTimeout(function () {
     $('img').on( "click", function (evt) {
-        console.log( 'click');
+        // console.log( 'click');
         setDetails(getImageNameFromPath(evt.target.src), 'toolbox');
     } );
 } ,1000);
 
 // Mouse Move ----------------------------------------------------------------
-
 var addListeners = function (editor) {
     var graph = editor.graph
     graph.addMouseListener(
-        {
-            currentState: null,
-            previousStyle: null,
-            mouseDown: function(sender, me) { },
-            mouseMove: function(sender, me)
-            {
-                if (this.currentState != null && me.getState() == this.currentState)
-                {
-                    return;
-                }
-
-                var tmp = graph.view.getState(me.getCell());
-
-                // Ignores everything but vertices
-                if (graph.isMouseDown || (tmp != null && !
-                        graph.getModel().isVertex(tmp.cell)))
-                {
-                    tmp = null;
-                }
-
-                if (tmp != this.currentState)
-                {
-                    if (this.currentState != null)
-                    {
-                        this.dragLeave(me.getEvent(), this.currentState);
-                    }
-
-                    this.currentState = tmp;
-
-                    if (this.currentState != null)
-                    {
-                        this.dragEnter(me.getEvent(), this.currentState);
-                    }
-                }
-            },
-            mouseUp: function(sender, me) {
-                if (this.currentState != null)
-                {
-                    this.dragLeave(me.getEvent(), this.currentState);
-                    this.currentState = null;
-                    setDetails(me.state.cell.getStyle(), 'graph');
-                }
-
-                //listener for click on edges
-                if (me.sourceState != null && me.sourceState.cell.isEdge() == true) {
-                    // console.log("clicked on edge");
-                }
-
-            },
-            dragEnter: function(evt, state)
-            {
-                if (state != null)
-                {
-                    this.previousStyle = state.style;
-                    state.style = mxUtils.clone(state.style);
-                    // updateStyle(state, true);
-                    // showDialog();
-                    state.shape.apply(state);
-                    state.shape.redraw();
-
-                    if (state.text != null)
-                    {
-                        state.text.apply(state);
-                        state.text.redraw();
-                    }
-                }
-            },
-            dragLeave: function(evt, state)
-            {
-                if (state != null)
-                {
-                    state.style = this.previousStyle;
-                    // updateStyle(state, false);
-                    state.shape.apply(state);
-                    state.shape.redraw();
-
-                    if (state.text != null)
-                    {
-                        state.text.apply(state);
-                        state.text.redraw();
-                    }
-                }
-            }
-        });
-
-//--------------------------------- Drop
-    mxEvent.addListener(document.getElementById('graph'), 'drop', function(evt)
     {
-        console.log("drop");
-        if (graph.isEnabled())
-        {
-            // evt.stopPropagation();
-            // evt.preventDefault();
-            //
-            // // Gets drop location point for vertex
-            // var pt = mxUtils.convertPoint(graph.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-            // var tr = graph.view.translate;
-            // var scale = graph.view.scale;
-            // var x = pt.x / scale - tr.x;
-            // var y = pt.y / scale - tr.y;
-            //
-            // // Converts local images to data urls
-            // var filesArray = evt.dataTransfer.files;
-            //
-            // for (var i = 0; i < filesArray.length; i++)
-            // {
-            //     handleDrop(graph, filesArray[i], x + i * 10, y + i * 10);
-            // }
+        currentState: null,
+        previousStyle: null,
+        mouseDown: function(sender, me) {
+            // console.log('mouseDown');
+        },
+        mouseMove: function(sender, me) {
+            // console.log('mouseMove');
+        },
+        mouseUp: function(sender, me) {
+            // console.log('mouseup');
+            if (me.state != null) {
+                setDetails(me.state.cell.getStyle(), 'graph');
+            }
+            //listener for click on edges
+            if (me.sourceState != null && me.sourceState.cell.isEdge() == true) {
+                // console.log("clicked on edge");
+            }
+
+        },
+        dragEnter: function(evt, state) {
+            // console.log('dragEnter');
+        },
+        dragLeave: function(evt, state) {
+            // console.log('dragLeave');
         }
     });
 }
-
-
-
 
 var getSuggests = function (component, place) {
     $.getJSON( "http://10.100.4.196:5000/article_suggest/"+component, function( data ) {
@@ -202,10 +115,8 @@ var getSuggests = function (component, place) {
         else
             $('#links_details').html("");
         console.log(data )
-
     });
 }
-
 
 $(document).ready(function() {
 
@@ -213,7 +124,6 @@ $(document).ready(function() {
     $('#contact_popup').popup();
 
     $('.contact_popup_open').on('click', function (evt) {
-
 
         // var canvas = document.getElementById("#drawing_pad");
         // var img = canvas.toDataUR    L("image/png");
@@ -254,13 +164,13 @@ $(document).ready(function() {
             encode          : true
         })
         // using the done promise callback
-            .done(function(data) {
+        .done(function(data) {
 
-                // log data to the console so we can see
-                console.log(data);
+            // log data to the console so we can see
+            console.log(data);
 
-                // here we will handle errors and validation messages
-            });
+            // here we will handle errors and validation messages
+        });
 
         setTimeout(function () {
             $('#contact_popup').popup( 'hide');
@@ -268,9 +178,21 @@ $(document).ready(function() {
             setTimeout(function () {
                 $('#success_popup').popup('hide');
             }, 1000)
-            }, 500);
-
-
+        }, 500);
     })
-
 });
+
+var generateGraph = function (configXML, editor) {
+    var graphNode = editor.graph.container;
+    graphNode.style.display = '';
+
+    var doc = mxUtils.parseXml(configXML);
+    var dec = new mxCodec(doc);
+    dec.decode(doc.documentElement, editor.graph.getModel());
+
+    // Makes sure nothing is selected in IE
+    if (mxClient.IS_IE)
+    {
+        mxUtils.clearSelection();
+    }
+}
