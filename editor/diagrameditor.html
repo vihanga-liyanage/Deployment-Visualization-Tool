@@ -277,9 +277,9 @@
             //add listener for drop icon event to trigger suggestions
             editor.graph.addListener(mxEvent.ADD_CELLS, function (sender, me) {
 //				console.log(me);
-				if (me.properties.cells[0].isVertex() == true) {
-                    setDetails(me.properties.cells[0].getStyle(), 'graph');
-                }
+//				if (me.properties.cells[0].isVertex() == true) {
+//                    setDetails(me.properties.cells[0].getStyle(), 'graph');
+//                }
 			});
 
 			// Defines a new action to switch between
@@ -578,7 +578,7 @@
                     var service = services[i];
                     lastElementId = service.id + idOffset;
                     configXML +=
-						'<Image label="' + service.name + '" href="" id="' + lastElementId + '">' +
+						'<Image label="' + service.profile + '" href="" id="' + lastElementId + '">' +
                         '<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
                         '<mxGeometry x="' + x + '" y="' + y + '" width="100" height="100" as="geometry"/>' +
                         '</mxCell>' +
@@ -597,14 +597,26 @@
                         lastElementId ++;
                         var targetId = links[j].serviceId + idOffset;
                         configXML +=
-							'<Connector label="" href="" id="' + lastElementId + '">' +
-							'<mxCell edge="1" parent="1" source="' + sourceId + '" target="' + targetId + '">' +
+							'<Connector label="" href="" id="' + lastElementId + '">';
+                        //Defining edge color based on service
+						if (services[i].type == 'database') {
+						    configXML += '<mxCell edge="1" style="strokeColor=#e900ff;startArrow=classic" ' +
+								'parent="1" source="' + sourceId + '" target="' + targetId + '">';
+
+						} else if (services[i].type == 'wso2am-analytics') {
+                            configXML += '<mxCell edge="1" style="strokeColor=#3aa210;dashed=1;" ' +
+								'parent="1" source="' + sourceId + '" target="' + targetId + '">';
+
+                        } else {
+                            configXML += '<mxCell edge="1" style="startArrow=classic;" ' +
+								'parent="1" source="' + sourceId + '" target="' + targetId + '">';
+                        }
+						configXML +=
 							'<mxGeometry relative="1" as="geometry"/>' +
 							'</mxCell>' +
 							'</Connector>';
 					}
                 }
-
                 configXML += '</root>' +
 							'</mxGraphModel>';
 

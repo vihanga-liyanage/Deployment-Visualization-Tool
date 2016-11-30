@@ -212,7 +212,7 @@
 				<add as="align" value="center"/>
 				<add as="verticalAlign" value="middle"/>
 				<add as="strokeColor" value="gray"/>
-				<add as="dashed" value="1"/>
+				<add as="dashed" value="0"/>
 			</add>
 			<add as="defaultEdge">
 				<add as="shape" value="connector"/>
@@ -221,11 +221,12 @@
 				<add as="verticalAlign" value="middle"/>
 				<add as="rounded" value="1"/>
 				<add as="labelBackgroundColor" value="white"/>
-				<add as="strokeColor" value="#528cf2"/>
-				<add as="strokeWidth" value="2"/>
+				<add as="strokeColor" value="#4580e8"/>
+				<add as="strokeWidth" value="3"/>
 				<!--<add as="edgeStyle" value="topToBottomEdgeStyle"/>-->
 				<add as="endArrow" value="classic"/>
-				<add as="dashed" value="1"/>
+				<!--<add as="startArrow" value="classic"/>-->
+				<!--<add as="dashed" value="1"/>-->
 			</add>
 			<add as="verticalConnector">
 				<add as="elbow" value="vertical"/>
@@ -239,6 +240,7 @@
 				<add as="shape" value="arrow"/>
 				<add as="fillColor" value="#e89a66"/>
 				<add as="endSize" value="20"/>
+				<add as="startArrow" value="classic"/>
 				<remove as="edgeStyle"/>
 			</add>
 			<add as="swimlane">
@@ -331,6 +333,11 @@
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="ellipsePerimeter"/>
 				<add as="image" value="images/wso2/load-balancer.png"/>
+			</add>
+			<add as="two_way_arrow">
+				<add as="shape" value="arrow"/>
+				<add as="startArrow" value="classic"/>
+				<remove as="edgeStyle"/>
 			</add>
 
 		</mxStylesheet>
