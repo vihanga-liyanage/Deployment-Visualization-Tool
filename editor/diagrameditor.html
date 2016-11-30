@@ -15,10 +15,6 @@
  	<link rel="stylesheet" href="css/wordpress.css" type="text/css" media="screen" />
  	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
 
-	<script type="text/javascript" src="js/custom.js"></script>
-	<script type="text/javascript" src="js/mxClient.js"></script>
-	<script type="text/javascript" src="js/mxApplication.js"></script>
-
 	<script type="text/javascript">
         var mxBasePath = './lib';
 
@@ -42,6 +38,10 @@
 
         var mxLanguage = urlParams['lang'];
 	</script>
+
+	<script type="text/javascript" src="js/custom.js"></script>
+	<script type="text/javascript" src="js/mxClient.js"></script>
+	<script type="text/javascript" src="js/mxApplication.js"></script>
 
 	<script type="text/javascript">
 
@@ -95,10 +95,7 @@
             mxEvent.addListener(img, 'click',
                 mxUtils.bind(this, function(evt)
                 {
-                    var res = confirm("Please confirm node delete.");
-                    if (res == true) {
-                        graph.removeCells([state.cell]);
-                    }
+                    graph.removeCells([state.cell]);
                     mxEvent.consume(evt);
                     this.destroy();
                 })
@@ -159,6 +156,9 @@
 		// last step in the editor constructor.
 		function onInit(editor)
 		{
+            // Set align of the labels to bottom
+            mxConstants.STYLE_VERTICAL_LABEL_POSITION = 'bottom';
+
 			// Enables rotation handle
 			mxVertexHandler.prototype.rotationEnabled = true;
 
@@ -560,7 +560,7 @@
                 '<mxCell parent="0"/>' +
                 '</Layer>';
 
-            var imageID = 2, x = 20, y = 20;
+            var idOffset = 1, lastElementId = idOffset, x = 20, y = 20;
 
 
             loadJSON(jsonModelPath, function(response) {
@@ -568,21 +568,41 @@
                 var actual_JSON = JSON.parse(response);
                 var services = actual_JSON.services;
 
+                //Adding vertex
                 for (i in services) {
+                    if (( i != 0 ) && (i % 3 == 0)) {
+                        y += 250;
+                        x = 20;
+                    }
                     //take each service one by one
                     var service = services[i];
+                    lastElementId = service.id + idOffset;
                     configXML +=
-						'<Image label="' + service.name + '" href="" id="' + imageID + '">' +
-                        '<mxCell style="' + service.type + '" parent="1" vertex="1">' +
+						'<Image label="' + service.name + '" href="" id="' + lastElementId + '">' +
+                        '<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
                         '<mxGeometry x="' + x + '" y="' + y + '" width="100" height="100" as="geometry"/>' +
                         '</mxCell>' +
                         '</Image>';
-                    imageID ++;
-                    x += 150;
-                    console.log(i + ((i+1) % 2 == 0));
-                    if ((i) % 2 == 0) {
-                        y += 150;
-                    }
+                    x += 250;
+
+                }
+
+                //Adding edges
+                for (i in services) {
+                    //take each service one by one
+					var sourceId = services[i].id + idOffset;
+					var links = services[i].links;
+                    for (j in links) {
+                        //take each link in a service
+                        lastElementId ++;
+                        var targetId = links[j].serviceId + idOffset;
+                        configXML +=
+							'<Connector label="" href="" id="' + lastElementId + '">' +
+							'<mxCell edge="1" parent="1" source="' + sourceId + '" target="' + targetId + '">' +
+							'<mxGeometry relative="1" as="geometry"/>' +
+							'</mxCell>' +
+							'</Connector>';
+					}
                 }
 
                 configXML += '</root>' +

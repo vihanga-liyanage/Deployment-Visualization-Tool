@@ -133,7 +133,7 @@
 		</add>
 		<add as="WSO2_DAS">
 			<Image label="" href="">
-				<mxCell vertex="1" style="wso2_das">
+				<mxCell vertex="1" style="wso2am-analytics">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
@@ -145,6 +145,15 @@
 				</mxCell>
 			</Image>
 		</add>
+		<add as="Load_Balancer">
+			<Image label="" href="">
+				<mxCell vertex="1" style="load-balancer">
+					<mxGeometry as="geometry" width="100" height="100"/>
+				</mxCell>
+			</Image>
+		</add>
+
+
 	</Array>
 	<mxGraph as="graph" alternateEdgeStyle="verticalConnector" allowLoops="1" dropEnabled="1">
 		<add as="isAutoSizeCell"><![CDATA[
@@ -178,7 +187,7 @@
 			<add as="text">
 				<add as="shape" value="rectangle"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="fontSize" value="12"/>
+				<add as="fontSize" value="15"/>
 				<add as="align" value="left"/>
 				<add as="verticalAlign" value="top"/>
 				<add as="shadow" value="0"/>
@@ -188,7 +197,7 @@
 			</add>
 			<add as="defaultVertex" extend="text">
 				<add as="shape" value="rectangle"/>
-				<add as="fontSize" value="11"/>
+				<add as="fontSize" value="15"/>
 				<add as="align" value="center"/>
 				<add as="verticalAlign" value="middle"/>
 				<add as="shadow" value="1"/>
@@ -199,7 +208,7 @@
 			<add as="group">
 				<add as="shape" value="rectangle"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="fontSize" value="10"/>
+				<add as="fontSize" value="15"/>
 				<add as="align" value="center"/>
 				<add as="verticalAlign" value="middle"/>
 				<add as="strokeColor" value="gray"/>
@@ -207,7 +216,7 @@
 			</add>
 			<add as="defaultEdge">
 				<add as="shape" value="connector"/>
-				<add as="fontSize" value="14"/>
+				<add as="fontSize" value="15"/>
 				<add as="align" value="center"/>
 				<add as="verticalAlign" value="middle"/>
 				<add as="rounded" value="1"/>
@@ -308,7 +317,7 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/publisher.png"/>
 			</add>
-			<add as="wso2_das">
+			<add as="wso2am-analytics">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2_das.png"/>
@@ -318,8 +327,10 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2_iot_server.png"/>
 			</add>
-			<add as="arrow_connector">
-				<add as="style" value="transform: scale(1);"/>
+			<add as="load-balancer">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="ellipsePerimeter"/>
+				<add as="image" value="images/wso2/load-balancer.png"/>
 			</add>
 
 		</mxStylesheet>
@@ -381,20 +392,21 @@
 			<!--}-->
 		<!--]]></add>-->
 		<br/>
-		<add as="connect" mode="connect" icon="images/wso2/arrow.png">
-			<![CDATA[
-				function (editor)
-				{
-					if (editor.defaultEdge != null)
-					{
-						editor.defaultEdge.style = 'arrowConnector';
-					}
-				}
-			]]>
-		</add>
+		<!--<add as="connect" mode="connect" icon="images/wso2/arrow.png">-->
+			<!--<![CDATA[-->
+				<!--function (editor)-->
+				<!--{-->
+					<!--if (editor.defaultEdge != null)-->
+					<!--{-->
+						<!--editor.defaultEdge.style = 'arrowConnector';-->
+					<!--}-->
+				<!--}-->
+			<!--]]>-->
+		<!--</add>-->
 
 		<add as="Dashboard" template="Dashboard" icon="images/wso2/dashboard.png"/>
 		<add as="Data Stream" template="Data_Stream" icon="images/wso2/data_stream.png"/>
+		<add as="Load Balancer" template="Load_Balancer" icon="images/wso2/load-balancer.png"/>
 		<add as="Database" template="Database" icon="images/wso2/database.png"/>
 		<add as="Mobile Phone" template="Mobile_Phone" icon="images/wso2/mobile_phone.png"/>
 		<add as="User" template="User" icon="images/wso2/user.png"/>

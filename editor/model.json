@@ -6,7 +6,7 @@
 		"image":"mysql:5.5",
 		"ports":[],
 		"links":[],
-		"profiles":[]
+		"profiles":""
 	},
 	{
 		"id":2,
@@ -21,48 +21,111 @@
 		],
 		"links":[
 			{
-				"service-id":1,
-				"type":"database",
+				"serviceId":1,
 				"port":"3306"
 			}
 		],
-		"profiles":[
-			"api-manager"
-		]
+		"profiles":"Publisher"
 	},
 	{
 		"id":3,
 		"type":"wso2am-analytics",
-		"name":"am-analytics",
+		"name":"analytics",
 		"image":"docker.wso2.com/wso2am-analytics:2.0.0",
 		"ports":[
-			"9444:9444",
-	        "9764:9764"
+			"9448:9444"
 		],
 		"links":[
 			{
-				"service-id":1,
-				"type":"database",
+				"serviceId":1,
 				"port":"3306"
+			},
+			{
+				"serviceId":2,
+				"port":"443"
 			}
 		],
-		"profiles":[
-			"am-analytics"
-		]
+		"profiles":"Analytics"
 	},
 	{
 		"id":4,
-		"type":"wso2esb",
-		"name":"ESB",
-		"image":"docker.wso2.com/wso2esb:4.0.0",
-		"ports":[],
+		"type":"wso2am",
+		"name":"traffic-manager",
+		"image":"docker.wso2.com/wso2am:2.0.0",
+		"ports":[
+			"9447:9443"
+		],
 		"links":[
 			{
-				"service-id":1,
-				"type":"database",
+				"serviceId":1,
 				"port":"3306"
 			}
 		],
-		"profiles":[]
+		"profiles":"Traffic Manager"
+	},
+	{
+		"id":5,
+		"type":"wso2am",
+		"name":"keymanager",
+		"image":"docker.wso2.com/wso2am:2.0.0",
+		"ports":[
+			"9443:9443"
+		],
+		"links":[
+			{
+				"serviceId":1,
+				"port":"3306"
+			}
+		],
+		"profiles":"Key Manager"
+	},
+	{
+		"id":6,
+		"type":"wso2am",
+		"name":"gateway-manager",
+		"image":"docker.wso2.com/wso2am:2.0.0",
+		"ports":[
+			"9444:9443"
+		],
+		"links":[
+			{
+				"serviceId":1,
+				"port":"3306"
+			}
+		],
+		"profiles":"Gateway Manager"
+	},
+	{
+		"id":7,
+		"type":"wso2am",
+		"name":"gateway-worker",
+		"image":"docker.wso2.com/wso2am:2.0.0",
+		"ports":[
+			"8280:8280",
+			"8243:8243"
+		],
+		"links":[
+			{
+				"serviceId":1,
+				"port":"3306"
+			}
+		],
+		"profiles":"Gateway Worker"
+	},
+	{
+		"id":7,
+		"type":"wso2am",
+		"name":"store",
+		"image":"docker.wso2.com/wso2am:2.0.0",
+		"ports":[
+			"9446:9443"
+		],
+		"links":[
+			{
+				"serviceId":1,
+				"port":"3306"
+			}
+		],
+		"profiles":"Store"
 	}
 ]}
