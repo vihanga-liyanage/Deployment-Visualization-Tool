@@ -484,15 +484,14 @@
 			mxUtils.write(node, ', ');
 			mxUtils.linkAction(node, 'Fit', editor, 'fit');
 
-            var parent = editor.graph.getDefaultParent();
+
 
 			//Generating sample graph
 			var jsonModelPath = "http://localhost/Deployment-Visualization-Tool/editor/model.json";
-			generateConfigXML(jsonModelPath);
 
             //initiate graph layout
             var layout = new mxFastOrganicLayout(editor.graph);
-            layout.forceConstant = 120;
+            layout.forceConstant = 220;
 
 			var configXML =
 				'<mxGraphModel>' +
@@ -504,20 +503,16 @@
 				'<mxCell parent="0"/>' +
 				'</Layer>';
 
-			var idOffset = 1, lastElementId = idOffset, x = 20, y = 20;
-
+			var idOffset = 1, lastElementId = idOffset;
 
 			loadJSON(jsonModelPath, function(response) {
 				// Parse JSON string into object
 				var actual_JSON = JSON.parse(response);
 				var services = actual_JSON.services;
 
-				//Adding vertices
+				//Adding vertices to XML
 				for (i in services) {
-					if (( i != 0 ) && (i % 3 == 0)) {
-						y += 250;
-						x = 20;
-					}
+
 					//take each service one by one
 					var service = services[i];
 //                    console.log(i + " " + x + " " + y + " " + service.id);
@@ -525,13 +520,12 @@
 					configXML +=
 						'<Image label="' + service.profile + '" href="" id="' + lastElementId + '">' +
 						'<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
-						'<mxGeometry x="' + x + '" y="' + y + '" width="100" height="100" as="geometry"/>' +
+						'<mxGeometry x="0" y="0" width="100" height="100" as="geometry"/>' +
 						'</mxCell>' +
 						'</Image>';
-					x += 250;
 				}
 
-				//Adding edges
+				//Adding edges to XML
 				for (i in services) {
 					//take each service one by one
 					var sourceId = services[i].id + idOffset;
@@ -578,11 +572,28 @@
 
 				generateGraph(configXML, editor);
 
-                layout.execute(parent);
+                //Set graph layout
+                layout.execute(editor.graph.getDefaultParent());
+
+//                editor.graph.getModel().beginUpdate();
+//                try
+//                {
+//                    //Set graph layout
+//                    layout.execute(editor.graph.getDefaultParent());
+//                }
+//                finally
+//                {
+////                    var morph = new mxMorphing(editor.graph, 10, 1.7, 100);
+//                    var morph = new mxMorphing(editor.graph);
+//                    morph.addListener(mxEvent.DONE, function()
+//                    {
+//                        editor.graph.getModel().endUpdate();
+//                    });
+//
+//                    morph.startAnimation();
+//                }
+
 			});
-
-
-
 		}
 
 		window.onbeforeunload = function() { return mxResources.get('changesLost'); };

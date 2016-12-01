@@ -129,7 +129,7 @@
 							if (animate.checked)
 							{
 								// Default values are 6, 1.5, 20
-								var morph = new mxMorphing(graph, 10, 1.7, 20);
+								var morph = new mxMorphing(graph, 100, 1.7, 100);
 								morph.addListener(mxEvent.DONE, function()
 								{
 									graph.getModel().endUpdate();
@@ -170,6 +170,7 @@
 					var e10 = graph.insertEdge(parent, null, 'eh', v5, v8);
 					
 					// Executes the layout
+					console.log(parent);
 					layout.execute(parent);
 				}
 				finally

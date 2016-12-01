@@ -30980,7 +30980,6 @@ mxFastOrganicLayout.prototype.isVertexIgnored = function(vertex)
  */
 mxFastOrganicLayout.prototype.execute = function(parent)
 {
-    console.log("mxFastOrganicLayout");
 	var model = this.graph.getModel();
 	this.vertexArray = [];
 	var cells = this.graph.getChildVertices(parent);
@@ -31181,7 +31180,6 @@ mxFastOrganicLayout.prototype.execute = function(parent)
 	{
 		model.endUpdate();
 	}
-    console.log("mxFastOrganicLayout.prototype.execute : done");
 };
 
 /**
