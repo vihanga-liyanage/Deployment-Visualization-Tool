@@ -19,7 +19,7 @@
 				"serviceId":5
 			},
 			{
-				"serviceId":7
+				"serviceId":8
 			}
 		],
 		"profile":""
@@ -53,7 +53,7 @@
 				"serviceId":2
 			},
 			{
-				"serviceId":7
+				"serviceId":8
 			}
 		],
 		"profile":"Analytics"
@@ -67,7 +67,9 @@
 			"9447:9443"
 		],
 		"links":[
-
+			{
+				"serviceId":7
+			}
 		],
 		"profile":"Traffic Manager"
 	},
@@ -107,12 +109,14 @@
 			"8243:8243"
 		],
 		"links":[
-
+			{
+				"serviceId":3
+			}
 		],
 		"profile":"Gateway Worker"
 	},
 	{
-		"id":7,
+		"id":8,
 		"type":"wso2am",
 		"name":"store",
 		"image":"docker.wso2.com/wso2am:2.0.0",
@@ -125,7 +129,7 @@
 		"profile":"Store"
 	},
 	{
-		"id":8,
+		"id":9,
 		"type":"load-balancer",
 		"name":"load-balancer",
 		"image":"",
@@ -143,6 +147,25 @@
 			{
 				"serviceId":5
 			},
+			{
+				"serviceId":6
+			},
+			{
+				"serviceId":7
+			},
+			{
+				"serviceId":8
+			}
+		],
+		"profile":""
+	},
+	{
+		"id":10,
+		"type":"svn",
+		"name":"svn",
+		"image":"",
+		"ports":[],
+		"links":[
 			{
 				"serviceId":6
 			},

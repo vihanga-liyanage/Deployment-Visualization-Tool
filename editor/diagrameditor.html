@@ -484,144 +484,105 @@
 			mxUtils.write(node, ', ');
 			mxUtils.linkAction(node, 'Fit', editor, 'fit');
 
+            var parent = editor.graph.getDefaultParent();
 
 			//Generating sample graph
-            var jsonModelPath = "http://localhost:63342/Deployment-Visualization-Tool/editor/model.json";
-            generateConfigXML(jsonModelPath);
+			var jsonModelPath = "http://localhost/Deployment-Visualization-Tool/editor/model.json";
+			generateConfigXML(jsonModelPath);
 
+            //initiate graph layout
+            var layout = new mxFastOrganicLayout(editor.graph);
+            layout.forceConstant = 120;
 
-			var configXMLOriginal =
+			var configXML =
 				'<mxGraphModel>' +
-                '<root>' +
-                '<Diagram label="My Diagram" href="http://www.jgraph.com/" id="0">' +
+				'<root>' +
+				'<Diagram label="My Diagram" href="http://www.jgraph.com/" id="0">' +
 				'<mxCell/>' +
 				'</Diagram>' +
 				'<Layer label="Default Layer" id="1">' +
 				'<mxCell parent="0"/>' +
-				'</Layer>' +
-				'<Image label="" href="" id="2">' +
-				'<mxCell style="wso2_identity_server" parent="1" vertex="1">' +
-				'<mxGeometry x="60" y="140" width="100" height="100" as="geometry"/>' +
-				'</mxCell>' +
-				'</Image>' +
-				'<Image label="" href="" id="6">' +
-				'<mxCell style="wso2_api_manager" parent="1" vertex="1">' +
-				'<mxGeometry x="460" y="90" width="100" height="100" as="geometry"/>' +
-				'</mxCell>' +
-				'</Image>' +
-				'<Image label="" href="" id="7">' +
-				'<mxCell style="wso2_enterprise_service_bus" parent="1" vertex="1">' +
-				'<mxGeometry x="420" y="470" width="100" height="100" as="geometry"/>' +
-				'</mxCell>' +
-				'</Image>' +
-				'<Connector label="Hello" href="" id="8">' +
-				'<mxCell parent="1" source="2" target="6" edge="1">' +
-				'<mxGeometry relative="1" as="geometry"/>' +
-				'</mxCell>' +
-				'</Connector>' +
-				'<Connector label="" href="" id="9">' +
-				'<mxCell parent="1" source="11" target="7" edge="1">' +
-				'<mxGeometry relative="1" as="geometry"/>' +
-				'</mxCell>' +
-				'</Connector>' +
-				'<Connector label="" href="" id="10">' +
-				'<mxCell edge="1" parent="1" source="7" target="6">' +
-				'<mxGeometry relative="1" as="geometry"/>' +
-				'</mxCell>' +
-				'</Connector>' +
-				'<Image label="" href="" id="11">' +
-				'<mxCell style="mobile_phone" vertex="1" parent="1">' +
-				'<mxGeometry x="249.6666717529297" y="410" width="100" height="100" as="geometry"/>' +
-				'</mxCell>' +
-				'</Image>' +
-				'<Connector label="" href="" id="12">' +
-				'<mxCell edge="1" parent="1" source="2" target="11">' +
-				'<mxGeometry relative="1" as="geometry">' +
-				'<mxPoint x="160" y="190" as="sourcePoint"/>' +
-				'<mxPoint x="420" y="520" as="targetPoint"/>' +
-				'</mxGeometry>' +
-				'</mxCell>' +
-				'</Connector>' +
-				'<Connector label="" href="" id="13">' +
-				'<mxCell edge="1" parent="1" source="11" target="6">' +
-				'<mxGeometry relative="1" as="geometry"/>' +
-				'</mxCell>' +
-				'</Connector>' +
-				'</root>' +
-				'</mxGraphModel>';
+				'</Layer>';
 
-            var configXML =
-                '<mxGraphModel>' +
-                '<root>' +
-                '<Diagram label="My Diagram" href="http://www.jgraph.com/" id="0">' +
-                '<mxCell/>' +
-                '</Diagram>' +
-                '<Layer label="Default Layer" id="1">' +
-                '<mxCell parent="0"/>' +
-                '</Layer>';
-
-            var idOffset = 1, lastElementId = idOffset, x = 20, y = 20;
+			var idOffset = 1, lastElementId = idOffset, x = 20, y = 20;
 
 
-            loadJSON(jsonModelPath, function(response) {
-                // Parse JSON string into object
-                var actual_JSON = JSON.parse(response);
-                var services = actual_JSON.services;
+			loadJSON(jsonModelPath, function(response) {
+				// Parse JSON string into object
+				var actual_JSON = JSON.parse(response);
+				var services = actual_JSON.services;
 
-                //Adding vertex
-                for (i in services) {
-                    if (( i != 0 ) && (i % 3 == 0)) {
-                        y += 250;
-                        x = 20;
-                    }
-                    //take each service one by one
-                    var service = services[i];
-                    lastElementId = service.id + idOffset;
-                    configXML +=
+				//Adding vertices
+				for (i in services) {
+					if (( i != 0 ) && (i % 3 == 0)) {
+						y += 250;
+						x = 20;
+					}
+					//take each service one by one
+					var service = services[i];
+//                    console.log(i + " " + x + " " + y + " " + service.id);
+					lastElementId = service.id + idOffset;
+					configXML +=
 						'<Image label="' + service.profile + '" href="" id="' + lastElementId + '">' +
-                        '<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
-                        '<mxGeometry x="' + x + '" y="' + y + '" width="100" height="100" as="geometry"/>' +
-                        '</mxCell>' +
-                        '</Image>';
-                    x += 250;
+						'<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
+						'<mxGeometry x="' + x + '" y="' + y + '" width="100" height="100" as="geometry"/>' +
+						'</mxCell>' +
+						'</Image>';
+					x += 250;
+				}
 
-                }
-
-                //Adding edges
-                for (i in services) {
-                    //take each service one by one
+				//Adding edges
+				for (i in services) {
+					//take each service one by one
 					var sourceId = services[i].id + idOffset;
 					var links = services[i].links;
-                    for (j in links) {
-                        //take each link in a service
-                        lastElementId ++;
-                        var targetId = links[j].serviceId + idOffset;
-                        configXML +=
+					for (j in links) {
+						//take each link in a service
+						lastElementId ++;
+						var targetId = links[j].serviceId + idOffset;
+						configXML +=
 							'<Connector label="" href="" id="' + lastElementId + '">';
-                        //Defining edge color based on service
+						//Defining edge color based on service
 						if (services[i].type == 'database') {
-						    configXML += '<mxCell edge="1" style="strokeColor=#e900ff;startArrow=classic" ' +
+							configXML += '<mxCell edge="1" style="strokeColor=#e900ff;startArrow=classic;" ' +
 								'parent="1" source="' + sourceId + '" target="' + targetId + '">';
 
 						} else if (services[i].type == 'wso2am-analytics') {
-                            configXML += '<mxCell edge="1" style="strokeColor=#3aa210;dashed=1;" ' +
+							configXML += '<mxCell edge="1" style="strokeColor=#3aa210;dashed=1;" ' +
 								'parent="1" source="' + sourceId + '" target="' + targetId + '">';
 
+						} else if (services[i].type == 'svn') {
+                            configXML += '<mxCell edge="1" style="strokeColor=#3aa210;startArrow=classic;" ' +
+                                'parent="1" source="' + sourceId + '" target="' + targetId + '">';
+
+                        } else if (services[i].name == 'traffic-manager') {
+                            configXML += '<mxCell edge="1" style="strokeColor=#dd0009;startArrow=classic;dashed=1;" ' +
+                                'parent="1" source="' + sourceId + '" target="' + targetId + '">';
+
+                        } else if (services[i].name == 'gateway-worker') {
+                            configXML += '<mxCell edge="1" style="strokeColor=#3aa210;dashed=1;" ' +
+                                'parent="1" source="' + sourceId + '" target="' + targetId + '">';
+
                         } else {
-                            configXML += '<mxCell edge="1" style="startArrow=classic;" ' +
+							configXML += '<mxCell edge="1" style="startArrow=classic;" ' +
 								'parent="1" source="' + sourceId + '" target="' + targetId + '">';
-                        }
+						}
 						configXML +=
 							'<mxGeometry relative="1" as="geometry"/>' +
 							'</mxCell>' +
 							'</Connector>';
 					}
-                }
-                configXML += '</root>' +
+				}
+				configXML += '</root>' +
 							'</mxGraphModel>';
 
-                generateGraph(configXML, editor);
-            });
+				generateGraph(configXML, editor);
+
+                layout.execute(parent);
+			});
+
+
+
 		}
 
 		window.onbeforeunload = function() { return mxResources.get('changesLost'); };

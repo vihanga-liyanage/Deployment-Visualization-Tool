@@ -413,10 +413,9 @@ mxFastOrganicLayout.prototype.execute = function(parent)
 		
 		this.graph.moveCells(this.vertexArray, dx, dy);
 	}
-	finally
-	{
-		model.endUpdate();
-	}
+	finally {
+        model.endUpdate();
+    }
 };
 
 /**

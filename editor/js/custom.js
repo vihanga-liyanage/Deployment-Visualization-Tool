@@ -12,6 +12,7 @@ var generateGraph = function (configXML, editor) {
     {
         mxUtils.clearSelection();
     }
+    console.log("generateGraph : done");
 };
 
 var jsonText = '{"services":[' +
@@ -80,7 +81,7 @@ function loadJSON(path, callback) {
 
 //reads the model.json and generate xml config file
 var generateConfigXML = function (jsonModelPath) {
-    console.log(jsonModelPath + "-->");
+    console.log("generateConfigXML");
 
     //JQuery jason load
     // $.getJSON(jsonModelPath, function(json) {
