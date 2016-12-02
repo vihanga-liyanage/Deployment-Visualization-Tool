@@ -491,7 +491,8 @@
 
             //initiate graph layout
             var layout = new mxFastOrganicLayout(editor.graph);
-            layout.forceConstant = 220;
+            layout.forceConstant = 10;
+//            layout.maxIterations = 1;
 
 			var configXML =
 				'<mxGraphModel>' +
@@ -517,12 +518,46 @@
 					var service = services[i];
 //                    console.log(i + " " + x + " " + y + " " + service.id);
 					lastElementId = service.id + idOffset;
-					configXML +=
-						'<Image label="' + service.profile + '" href="" id="' + lastElementId + '">' +
-						'<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
-						'<mxGeometry x="0" y="0" width="100" height="100" as="geometry"/>' +
-						'</mxCell>' +
-						'</Image>';
+                    if (services[i].type == 'load-balancer') {
+                        configXML +=
+                            '<Image label="' + service.profile + '" href="" id="' + lastElementId + '">' +
+                            '<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
+                            '<mxGeometry x="30" y="300" width="100" height="100" as="geometry"/>' +
+                            '</mxCell>' +
+                            '</Image>';
+
+                    } else if (services[i].type == 'database') {
+                        configXML +=
+                            '<Image label="' + service.profile + '" href="" id="' + lastElementId + '">' +
+                            '<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
+                            '<mxGeometry x="1000" y="300" width="100" height="100" as="geometry"/>' +
+                            '</mxCell>' +
+                            '</Image>';
+
+                    } else if (services[i].type == 'svn') {
+                        configXML +=
+                            '<Image label="' + service.profile + '" href="" id="' + lastElementId + '">' +
+                            '<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
+                            '<mxGeometry x="700" y="500" width="100" height="100" as="geometry"/>' +
+                            '</mxCell>' +
+                            '</Image>';
+
+                    } else if (services[i].type == 'wso2am-analytics') {
+                        configXML +=
+                            '<Image label="' + service.profile + '" href="" id="' + lastElementId + '">' +
+                            '<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
+                            '<mxGeometry x="700" y="100" width="100" height="100" as="geometry"/>' +
+                            '</mxCell>' +
+                            '</Image>';
+
+                    } else {
+                        configXML +=
+                            '<Image label="' + service.profile + '" href="" id="' + lastElementId + '">' +
+                            '<mxCell style="' + service.type + ';fontSize=16;" parent="1" vertex="1">' +
+                            '<mxGeometry x="0" y="0" width="100" height="100" as="geometry"/>' +
+                            '</mxCell>' +
+                            '</Image>';
+                    }
 				}
 
 				//Adding edges to XML

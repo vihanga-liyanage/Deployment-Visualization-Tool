@@ -1,15 +1,15 @@
 version: '2'
 services:
-  apim_rdbms:
+  database-apim_rdbms:
     image: docker.wso2.com/swarm-apim-pattern3-mysql:5.5
     build:
         context: ../
         dockerfile: pattern-3/database/Dockerfile
     environment:
         MYSQL_ROOT_PASSWORD: root
-  svnrepo:
+  svn-svnrepo:
     image: docker.wso2.com/svnrepo
-  analytics:
+  wso2analytics-analytics:
     image: docker.wso2.com/swarm-apim-pattern3-am-analytics:2.0.0
     build:
       context: ../
@@ -18,7 +18,7 @@ services:
       - SLEEP=5
     ports:
     - "9448:9444"
-  traffic-manager:
+  wso2am-traffic-manager:
     image: docker.wso2.com/swarm-apim-pattern3-traffic-manager:2.0.0
     build:
       context: ../
@@ -27,7 +27,7 @@ services:
       - SLEEP=5
     ports:
     - "9447:9443"
-  keymanager:
+  wso2am-keymanager:
     image: docker.wso2.com/swarm-apim-pattern3-keymanager:2.0.0
     build:
       context: ../
@@ -36,7 +36,7 @@ services:
       - SLEEP=60
     ports:
     - "9443:9443"
-  gateway-manager:
+  wso2am-gateway-manager:
     image: docker.wso2.com/swarm-apim-pattern3-gateway-manager:2.0.0
     build:
       context: ../
@@ -45,7 +45,7 @@ services:
       - SLEEP=100
     ports:
     - "9444:9443"
-  gateway-worker:
+  wso2am-gateway-worker:
     image: docker.wso2.com/swarm-apim-pattern3-gateway-worker:2.0.0
     build:
       context: ../
@@ -55,7 +55,7 @@ services:
     ports:
     - "8280:8280"
     - "8243:8243"
-  store:
+  wso2am-store:
     image: docker.wso2.com/swarm-apim-pattern3-store:2.0.0
     build:
       context: ../
@@ -64,7 +64,7 @@ services:
       - SLEEP=200
     ports:
     - "9446:9443"
-  publisher:
+  wso2am-publisher:
     image: docker.wso2.com/swarm-apim-pattern3-publisher:2.0.0
     build:
       context: ../

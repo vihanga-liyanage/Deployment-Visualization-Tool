@@ -230,7 +230,7 @@
 				<add as="labelBackgroundColor" value="white"/>
 				<add as="strokeColor" value="#4580e8"/>
 				<add as="strokeWidth" value="3"/>
-				<add as="edgeStyle" value="elbowEdgeStyle"/>
+				<!--<add as="edgeStyle" value="elbowEdgeStyle"/>-->
 				<add as="endArrow" value="classic"/>
 				<!--<add as="startArrow" value="classic"/>-->
 				<!--<add as="dashed" value="1"/>-->

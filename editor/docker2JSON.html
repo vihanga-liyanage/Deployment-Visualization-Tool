@@ -9,15 +9,64 @@
     <script src="js/jquery-1.12.4.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
 
+    <script src="js/yaml.js"></script>
+
     <script type="text/javascript">
-        var loc = window.location.pathname;
-        console.log(loc.substring(0, loc.lastIndexOf('/')));
+
+        var file = ('http://localhost/Deployment-Visualization-Tool/editor/resources/pattern-3/docker-compose.yml');
+
+        var loadDockerConfig = function(ymlFile) {
+            YAML.fromURL(ymlFile, function(data) {
+                var errors = YAML.getErrors();
+                if (errors.length == 0) {
+                    document.getElementById("out").innerHTML = "Done! Took " + YAML.getProcessingTime() +
+                        " miliseconds.<br><br>";
+//                    document.getElementById("out").innerHTML += JSON.parse(data);
+//                    console.log(data);
+                    for (var key in data.services) {
+                        processService(key, data.services[key]);
+                    }
+                    console.log(JSON.parse(JSON.stringify(data)));
+                } else {
+                    console.error(errors.join("<br>"));
+                }
+            });
+        };
+
+        var processService = function (key, service) {
+            document.getElementById("out").innerHTML += key + "<br>";
+            if (service.build != null) {
+                document.getElementById("out").innerHTML += service.build.dockerfile + "<br>";
+            } else {
+                document.getElementById("out").innerHTML += "No file" + "<br>";
+            }
+        }
+
+        loadDockerConfig(file);
+
+        function readTextFile(file)
+        {
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, false);
+            rawFile.onreadystatechange = function ()
+            {
+                if(rawFile.readyState === 4)
+                {
+                    if(rawFile.status === 200 || rawFile.status == 0)
+                    {
+                        var allText = rawFile.responseText;
+                        console.log(allText);
+                    }
+                }
+            }
+            rawFile.send(null);
+        }
+
+//        readTextFile(dir);
 
     </script>
 </head>
 <body>
-    <div>
-        Hello world!
-    </div>
+    <pre id="out"></pre>
 </body>
 </html>
