@@ -491,7 +491,11 @@
 			mxUtils.linkAction(node, 'Fit', editor, 'fit');
 
 			//Generating sample graph
+<<<<<<< 223d4455c919e9d895bc696f3a2854ae8bf55207
+			var jsonModelPath = "model.json";
+=======
 			var jsonModelPath = "model-original.json";
+>>>>>>> Few changes
 
             //initiate graph layout
             var layout = new mxFastOrganicLayout(editor.graph);
