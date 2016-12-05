@@ -27,7 +27,7 @@
 	{
 		"id":2,
 		"type":"wso2am",
-		"name":"api-manager",
+		"name":"publisher",
 		"image":"docker.wso2.com/wso2am:2.0.0",
 		"ports":[
 			"443:9443",
@@ -42,7 +42,7 @@
 	},
 	{
 		"id":3,
-		"type":"wso2am-analytics",
+		"type":"wso2analytics",
 		"name":"analytics",
 		"image":"docker.wso2.com/wso2am-analytics:2.0.0",
 		"ports":[

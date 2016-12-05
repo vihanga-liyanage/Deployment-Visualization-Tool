@@ -9,6 +9,8 @@
 	<script src="js/jquery-1.12.4.min.js"></script>
 	<script src="js/jquery-ui.min.js"></script>
 
+	<script src="js/js-yaml.min.js"></script>
+
 	<!--Bootstrap-->
 	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="screen" />
 
@@ -273,7 +275,6 @@
 				}
 			});
 
-
             //add listener for drop icon event to trigger suggestions
             editor.graph.addListener(mxEvent.ADD_CELLS, function (sender, me) {
 //				console.log(me);
@@ -485,9 +486,8 @@
 			mxUtils.linkAction(node, 'Fit', editor, 'fit');
 
 
-
-			//Generating sample graph
-			var jsonModelPath = "http://localhost/Deployment-Visualization-Tool/editor/model.json";
+            var baseDir = 'http://localhost/Deployment-Visualization-Tool/editor/resources/';
+            var composeFile = baseDir + 'pattern-3/docker-compose.yml';
 
             //initiate graph layout
             var layout = new mxFastOrganicLayout(editor.graph);
@@ -506,18 +506,17 @@
 
 			var idOffset = 1, lastElementId = idOffset;
 
-			loadJSON(jsonModelPath, function(response) {
-				// Parse JSON string into object
-				var actual_JSON = JSON.parse(response);
-				var services = actual_JSON.services;
+            getModelFromDocker(baseDir, composeFile, function (model) {
 
-				//Adding vertices to XML
-				for (i in services) {
+                var services = model.services;
 
-					//take each service one by one
-					var service = services[i];
+                //Adding vertices to XML
+                for (i in services) {
+
+                    //take each service one by one
+                    var service = services[i];
 //                    console.log(i + " " + x + " " + y + " " + service.id);
-					lastElementId = service.id + idOffset;
+                    lastElementId = service.id + idOffset;
                     if (services[i].type == 'load-balancer') {
                         configXML +=
                             '<Image label="' + service.profile + '" href="" id="' + lastElementId + '">' +
@@ -558,29 +557,29 @@
                             '</mxCell>' +
                             '</Image>';
                     }
-				}
+                }
 
-				//Adding edges to XML
-				for (i in services) {
-					//take each service one by one
-					var sourceId = services[i].id + idOffset;
-					var links = services[i].links;
-					for (j in links) {
-						//take each link in a service
-						lastElementId ++;
-						var targetId = links[j].serviceId + idOffset;
-						configXML +=
-							'<Connector label="" href="" id="' + lastElementId + '">';
-						//Defining edge color based on service
-						if (services[i].type == 'database') {
-							configXML += '<mxCell edge="1" style="strokeColor=#e900ff;startArrow=classic;" ' +
-								'parent="1" source="' + sourceId + '" target="' + targetId + '">';
+                //Adding edges to XML
+                for (i in services) {
+                    //take each service one by one
+                    var sourceId = services[i].id + idOffset;
+                    var links = services[i].links;
+                    for (j in links) {
+                        //take each link in a service
+                        lastElementId ++;
+                        var targetId = links[j].serviceId + idOffset;
+                        configXML +=
+                            '<Connector label="" href="" id="' + lastElementId + '">';
+                        //Defining edge color based on service
+                        if (services[i].type == 'database') {
+                            configXML += '<mxCell edge="1" style="strokeColor=#e900ff;startArrow=classic;" ' +
+                                'parent="1" source="' + sourceId + '" target="' + targetId + '">';
 
-						} else if (services[i].type == 'wso2am-analytics') {
-							configXML += '<mxCell edge="1" style="strokeColor=#3aa210;dashed=1;" ' +
-								'parent="1" source="' + sourceId + '" target="' + targetId + '">';
+                        } else if (services[i].type == 'wso2am-analytics') {
+                            configXML += '<mxCell edge="1" style="strokeColor=#3aa210;dashed=1;" ' +
+                                'parent="1" source="' + sourceId + '" target="' + targetId + '">';
 
-						} else if (services[i].type == 'svn') {
+                        } else if (services[i].type == 'svn') {
                             configXML += '<mxCell edge="1" style="strokeColor=#3aa210;startArrow=classic;" ' +
                                 'parent="1" source="' + sourceId + '" target="' + targetId + '">';
 
@@ -593,24 +592,25 @@
                                 'parent="1" source="' + sourceId + '" target="' + targetId + '">';
 
                         } else {
-							configXML += '<mxCell edge="1" style="startArrow=classic;" ' +
-								'parent="1" source="' + sourceId + '" target="' + targetId + '">';
-						}
-						configXML +=
-							'<mxGeometry relative="1" as="geometry"/>' +
-							'</mxCell>' +
-							'</Connector>';
-					}
-				}
-				configXML += '</root>' +
-							'</mxGraphModel>';
+                            configXML += '<mxCell edge="1" style="startArrow=classic;" ' +
+                                'parent="1" source="' + sourceId + '" target="' + targetId + '">';
+                        }
+                        configXML +=
+                            '<mxGeometry relative="1" as="geometry"/>' +
+                            '</mxCell>' +
+                            '</Connector>';
+                    }
+                }
 
-				generateGraph(configXML, editor);
+                configXML += '</root>' +
+                    '</mxGraphModel>';
+
+                generateGraph(configXML, editor);
 
                 //Execute graph layout
                 layout.execute(editor.graph.getDefaultParent());
 
-				//Init graph animation
+                //Init graph animation
 //                editor.graph.getModel().beginUpdate();
 //                try
 //                {
@@ -628,8 +628,7 @@
 //
 //                    morph.startAnimation();
 //                }
-
-			});
+            });
 		}
 
 		window.onbeforeunload = function() { return mxResources.get('changesLost'); };
