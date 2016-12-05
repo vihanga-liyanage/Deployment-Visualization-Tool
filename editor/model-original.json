@@ -22,7 +22,7 @@
 				"serviceId":8
 			}
 		],
-		"profile":[]
+		"profile":""
 	},
 	{
 		"id":2,
@@ -38,7 +38,7 @@
 		"links":[
 
 		],
-		"profile":["publisher"]
+		"profile":"Publisher"
 	},
 	{
 		"id":3,

@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+	<!--
+	Pre loaded graph by model-original.json
+	-->
+
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Deployment Visualizer</title>
 
@@ -486,7 +491,7 @@
 			mxUtils.linkAction(node, 'Fit', editor, 'fit');
 
 			//Generating sample graph
-			var jsonModelPath = "model.json";
+			var jsonModelPath = "http://localhost/Deployment-Visualization-Tool/editor/model.json";
 
             //initiate graph layout
             var layout = new mxFastOrganicLayout(editor.graph);
