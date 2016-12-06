@@ -1,0 +1,9 @@
+@@ -93,7 +93,7 @@
+                 <!-- Admin password for the API gateway.-->
+                 <Password>${admin.password}</Password>
+                 <!-- Endpoint URLs for the APIs hosted in this API gateway.-->
+-                <GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
++                <GatewayEndpoint>http://gateway-worker:8280,https://gateway-worker:8243</GatewayEndpoint>
+             </Environment>
+         </Environments>
+     </APIGateway>
