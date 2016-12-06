@@ -2,12 +2,15 @@ Issues with building the knowledge base
 
 Pattern-3
 
-wso2am-publisher / wso2am-store
+###################################
+# wso2am-publisher / wso2am-store #
+###################################
+
 
 repository/components/api-publisher/configuration/org.eclipse.equinox.simpleconfigurator/bundles.info
 =====================================================================================================
 
-    Why following two lines are added?
+Why following two lines are added?
 @@ -239,6 +239,8 @@
  org.wso2.carbon.core.services,4.4.7,../plugins/org.wso2.carbon.core.services_4.4.7.jar,4,true
  org.wso2.carbon.databridge.agent,5.1.0,../plugins/org.wso2.carbon.databridge.agent_5.1.0.jar,4,true
@@ -22,7 +25,7 @@ repository/components/api-publisher/configuration/org.eclipse.equinox.simpleconf
 repository/conf/axis2/axis2.xml
 ===============================
 
-    All hostnames are allowed.
+All hostnames are allowed.
 @@ -543,7 +543,7 @@
                  <Password>wso2carbon</Password>
              </TrustStore>
@@ -36,7 +39,7 @@ repository/conf/axis2/axis2.xml
 repository/conf/api-manager.xml
 ===============================
 
-    No link between publisher and store
+No link between publisher and store
 @@ -628,7 +628,7 @@
       getting this node to join the cluster.
       -->
@@ -83,7 +86,7 @@ repository/conf/api-manager.xml
              </member>
          </members>
 
-    Why there is no link between publisher and key manager?
+Why there is no link between publisher and key manager?
 @@ -16,7 +16,7 @@
           logic relies on this. -->
      <AuthManager>
@@ -94,7 +97,7 @@ repository/conf/api-manager.xml
          <Username>${admin.username}</Username>
          <!-- Admin password for the Authentication manager. -->
 
-    Same with follow components
+Same with follow components
 @@ -87,13 +87,13 @@
                  <Name>Production and Sandbox</Name>
                  <Description>This is a hybrid gateway that handles both production and sandbox token traffic.</Description>
@@ -151,7 +154,7 @@ repository/conf/api-manager.xml
              <Password>${admin.password}</Password>
          </PolicyDeployer>
 
-    Why follow change?
+Why follow change?
 @@ -484,12 +484,12 @@        
              <Password>${admin.password}</Password>
          </PolicyDeployer>
@@ -172,7 +175,7 @@ repository/conf/api-manager.xml
 repository/conf/carbon.xml
 ==========================
 
-    Why follow change?
+Why follow change?
 @@ -582,11 +582,11 @@
      -->
      <DeploymentSynchronizer>
@@ -193,7 +196,7 @@ repository/conf/carbon.xml
 repository/conf/jndi.properties
 ===============================
 
-    No link between publisher and traffic manager
+No link between publisher and traffic manager
 @@ -16,9 +16,9 @@
 
  # register some connection factories
@@ -213,3 +216,106 @@ repository/resources/security/client-truststore.jks, repository/resources/securi
     Content has been changed but cannot read.
 
 
+######################
+# wso2am-key_manager #
+######################
+
+
+repository/conf/api-manager.xml
+================================
+
+No direct link between keymanager and gateway-manager / gateway-worker
+@@ -87,13 +87,13 @@
+                 <Name>Production and Sandbox</Name>
+                 <Description>This is a hybrid gateway that handles both production and sandbox token traffic.</Description>
+                 <!-- Server URL of the API gateway -->
+-                <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
++                <ServerURL>https://gateway-manager:9443/services/</ServerURL>
+                <!-- Admin username for the API gateway. -->
+                 <Username>${admin.username}</Username>
+                 <!-- Admin password for the API gateway.-->
+                 <Password>${admin.password}</Password>
+                 <!-- Endpoint URLs for the APIs hosted in this API gateway.-->
+-                <GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
++                <GatewayEndpoint>http://gateway-worker:8280,https://gateway-worker:8243</GatewayEndpoint>
+             </Environment>
+         </Environments>
+     </APIGateway>
+
+No link to analytics
+@@ -136,20 +136,20 @@
+ 
+              Ex - Multiple Receiver Groups with two receivers each
+              {tcp://localhost:7612/,tcp://localhost:7613},{tcp://localhost:7712/,tcp://localhost:7713/} -->
+-        <DASServerURL>{tcp://localhost:7612}</DASServerURL>
+-        <!--DASAuthServerURL>{ssl://localhost:7712}</DASAuthServerURL-->
++        <DASServerURL>tcp://analytics:7612</DASServerURL>
++        <DASAuthServerURL>ssl://analytics:7712</DASAuthServerURL>
+         <!-- Administrator username to login to the remote DAS server. -->
+-        <DASUsername>${admin.username}</DASUsername>
++        <DASUsername>admin</DASUsername>
+         <!-- Administrator password to login to the remote DAS server. -->
+-        <DASPassword>${admin.password}</DASPassword>
++        <DASPassword>admin</DASPassword>
+ 
+         <!-- For APIM implemented Statistic client for RDBMS -->
+         <StatsProviderImpl>org.wso2.carbon.apimgt.usage.client.impl.APIUsageStatisticsRdbmsClientImpl</StatsProviderImpl>
+ 
+         <!-- DAS REST API configuration -->
+-        <DASRestApiURL>https://localhost:9444</DASRestApiURL>
+-        <DASRestApiUsername>${admin.username}</DASRestApiUsername>
+-        <DASRestApiPassword>${admin.password}</DASRestApiPassword>
++        <DASRestApiURL>https://analytics:9444</DASRestApiURL>
++        <DASRestApiUsername>admin</DASRestApiUsername>
++        <DASRestApiPassword>admin</DASRestApiPassword>
+ 
+         <!-- Below property is used to skip trying to connect to event receiver nodes when publishing events even if
+             the stats enabled flag is set to true. -->
+@@ -216,7 +216,7 @@
+              -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
+              -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
+             -The Gateway uses this parameter to connect to the key validation thrift service. -->
+-        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
++        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
+         <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
+         <!--ThriftClientPort>10397</ThriftClientPort-->
+ 
+ No link to traffic-manager
+@@ -462,10 +462,10 @@
+     <ThrottlingConfigurations>
+         <EnableAdvanceThrottling>true</EnableAdvanceThrottling>
+         <DataPublisher>
+-            <Enabled>true</Enabled>
++            <Enabled>false</Enabled>
+             <Type>Binary</Type>
+-            <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
+-            <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>
++            <ReceiverUrlGroup>tcp://traffic-manager:9611</ReceiverUrlGroup>
++            <AuthUrlGroup>ssl://traffic-manager:9711</AuthUrlGroup>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+             <DataPublisherPool>
+@@ -479,7 +479,7 @@
+             </DataPublisherThreadPool>
+         </DataPublisher>
+         <PolicyDeployer>
+-            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
++            <ServiceURL>https://traffic-manager:9443/services/</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+         </PolicyDeployer>
+@@ -489,8 +489,8 @@
+             <Period>3600000</Period-->
+         </BlockCondition>
+         <JMSConnectionDetails>
+-            <Enabled>true</Enabled>
+-            <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
++            <Enabled>false</Enabled>
++            <ServiceURL>tcp://traffic-manager:5672</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+             <Destination>throttleData</Destination>
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.
