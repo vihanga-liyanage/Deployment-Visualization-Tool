@@ -319,3 +319,154 @@ No link to analytics
 repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
 ================================================================================================
     Content has been changed but cannot read.
+
+
+######################
+# wso2am-gateway_manager #
+######################
+
+repository/conf/axis2/axis2.xml
+===============================
+
+What does following changes do?
+@@ -543,7 +543,7 @@
+                 <Password>wso2carbon</Password>
+             </TrustStore>
+         </parameter>
+-        <!--<parameter name="HostnameVerifier">DefaultAndLocalhost</parameter>-->
++        <parameter name="HostnameVerifier">AllowAll</parameter>
+             <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
+     </transportSender>
+ 
+@@ -628,7 +628,7 @@
+      getting this node to join the cluster.
+      -->
+     <clustering class="org.wso2.carbon.core.clustering.hazelcast.HazelcastClusteringAgent"
+-                enable="false">
++                enable="true">
+ 
+         <!--
+            This parameter indicates whether the cluster has to be automatically initalized
+@@ -650,7 +650,7 @@
+                     is deemed to have left the cluster, it will be detected by the Group Membership
+                     Service (GMS) using a TCP ping mechanism.
+         -->
+-        <parameter name="membershipScheme">multicast</parameter>
++        <parameter name="membershipScheme">wka</parameter>
+         <!--<parameter name="licenseKey">xxx</parameter>-->
+         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
+ 
+ repository/conf/api-manager.xml
+ ===============================
+
+ @@ -136,20 +136,20 @@
+ 
+              Ex - Multiple Receiver Groups with two receivers each
+              {tcp://localhost:7612/,tcp://localhost:7613},{tcp://localhost:7712/,tcp://localhost:7713/} -->
+-        <DASServerURL>{tcp://localhost:7612}</DASServerURL>
+-        <!--DASAuthServerURL>{ssl://localhost:7712}</DASAuthServerURL-->
++        <DASServerURL>tcp://analytics:7612</DASServerURL>
++        <DASAuthServerURL>ssl://analytics:7712</DASAuthServerURL>
+         <!-- Administrator username to login to the remote DAS server. -->
+-        <DASUsername>${admin.username}</DASUsername>
++        <DASUsername>admin</DASUsername>
+         <!-- Administrator password to login to the remote DAS server. -->
+-        <DASPassword>${admin.password}</DASPassword>
++        <DASPassword>admin</DASPassword>
+ 
+         <!-- For APIM implemented Statistic client for RDBMS -->
+         <StatsProviderImpl>org.wso2.carbon.apimgt.usage.client.impl.APIUsageStatisticsRdbmsClientImpl</StatsProviderImpl>
+ 
+         <!-- DAS REST API configuration -->
+-        <DASRestApiURL>https://localhost:9444</DASRestApiURL>
+-        <DASRestApiUsername>${admin.username}</DASRestApiUsername>
+-        <DASRestApiPassword>${admin.password}</DASRestApiPassword>
++        <DASRestApiURL>https://analytics:9444</DASRestApiURL>
++        <DASRestApiUsername>admin</DASRestApiUsername>
++        <DASRestApiPassword>admin</DASRestApiPassword>
+ 
+         <!-- Below property is used to skip trying to connect to event receiver nodes when publishing events even if
+             the stats enabled flag is set to true. -->
+@@ -202,7 +202,7 @@
+     -->
+     <APIKeyValidator>
+         <!-- Server URL of the API key manager -->
+-        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
++        <ServerURL>https://keymanager:9443/services/</ServerURL>
+ 
+         <!-- Admin username for API key manager. -->
+         <Username>${admin.username}</Username>
+@@ -216,7 +216,7 @@
+              -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
+              -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
+             -The Gateway uses this parameter to connect to the key validation thrift service. -->
+-        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
++        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
+         <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
+         <!--ThriftClientPort>10397</ThriftClientPort-->
+ 
+@@ -460,7 +460,7 @@
+         </WhiteListedURIs>
+     </RESTAPI>
+     <ThrottlingConfigurations>
+-        <EnableAdvanceThrottling>true</EnableAdvanceThrottling>
++        <EnableAdvanceThrottling>false</EnableAdvanceThrottling>
+         <DataPublisher>
+             <Enabled>true</Enabled>
+             <Type>Binary</Type>
+
+repository/deployment/server/synapse-configs/default/api/_AuthorizeAPI_.xml
+===========================================================================
+
+@@ -5,7 +5,7 @@
+        <property name="uri.var.hostname" expression="get-property('keyManager.hostname')"/>
+             <send>
+                 <endpoint>
+-                    <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/authorize">
++                    <http uri-template="https://keymanager:9443/oauth2/authorize">
+                         <timeout>
+                             <duration>60000</duration>
+                             <responseAction>fault</responseAction>
+
+repository/deployment/server/synapse-configs/default/api/_RevokeAPI_.xml
+========================================================================
+
+@@ -5,7 +5,7 @@
+        <property name="uri.var.hostname" expression="get-property('keyManager.hostname')"/>
+             <send>
+                 <endpoint>
+-                    <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/revoke">
++                    <http uri-template="https://keymanager:9443/oauth2/revoke">
+                         <timeout>
+                             <duration>60000</duration>
+                             <responseAction>fault</responseAction>
+
+repository/deployment/server/synapse-configs/default/api/_TokenAPI_.xml
+=======================================================================
+
+@@ -5,7 +5,7 @@
+        <property name="uri.var.hostname" expression="get-property('keyManager.hostname')"/>
+             <send>
+                 <endpoint>
+-                     <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/token">
++                     <http uri-template="https://keymanager:9443/oauth2/token">
+                         <timeout>
+                             <duration>60000</duration>
+                             <responseAction>fault</responseAction>
+
+repository/deployment/server/synapse-configs/default/api/_UserInfoAPI_.xml
+==========================================================================
+
+@@ -5,7 +5,7 @@
+        <property name="uri.var.hostname" expression="get-property('keyManager.hostname')"/>
+             <send>
+                 <endpoint>
+-                    <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/userinfo">
++                    <http uri-template="https://keymanager:9443/oauth2/userinfo">
+                         <timeout>
+                             <duration>60000</duration>
+                             <responseAction>fault</responseAction>
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.
