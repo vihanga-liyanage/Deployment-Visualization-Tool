@@ -1,0 +1,9 @@
+@@ -462,7 +462,7 @@
+     <ThrottlingConfigurations>
+         <EnableAdvanceThrottling>true</EnableAdvanceThrottling>
+         <DataPublisher>
+-            <Enabled>true</Enabled>
++            <Enabled>false</Enabled>
+             <Type>Binary</Type>
+             <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
+             <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>

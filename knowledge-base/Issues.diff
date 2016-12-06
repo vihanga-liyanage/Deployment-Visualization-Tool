@@ -1,0 +1,160 @@
+Issues with building the knowledge base
+
+Pattern-3
+
+wso2am-publisher
+
+repository/components/api-publisher/configuration/org.eclipse.equinox.simpleconfigurator/bundles.info
+
+    Why following two lines are added?
+    @@ -239,6 +239,8 @@
+     org.wso2.carbon.core.services,4.4.7,../plugins/org.wso2.carbon.core.services_4.4.7.jar,4,true
+     org.wso2.carbon.databridge.agent,5.1.0,../plugins/org.wso2.carbon.databridge.agent_5.1.0.jar,4,true
+     org.wso2.carbon.databridge.commons,5.1.0,../plugins/org.wso2.carbon.databridge.commons_5.1.0.jar,4,true
+    +org.wso2.carbon.databridge.commons.binary,5.1.0,../plugins/org.wso2.carbon.databridge.commons.binary_5.1.0.jar,4,true
+    +org.wso2.carbon.databridge.commons.thrift,5.1.0,../plugins/org.wso2.carbon.databridge.commons.thrift_5.1.0.jar,4,true
+     org.wso2.carbon.deployment.synchronizer,4.5.4,../plugins/org.wso2.carbon.deployment.synchronizer_4.5.4.jar,4,true
+     org.wso2.carbon.deployment.synchronizer.subversion,4.5.4,../plugins/org.wso2.carbon.deployment.synchronizer.subversion_4.5.4.jar,4,true
+     org.wso2.carbon.directory.server.manager,5.2.0,../plugins/org.wso2.carbon.directory.server.manager_5.2.0.jar,4,true
+
+
+repository/conf/axis2/axis2.xml
+
+    All hostnames are allowed.
+    @@ -543,7 +543,7 @@
+                     <Password>wso2carbon</Password>
+                 </TrustStore>
+             </parameter>
+    -        <!--<parameter name="HostnameVerifier">DefaultAndLocalhost</parameter>-->
+    +        <parameter name="HostnameVerifier">AllowAll</parameter>
+                 <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
+         </transportSender>
+
+
+repository/conf/api-manager.xml
+
+    Why there is no link between publisher and key manager?
+    @@ -16,7 +16,7 @@
+              logic relies on this. -->
+         <AuthManager>
+             <!-- Server URL of the Authentication service -->
+    -        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
+    +        <ServerURL>https://keymanager:9443/services/</ServerURL>
+             <!-- Admin username for the Authentication manager. -->
+             <Username>${admin.username}</Username>
+             <!-- Admin password for the Authentication manager. -->
+
+    Same with follow components
+    @@ -87,13 +87,13 @@
+                     <Name>Production and Sandbox</Name>
+                     <Description>This is a hybrid gateway that handles both production and sandbox token traffic.</Description>
+                     <!-- Server URL of the API gateway -->
+    -                <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
+    +                <ServerURL>https://gateway-manager:9443/services/</ServerURL>
+                    <!-- Admin username for the API gateway. -->
+                     <Username>${admin.username}</Username>
+                     <!-- Admin password for the API gateway.-->
+                     <Password>${admin.password}</Password>
+                     <!-- Endpoint URLs for the APIs hosted in this API gateway.-->
+    -                <GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
+    +                <GatewayEndpoint>http://gateway-worker:8280,https://gateway-worker:8243</GatewayEndpoint>
+                 </Environment>
+             </Environments>
+         </APIGateway>
+
+    @@ -202,7 +202,7 @@
+         -->
+         <APIKeyValidator>
+             <!-- Server URL of the API key manager -->
+    -        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
+    +        <ServerURL>https://keymanager:9443/services/</ServerURL>
+     
+             <!-- Admin username for API key manager. -->
+             <Username>${admin.username}</Username>
+
+    @@ -216,7 +216,7 @@
+                  -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
+                  -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
+                 -The Gateway uses this parameter to connect to the key validation thrift service. -->
+    -        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
+    +        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
+             <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
+             <!--ThriftClientPort>10397</ThriftClientPort-->
+
+    @@ -284,7 +284,7 @@
+             <!--This property is used to indicate how we do user name comparision for token generation https://wso2.org/jira/browse/APIMANAGER-2225-->
+             <CompareCaseInsensitively>true</CompareCaseInsensitively>
+             <DisplayURL>false</DisplayURL>
+    -        <URL>https://localhost:${mgt.transport.https.port}/store</URL>
+    +        <URL>https://store:9446/store</URL>
+     
+             <!-- Server URL of the API Store. -->
+             <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
+
+    @@ -479,7 +479,7 @@
+                 </DataPublisherThreadPool>
+             </DataPublisher>
+             <PolicyDeployer>
+    -            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
+    +            <ServiceURL>https://traffic-manager:9443/services/</ServiceURL>
+                 <Username>${admin.username}</Username>
+                 <Password>${admin.password}</Password>
+             </PolicyDeployer>
+
+    Why follow change?
+    @@ -484,12 +484,12 @@        
+                 <Password>${admin.password}</Password>
+             </PolicyDeployer>
+             <BlockCondition>
+    -            <Enabled>true</Enabled>
+    +            <Enabled>false</Enabled>
+                 <!--InitDelay>300000</InitDelay>
+                 <Period>3600000</Period-->
+             </BlockCondition>
+             <JMSConnectionDetails>
+    -            <Enabled>true</Enabled>
+    +            <Enabled>false</Enabled>
+                 <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
+                 <Username>${admin.username}</Username>
+                 <Password>${admin.password}</Password>
+
+
+repository/conf/carbon.xml
+
+    Why follow change?
+    @@ -582,11 +582,11 @@
+         -->
+         <DeploymentSynchronizer>
+             <Enabled>false</Enabled>
+    -        <AutoCommit>false</AutoCommit>
+    +        <AutoCommit>true</AutoCommit>
+             <AutoCheckout>true</AutoCheckout>
+             <RepositoryType>svn</RepositoryType>
+    -        <SvnUrl>http://svnrepo.example.com/repos/</SvnUrl>
+    -        <SvnUser>username</SvnUser>
+    +        <SvnUrl>http://svnrepo/repo</SvnUrl>
+    +        <SvnUser>user</SvnUser>
+             <SvnPassword>password</SvnPassword>
+             <SvnUrlAppendTenantId>true</SvnUrlAppendTenantId>
+         </DeploymentSynchronizer>
+
+repository/conf/jndi.properties
+
+    No link between publisher and traffic manager
+    @@ -16,9 +16,9 @@
+
+     # register some connection factories
+     # connectionfactory.[jndiname] = [ConnectionURL]
+    -connectionfactory.TopicConnectionFactory = amqp://admin:admin@clientid/carbon?brokerlist='tcp://localhost:5672'
+    +connectionfactory.TopicConnectionFactory = amqp://admin:admin@clientid/carbon?brokerlist='tcp://traffic-manager:5672'
+
+    -connectionfactory.QueueConnectionFactory = amqp://admin:admin@clientID/test?brokerlist='tcp://localhost:5672'
+    +connectionfactory.QueueConnectionFactory = amqp://admin:admin@clientID/test?brokerlist='tcp://traffic-manager:5672'
+
+     # register some queues in JNDI using the form
+     # queue.[jndiName] = [physicalName]
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+    Content has been changed but cannot read.
+
+
