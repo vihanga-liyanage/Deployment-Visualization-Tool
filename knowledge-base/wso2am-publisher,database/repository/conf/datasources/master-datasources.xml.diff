@@ -14,17 +14,19 @@
                      <maxActive>50</maxActive>
                      <maxWait>60000</maxWait>
                      <testOnBorrow>true</testOnBorrow>
-@@ -49,27 +49,27 @@
+@@ -49,19 +49,18 @@
              </definition>
          </datasource>
 
 -         <datasource>
-+        <datasource>
-             <name>WSO2AM_STATS_DB</name>
+-            <name>WSO2AM_STATS_DB</name>
 -            <description>The datasource used for getting statistics to API Manager</description>
-+            <description>The datasource used for setting statistics to API Manager</description>
++        <datasource>
++            <name>WSO2UM_DB</name>
++            <description>The datasource used by user manager</description>
              <jndiConfig>
-                 <name>jdbc/WSO2AM_STATS_DB</name>
+-                <name>jdbc/WSO2AM_STATS_DB</name>
++                <name>jdbc/WSO2UM_DB</name>
              </jndiConfig>
              <definition type="RDBMS">
                  <configuration>
@@ -33,51 +35,18 @@
 -                    <password>wso2carbon</password>
 -                    <defaultAutoCommit>false</defaultAutoCommit>
 -                    <driverClassName>org.h2.Driver</driverClassName>
-+                    <url>jdbc:mysql://apim_rdbms:3306/stats_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
++                    <url>jdbc:mysql://apim_rdbms:3306/userdb?autoReconnect=true</url>
 +                    <username>root</username>
 +                    <password>root</password>
 +                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
                      <maxActive>50</maxActive>
                      <maxWait>60000</maxWait>
                      <testOnBorrow>true</testOnBorrow>
-                     <validationQuery>SELECT 1</validationQuery>
+@@ -69,7 +68,50 @@
                      <validationInterval>30000</validationInterval>
-+                    <defaultAutoCommit>false</defaultAutoCommit>
                  </configuration>
              </definition>
 -         </datasource>
-+        </datasource>
-
-         <datasource>
-             <name>WSO2_MB_STORE_DB</name>
-@@ -89,6 +89,49 @@
-                     <validationQuery>SELECT 1</validationQuery>
-                     <validationInterval>30000</validationInterval>
-                     <defaultAutoCommit>false</defaultAutoCommit>
-+                </configuration>
-+            </definition>
-+        </datasource>
-+
-+
-+        <datasource>
-+            <name>WSO2UM_DB</name>
-+            <description>The datasource used by user manager</description>
-+            <jndiConfig>
-+                <name>jdbc/WSO2UM_DB</name>
-+            </jndiConfig>
-+            <definition type="RDBMS">
-+                <configuration>
-+                    <url>jdbc:mysql://apim_rdbms:3306/userdb?autoReconnect=true</url>
-+                    <username>root</username>
-+                    <password>root</password>
-+                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
-+                    <maxActive>50</maxActive>
-+                    <maxWait>60000</maxWait>
-+                    <testOnBorrow>true</testOnBorrow>
-+                    <validationQuery>SELECT 1</validationQuery>
-+                    <validationInterval>30000</validationInterval>
-+                </configuration>
-+            </definition>
 +        </datasource>
 +
 +        <datasource>
@@ -97,6 +66,31 @@
 +                    <testOnBorrow>true</testOnBorrow>
 +                    <validationQuery>SELECT 1</validationQuery>
 +                    <validationInterval>30000</validationInterval>
-                 </configuration>
-             </definition>
-         </datasource>
++                </configuration>
++            </definition>
++        </datasource>
++
++        <datasource>
++            <name>WSO2AM_STATS_DB</name>
++            <description>The datasource used for setting statistics to API Manager</description>
++            <jndiConfig>
++                <name>jdbc/WSO2AM_STATS_DB</name>
++            </jndiConfig>
++            <definition type="RDBMS">
++                <configuration>
++                    <url>jdbc:mysql://apim_rdbms:3306/stats_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
++                    <username>root</username>
++                    <password>root</password>
++                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
++                    <maxActive>50</maxActive>
++                    <maxWait>60000</maxWait>
++                    <testOnBorrow>true</testOnBorrow>
++                    <validationQuery>SELECT 1</validationQuery>
++                    <validationInterval>30000</validationInterval>
++                    <defaultAutoCommit>false</defaultAutoCommit>
++                </configuration>
++            </definition>
++        </datasource>
+
+         <datasource>
+             <name>WSO2_MB_STORE_DB</name>

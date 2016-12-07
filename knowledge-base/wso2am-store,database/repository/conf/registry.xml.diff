@@ -5,7 +5,7 @@
 +    <dbConfig name="govregistry">
 +        <dataSource>jdbc/WSO2REG_DB</dataSource>
 +    </dbConfig>
-+    <remoteInstance url="https://store">
++    <remoteInstance url="https://dummy.wso2.com">
 +        <id>gov</id>
 +        <cacheId>root@jdbc:mysql://apim_rdbms:3306/regdb</cacheId>
 +        <dbConfig>govregistry</dbConfig>

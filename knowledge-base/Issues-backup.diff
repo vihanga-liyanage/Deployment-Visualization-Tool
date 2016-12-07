@@ -3,10 +3,9 @@ Issues with building the knowledge base
 Pattern-3
 
 
-###################################
-# wso2am-publisher / wso2am-store #
-###################################
-
+####################
+# wso2am-publisher #
+####################
 
 repository/components/api-publisher/configuration/org.eclipse.equinox.simpleconfigurator/bundles.info
 =====================================================================================================
@@ -21,6 +20,12 @@ Why following two lines are added? - self
  org.wso2.carbon.deployment.synchronizer,4.5.4,../plugins/org.wso2.carbon.deployment.synchronizer_4.5.4.jar,4,true
  org.wso2.carbon.deployment.synchronizer.subversion,4.5.4,../plugins/org.wso2.carbon.deployment.synchronizer.subversion_4.5.4.jar,4,true
  org.wso2.carbon.directory.server.manager,5.2.0,../plugins/org.wso2.carbon.directory.server.manager_5.2.0.jar,4,true
+
+
+
+###################################
+# wso2am-publisher / wso2am-store #
+###################################
 
 
 repository/conf/axis2/axis2.xml

@@ -1,5 +1,4 @@
-@@ -87,9 +87,9 @@
-                 <Name>Production and Sandbox</Name>
+@@ -87,7 +87,7 @@
                  <Description>This is a hybrid gateway that handles both production and sandbox token traffic.</Description>
                  <!-- Server URL of the API gateway -->
 -                <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
@@ -8,4 +7,3 @@
                  <Username>${admin.username}</Username>
                  <!-- Admin password for the API gateway.-->
                  <Password>${admin.password}</Password>
-                 <!-- Endpoint URLs for the APIs hosted in this API gateway.-->
