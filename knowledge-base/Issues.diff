@@ -2,6 +2,7 @@ Issues with building the knowledge base
 
 Pattern-3
 
+
 ###################################
 # wso2am-publisher / wso2am-store #
 ###################################
@@ -321,9 +322,10 @@ repository/resources/security/client-truststore.jks, repository/resources/securi
     Content has been changed but cannot read.
 
 
-######################
+##########################
 # wso2am-gateway_manager #
-######################
+##########################
+
 
 repository/conf/axis2/axis2.xml
 ===============================
@@ -466,6 +468,37 @@ repository/deployment/server/synapse-configs/default/api/_UserInfoAPI_.xml
                          <timeout>
                              <duration>60000</duration>
                              <responseAction>fault</responseAction>
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.
+
+
+#####################
+# wso2am_analytics- #
+#####################
+
+
+repository/conf/tomcat/catalina-server.xml
+==========================================
+
+Why below change?
+@@ -27,6 +27,7 @@
+         -->
+         <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+                    port="9763"
++                   proxyPort="9764"
+                    redirectPort="9443"
+                    bindOnInit="false"
+                    maxHttpHeaderSize="8192"
+@@ -52,6 +53,7 @@
+         -->
+         <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+                    port="9443"
++                   proxyPort="9444"
+                    bindOnInit="false"
+                    sslProtocol="TLS"
+                    sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2"
 
 repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
 ================================================================================================
