@@ -30989,15 +30989,15 @@ mxFastOrganicLayout.prototype.execute = function(parent)
 		if (!this.isVertexIgnored(cells[i]))
 		{
 		    //Custom code to ignore special nodes
-            if ((cells[i].style.includes("load-balancer")) ||
-                (cells[i].style.includes("database")) ||
-                (cells[i].style.includes("svn")) ||
-                (cells[i].style.includes("wso2am-analytics"))) {
-                console.log("ignored");
-                console.log(cells[i]);
-            } else {
+            // if ((cells[i].style.includes("load-balancer")) ||
+             //    (cells[i].style.includes("database")) ||
+             //    (cells[i].style.includes("svn")) ||
+             //    (cells[i].style.includes("wso2am-analytics"))) {
+             //    console.log("ignored");
+             //    console.log(cells[i]);
+            // } else {
                 this.vertexArray.push(cells[i]);
-            }
+            // }
 		}
 	}
 	

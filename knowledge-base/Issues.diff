@@ -652,3 +652,13 @@ repository/conf/api-manager.xml
 repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
 ================================================================================================
     Content has been changed but cannot read.
+
+
+##########################
+# wso2am-traffic_manager #
+##########################
+
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.

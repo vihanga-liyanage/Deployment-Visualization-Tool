@@ -133,7 +133,7 @@
 		</add>
 		<add as="WSO2_DAS">
 			<Image label="" href="">
-				<mxCell vertex="1" style="wso2analytics">
+				<mxCell vertex="1" style="wso2am_analytics">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
@@ -326,7 +326,7 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/publisher.png"/>
 			</add>
-			<add as="wso2analytics">
+			<add as="wso2am_analytics">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2_das.png"/>

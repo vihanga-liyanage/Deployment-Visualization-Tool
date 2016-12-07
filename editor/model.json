@@ -42,7 +42,7 @@
 	},
 	{
 		"id":3,
-		"type":"wso2analytics",
+		"type":"wso2am_analytics",
 		"name":"analytics",
 		"image":"docker.wso2.com/wso2am-analytics:2.0.0",
 		"ports":[
