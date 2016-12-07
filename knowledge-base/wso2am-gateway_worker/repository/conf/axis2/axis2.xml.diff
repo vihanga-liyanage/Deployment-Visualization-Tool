@@ -7,12 +7,3 @@
              <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
      </transportSender>
 
-@@ -679,7 +679,7 @@
-         -->
-         <!-- The host name or IP address of this member -->
-
--        <parameter name="localMemberHost">127.0.0.1</parameter>
-+        <parameter name="localMemberHost">gateway-worker</parameter>
-
-         <!--
-             The bind adress of this member. The difference between localMemberHost & localMemberBindAddress
