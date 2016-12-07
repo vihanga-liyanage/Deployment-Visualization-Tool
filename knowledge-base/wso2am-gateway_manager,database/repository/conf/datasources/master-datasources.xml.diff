@@ -65,12 +65,3 @@
              <name>WSO2AM_STATS_DB</name>
              <description>The datasource used for getting statistics to API Manager</description>
              <jndiConfig>
-@@ -69,7 +111,7 @@
-                     <validationInterval>30000</validationInterval>
-                 </configuration>
-             </definition>
--         </datasource>
-+        </datasource>
-
-         <datasource>
-             <name>WSO2_MB_STORE_DB</name>
