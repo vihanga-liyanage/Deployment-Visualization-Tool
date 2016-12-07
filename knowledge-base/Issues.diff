@@ -503,3 +503,152 @@ Why below change?
 repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
 ================================================================================================
     Content has been changed but cannot read.
+
+
+#########################
+# wso2am-gateway_worker #
+#########################
+
+
+repository/conf/axis2/axis2.xml
+===============================
+
+@ -628,7 +628,7 @@
+      getting this node to join the cluster.
+      -->
+     <clustering class="org.wso2.carbon.core.clustering.hazelcast.HazelcastClusteringAgent"
+-                enable="false">
++                enable="true">
+ 
+         <!--
+            This parameter indicates whether the cluster has to be automatically initalized
+@@ -650,7 +650,7 @@
+                     is deemed to have left the cluster, it will be detected by the Group Membership
+                     Service (GMS) using a TCP ping mechanism.
+         -->
+-        <parameter name="membershipScheme">multicast</parameter>
++        <parameter name="membershipScheme">wka</parameter>
+         <!--<parameter name="licenseKey">xxx</parameter>-->
+         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
+ 
+@@ -658,7 +658,7 @@
+          The clustering domain/group. Nodes in the same group will belong to the same multicast
+          domain. There will not be interference between nodes in different groups.
+         -->
+-        <parameter name="domain">wso2.carbon.domain</parameter>
++        <parameter name="domain">wso2.am.domain</parameter>
+ 
+         <!-- The multicast address to be used -->
+         <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
+
+@@ -720,7 +720,7 @@
+         -->
+         <members>
+             <member>
+-                <hostName>127.0.0.1</hostName>
++                <hostName>gateway-manager</hostName>
+                 <port>4000</port>
+             </member>
+         </members>
+
+repository/conf/axis2/axis2_blocking_client.xml 
+===============================================
+
+@@ -302,6 +302,7 @@
+         <parameter name="Transfer-Encoding">chunked</parameter>
+         <parameter name="cacheHttpClient">true</parameter>
+         <parameter name="defaultMaxConnectionsPerHost">200</parameter>
++        <parameter name="HostnameVerifier">AllowAll</parameter>
+     </transportSender>
+     <transportSender name="jms"
+                      class="org.apache.axis2.transport.jms.JMSSender"/>
+
+repository/conf/axis2/axis2_client.xml
+======================================
+
+@@ -193,6 +193,7 @@
+         <parameter name="Transfer-Encoding">chunked</parameter>
+         <parameter name="SO_TIMEOUT">60000</parameter>
+         <parameter name="CONNECTION_TIMEOUT">60000</parameter>
++        <parameter name="HostnameVerifier">AllowAll</parameter>
+     </transportSender>
+     <!--<transportSender name="java"-->
+     <!--class="org.apache.axis2.transport.java.JavaTransportSender"/>-->
+
+repository/conf/api-manager.xml
+===============================
+
+@@ -202,7 +202,7 @@
+     -->
+     <APIKeyValidator>
+         <!-- Server URL of the API key manager -->
+-        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
++        <ServerURL>https://keymanager:9443/services/</ServerURL>
+ 
+         <!-- Admin username for API key manager. -->
+         <Username>${admin.username}</Username>
+@@ -216,7 +216,7 @@
+              -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
+              -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
+             -The Gateway uses this parameter to connect to the key validation thrift service. -->
+-        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
++        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
+         <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
+         <!--ThriftClientPort>10397</ThriftClientPort-->
+ 
+@@ -464,8 +464,8 @@
+         <DataPublisher>
+             <Enabled>true</Enabled>
+             <Type>Binary</Type>
+-            <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
+-            <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>
++            <ReceiverUrlGroup>tcp://traffic-manager:9611</ReceiverUrlGroup>
++            <AuthUrlGroup>ssl://traffic-manager:9711</AuthUrlGroup>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+             <DataPublisherPool>
+@@ -479,7 +479,7 @@
+             </DataPublisherThreadPool>
+         </DataPublisher>
+         <PolicyDeployer>
+-            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
++            <ServiceURL>https://traffic-manager:9443/services/</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+         </PolicyDeployer>
+@@ -490,7 +490,7 @@
+         </BlockCondition>
+         <JMSConnectionDetails>
+             <Enabled>true</Enabled>
+-            <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
++            <ServiceURL>tcp://traffic-manager:5672</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+             <Destination>throttleData</Destination>
+@@ -508,14 +508,14 @@
+                 <JobQueueSize>10</JobQueueSize>
+             </JMSTaskManager>
+         </JMSConnectionDetails>
+-        <JMSEventPublisherParameters>
+-                <java.naming.factory.initial>org.wso2.andes.jndi.PropertiesFileInitialContextFactory</java.naming.factory.initial>
+-                <java.naming.provider.url>repository/conf/jndi.properties</java.naming.provider.url>
+-                <transport.jms.DestinationType>topic</transport.jms.DestinationType>
+-                <transport.jms.Destination>throttleData</transport.jms.Destination>
+-                <transport.jms.ConcurrentPublishers>allow</transport.jms.ConcurrentPublishers>
+-                <transport.jms.ConnectionFactoryJNDIName>TopicConnectionFactory</transport.jms.ConnectionFactoryJNDIName>
+-        </JMSEventPublisherParameters>
++        <!--<JMSEventPublisherParameters>-->
++                <!--<java.naming.factory.initial>org.wso2.andes.jndi.PropertiesFileInitialContextFactory</java.naming.factory.initial>-->
++                <!--<java.naming.provider.url>repository/conf/jndi.properties</java.naming.provider.url>-->
++                <!--<transport.jms.DestinationType>topic</transport.jms.DestinationType>-->
++                <!--<transport.jms.Destination>throttleData</transport.jms.Destination>-->
++                <!--<transport.jms.ConcurrentPublishers>allow</transport.jms.ConcurrentPublishers>-->
++                <!--<transport.jms.ConnectionFactoryJNDIName>TopicConnectionFactory</transport.jms.ConnectionFactoryJNDIName>-->
++        <!--</JMSEventPublisherParameters>-->
+         <!--DefaultLimits>
+             <SubscriptionTierLimits>
+                 <Gold>5000</Gold>
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.
