@@ -180,86 +180,10 @@ repository/resources/security/client-truststore.jks, repository/resources/securi
 repository/conf/axis2/axis2.xml
 ===============================
 
-What does following changes do? - self
-@@ -543,7 +543,7 @@
-                 <Password>wso2carbon</Password>
-             </TrustStore>
-         </parameter>
--        <!--<parameter name="HostnameVerifier">DefaultAndLocalhost</parameter>-->
-+        <parameter name="HostnameVerifier">AllowAll</parameter>
-             <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
-     </transportSender>
- 
-@@ -628,7 +628,7 @@
-      getting this node to join the cluster.
-      -->
-     <clustering class="org.wso2.carbon.core.clustering.hazelcast.HazelcastClusteringAgent"
--                enable="false">
-+                enable="true">
- 
-         <!--
-            This parameter indicates whether the cluster has to be automatically initalized
-@@ -650,7 +650,7 @@
-                     is deemed to have left the cluster, it will be detected by the Group Membership
-                     Service (GMS) using a TCP ping mechanism.
-         -->
--        <parameter name="membershipScheme">multicast</parameter>
-+        <parameter name="membershipScheme">wka</parameter>
-         <!--<parameter name="licenseKey">xxx</parameter>-->
-         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
- 
- repository/conf/api-manager.xml
- ===============================
 
-No link to analytics - gateway_manager,analytics
- @@ -136,20 +136,20 @@
- 
-              Ex - Multiple Receiver Groups with two receivers each
-              {tcp://localhost:7612/,tcp://localhost:7613},{tcp://localhost:7712/,tcp://localhost:7713/} -->
--        <DASServerURL>{tcp://localhost:7612}</DASServerURL>
--        <!--DASAuthServerURL>{ssl://localhost:7712}</DASAuthServerURL-->
-+        <DASServerURL>tcp://analytics:7612</DASServerURL>
-+        <DASAuthServerURL>ssl://analytics:7712</DASAuthServerURL>
-         <!-- Administrator username to login to the remote DAS server. -->
--        <DASUsername>${admin.username}</DASUsername>
-+        <DASUsername>admin</DASUsername>
-         <!-- Administrator password to login to the remote DAS server. -->
--        <DASPassword>${admin.password}</DASPassword>
-+        <DASPassword>admin</DASPassword>
- 
-         <!-- For APIM implemented Statistic client for RDBMS -->
-         <StatsProviderImpl>org.wso2.carbon.apimgt.usage.client.impl.APIUsageStatisticsRdbmsClientImpl</StatsProviderImpl>
- 
-         <!-- DAS REST API configuration -->
--        <DASRestApiURL>https://localhost:9444</DASRestApiURL>
--        <DASRestApiUsername>${admin.username}</DASRestApiUsername>
--        <DASRestApiPassword>${admin.password}</DASRestApiPassword>
-+        <DASRestApiURL>https://analytics:9444</DASRestApiURL>
-+        <DASRestApiUsername>admin</DASRestApiUsername>
-+        <DASRestApiPassword>admin</DASRestApiPassword>
- 
-         <!-- Below property is used to skip trying to connect to event receiver nodes when publishing events even if
-             the stats enabled flag is set to true. -->
+repository/conf/api-manager.xml
+===============================
 
-No link to key manager  - *,keymanager             
-@@ -202,7 +202,7 @@
-     -->
-     <APIKeyValidator>
-         <!-- Server URL of the API key manager -->
--        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
-+        <ServerURL>https://keymanager:9443/services/</ServerURL>
- 
-         <!-- Admin username for API key manager. -->
-         <Username>${admin.username}</Username>
-@@ -216,7 +216,7 @@
-              -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
-              -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
-             -The Gateway uses this parameter to connect to the key validation thrift service. -->
--        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
-+        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
-         <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
-         <!--ThriftClientPort>10397</ThriftClientPort-->
- 
  ignore
 @@ -460,7 +460,7 @@
          </WhiteListedURIs>
@@ -336,23 +260,6 @@ repository/resources/security/client-truststore.jks, repository/resources/securi
 repository/conf/tomcat/catalina-server.xml
 ==========================================
 
-Why below change? - self
-@@ -27,6 +27,7 @@
-         -->
-         <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
-                    port="9763"
-+                   proxyPort="9764"
-                    redirectPort="9443"
-                    bindOnInit="false"
-                    maxHttpHeaderSize="8192"
-@@ -52,6 +53,7 @@
-         -->
-         <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
-                    port="9443"
-+                   proxyPort="9444"
-                    bindOnInit="false"
-                    sslProtocol="TLS"
-                    sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2"
 
 repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
 ================================================================================================
@@ -367,146 +274,25 @@ repository/resources/security/client-truststore.jks, repository/resources/securi
 repository/conf/axis2/axis2.xml
 ===============================
 
-@ -628,7 +628,7 @@
-      getting this node to join the cluster.
-      -->
-     <clustering class="org.wso2.carbon.core.clustering.hazelcast.HazelcastClusteringAgent"
--                enable="false">
-+                enable="true">
- 
-         <!--
-            This parameter indicates whether the cluster has to be automatically initalized
-@@ -650,7 +650,7 @@
-                     is deemed to have left the cluster, it will be detected by the Group Membership
-                     Service (GMS) using a TCP ping mechanism.
-         -->
--        <parameter name="membershipScheme">multicast</parameter>
-+        <parameter name="membershipScheme">wka</parameter>
-         <!--<parameter name="licenseKey">xxx</parameter>-->
-         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
- 
-@@ -658,7 +658,7 @@
-          The clustering domain/group. Nodes in the same group will belong to the same multicast
-          domain. There will not be interference between nodes in different groups.
-         -->
--        <parameter name="domain">wso2.carbon.domain</parameter>
-+        <parameter name="domain">wso2.am.domain</parameter>
- 
-         <!-- The multicast address to be used -->
-         <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
-
- - clustering link
-@@ -720,7 +720,7 @@
-         -->
-         <members>
-             <member>
--                <hostName>127.0.0.1</hostName>
-+                <hostName>gateway-manager</hostName>
-                 <port>4000</port>
-             </member>
-         </members>
 
 repository/conf/axis2/axis2_blocking_client.xml 
 ===============================================
 
-@@ -302,6 +302,7 @@
-         <parameter name="Transfer-Encoding">chunked</parameter>
-         <parameter name="cacheHttpClient">true</parameter>
-         <parameter name="defaultMaxConnectionsPerHost">200</parameter>
-+        <parameter name="HostnameVerifier">AllowAll</parameter>
-     </transportSender>
-     <transportSender name="jms"
-                      class="org.apache.axis2.transport.jms.JMSSender"/>
 
 repository/conf/axis2/axis2_client.xml
 ======================================
 
-@@ -193,6 +193,7 @@
-         <parameter name="Transfer-Encoding">chunked</parameter>
-         <parameter name="SO_TIMEOUT">60000</parameter>
-         <parameter name="CONNECTION_TIMEOUT">60000</parameter>
-+        <parameter name="HostnameVerifier">AllowAll</parameter>
-     </transportSender>
-     <!--<transportSender name="java"-->
-     <!--class="org.apache.axis2.transport.java.JavaTransportSender"/>-->
 
 repository/conf/api-manager.xml
 ===============================
 
 *,keymanager
-@@ -202,7 +202,7 @@
-     -->
-     <APIKeyValidator>
-         <!-- Server URL of the API key manager -->
--        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
-+        <ServerURL>https://keymanager:9443/services/</ServerURL>
- 
-         <!-- Admin username for API key manager. -->
-         <Username>${admin.username}</Username>
-@@ -216,7 +216,7 @@
-              -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
-              -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
-             -The Gateway uses this parameter to connect to the key validation thrift service. -->
--        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
-+        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
-         <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
-         <!--ThriftClientPort>10397</ThriftClientPort-->
- 
+
  *,traffic-manager
-@@ -464,8 +464,8 @@
-         <DataPublisher>
-             <Enabled>true</Enabled>
-             <Type>Binary</Type>
--            <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
--            <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>
-+            <ReceiverUrlGroup>tcp://traffic-manager:9611</ReceiverUrlGroup>
-+            <AuthUrlGroup>ssl://traffic-manager:9711</AuthUrlGroup>
-             <Username>${admin.username}</Username>
-             <Password>${admin.password}</Password>
-             <DataPublisherPool>
-@@ -479,7 +479,7 @@
-             </DataPublisherThreadPool>
-         </DataPublisher>
-         <PolicyDeployer>
--            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
-+            <ServiceURL>https://traffic-manager:9443/services/</ServiceURL>
-             <Username>${admin.username}</Username>
-             <Password>${admin.password}</Password>
-         </PolicyDeployer>
-@@ -490,7 +490,7 @@
-         </BlockCondition>
-         <JMSConnectionDetails>
-             <Enabled>true</Enabled>
--            <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
-+            <ServiceURL>tcp://traffic-manager:5672</ServiceURL>
-             <Username>${admin.username}</Username>
-             <Password>${admin.password}</Password>
-             <Destination>throttleData</Destination>
+
 
  - self
-@@ -508,14 +508,14 @@
-                 <JobQueueSize>10</JobQueueSize>
-             </JMSTaskManager>
-         </JMSConnectionDetails>
--        <JMSEventPublisherParameters>
--                <java.naming.factory.initial>org.wso2.andes.jndi.PropertiesFileInitialContextFactory</java.naming.factory.initial>
--                <java.naming.provider.url>repository/conf/jndi.properties</java.naming.provider.url>
--                <transport.jms.DestinationType>topic</transport.jms.DestinationType>
--                <transport.jms.Destination>throttleData</transport.jms.Destination>
--                <transport.jms.ConcurrentPublishers>allow</transport.jms.ConcurrentPublishers>
--                <transport.jms.ConnectionFactoryJNDIName>TopicConnectionFactory</transport.jms.ConnectionFactoryJNDIName>
--        </JMSEventPublisherParameters>
-+        <!--<JMSEventPublisherParameters>-->
-+                <!--<java.naming.factory.initial>org.wso2.andes.jndi.PropertiesFileInitialContextFactory</java.naming.factory.initial>-->
-+                <!--<java.naming.provider.url>repository/conf/jndi.properties</java.naming.provider.url>-->
-+                <!--<transport.jms.DestinationType>topic</transport.jms.DestinationType>-->
-+                <!--<transport.jms.Destination>throttleData</transport.jms.Destination>-->
-+                <!--<transport.jms.ConcurrentPublishers>allow</transport.jms.ConcurrentPublishers>-->
-+                <!--<transport.jms.ConnectionFactoryJNDIName>TopicConnectionFactory</transport.jms.ConnectionFactoryJNDIName>-->
-+        <!--</JMSEventPublisherParameters>-->
-         <!--DefaultLimits>
-             <SubscriptionTierLimits>
-                 <Gold>5000</Gold>
+
 
 repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
 ================================================================================================

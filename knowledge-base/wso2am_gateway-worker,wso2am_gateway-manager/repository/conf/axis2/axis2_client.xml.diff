@@ -1,0 +1,8 @@
+@@ -193,6 +193,7 @@
+         <parameter name="Transfer-Encoding">chunked</parameter>
+         <parameter name="SO_TIMEOUT">60000</parameter>
+         <parameter name="CONNECTION_TIMEOUT">60000</parameter>
++        <parameter name="HostnameVerifier">AllowAll</parameter>
+     </transportSender>
+     <!--<transportSender name="java"-->
+     <!--class="org.apache.axis2.transport.java.JavaTransportSender"/>-->

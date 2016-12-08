@@ -1,0 +1,17 @@
+@@ -202,7 +202,7 @@
+     -->
+     <APIKeyValidator>
+         <!-- Server URL of the API key manager -->
+-        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
++        <ServerURL>https://keymanager:9443/services/</ServerURL>
+
+         <!-- Admin username for API key manager. -->
+         <Username>${admin.username}</Username>
+@@ -216,7 +216,7 @@
+              -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
+              -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
+             -The Gateway uses this parameter to connect to the key validation thrift service. -->
+-        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
++        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
+         <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
+         <!--ThriftClientPort>10397</ThriftClientPort-->
