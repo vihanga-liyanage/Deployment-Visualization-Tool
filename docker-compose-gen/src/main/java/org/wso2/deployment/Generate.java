@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,14 +18,45 @@ public class Generate {
      * @param model JSON object with links and nodes
      * @return list of dir names that can be looked up in KB
      */
-    static List<String> toKnowledgeBaseNames(JSONObject model) {
+    static List<String> toKnowledgeBaseNames(String product, JSONObject model) {
         List<String> fileNames = new ArrayList<>();
         JSONArray services = model.getJSONArray("services");
         for (int i = 0; i < services.length(); i++) {
             JSONObject service = services.getJSONObject(i);
-            String type = service.getString("type");
-            fileNames.add(type);
+            String type = getType(service);
+            JSONArray profiles = service.optJSONArray("profiles");
+            if (type.equals(product)) {
+                if (profiles != null && profiles.length() == 1) {
+                    fileNames.add(withProfile(type, profiles.getString(0)));
+                } else {
+                    fileNames.add(type);
+                }
+            }
+            JSONArray links = service.optJSONArray("links");
+            if (links != null) {
+                for (int j = 0; j < links.length(); j++) {
+                    JSONObject link = links.getJSONObject(i);
+                    int linkIndex = link.getInt("serviceId");
+                    JSONObject linkedService = services.getJSONObject(linkIndex);
+                    String linkedType = getType(linkedService);
+                    if (type.equals(product)) {
+                        fileNames.add(type + "," + linkedType);
+                    } else if (linkedType.equals(product)) {
+                        fileNames.add(linkedType + "," + type);
+                    }
+                }
+
+            }
         }
+        Collections.sort(fileNames);
         return fileNames;
+    }
+
+    private static String withProfile(String type, String profile) {
+        return type + "_" + profile;
+    }
+
+    private static String getType(JSONObject service) {
+        return service.getString("type");
     }
 }
