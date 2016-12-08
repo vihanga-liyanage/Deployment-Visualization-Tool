@@ -4,24 +4,7 @@
 		"name":"apim_rdbms",
 		"image":"mysql:5.5",
 		"ports":[],
-		"links":[
-			{
-				"serviceId":2
-			},
-			{
-				"serviceId":3
-			},
-			{
-				"serviceId":4
-			},
-			{
-				"serviceId":5
-			},
-			{
-				"serviceId":8
-			}
-		],
-		"profile":[]
+		"profiles":[]
 	},
 	{
 		"type":"wso2am",
@@ -33,10 +16,7 @@
 	        "8280:8280",
 	        "8243:8243"
 		],
-		"links":[
-
-		],
-		"profile":["publisher"]
+		"profiles":["publisher"]
 	},
 	{
 		"type":"wso2am",
@@ -45,10 +25,7 @@
 		"ports":[
 			"9446:9443"
 		],
-		"links":[
-
-		],
-		"profile":["Store"]
+		"profiles":["Store"]
 	},
 	{
 		"type":"wso2am_analytics",
@@ -57,15 +34,7 @@
 		"ports":[
 			"9448:9444"
 		],
-		"links":[
-			{
-				"serviceId":2
-			},
-			{
-				"serviceId":8
-			}
-		],
-		"profile":["Analytics"]
+		"profiles":["Analytics"]
 	},
 	{
 		"type":"wso2am",
@@ -74,12 +43,7 @@
 		"ports":[
 			"9447:9443"
 		],
-		"links":[
-			{
-				"serviceId":7
-			}
-		],
-		"profile":["Traffic Manager"]
+		"profiles":["Traffic Manager"]
 	},
 	{
 		"type":"wso2am",
@@ -88,10 +52,7 @@
 		"ports":[
 			"9443:9443"
 		],
-		"links":[
-
-		],
-		"profile":["Key Manager"]
+		"profiles":["Key Manager"]
 	},
 	{
 		"type":"wso2am",
@@ -100,10 +61,7 @@
 		"ports":[
 			"9444:9443"
 		],
-		"links":[
-
-		],
-		"profile":["Gateway Manager"]
+		"profiles":["Gateway Manager"]
 	},
 	{
 		"type":"wso2am",
@@ -113,57 +71,21 @@
 			"8280:8280",
 			"8243:8243"
 		],
-		"links":[
-			{
-				"serviceId":3
-			}
-		],
-		"profile":["Gateway Worker"]
+		"profiles":["Gateway Worker"]
 	},
 	{
 		"type":"load-balancer",
 		"name":"load-balancer",
 		"image":"",
 		"ports":[],
-		"links":[
-			{
-				"serviceId":2
-			},
-			{
-				"serviceId":3
-			},
-			{
-				"serviceId":4
-			},
-			{
-				"serviceId":5
-			},
-			{
-				"serviceId":6
-			},
-			{
-				"serviceId":7
-			},
-			{
-				"serviceId":8
-			}
-		],
-		"profile":[]
+		"profiles":[]
 	},
 	{
 		"type":"svn",
 		"name":"svn",
 		"image":"",
 		"ports":[],
-		"links":[
-			{
-				"serviceId":6
-			},
-			{
-				"serviceId":7
-			}
-		],
-		"profile":[]
+		"profiles":[]
 	}
 ],
 "links":[

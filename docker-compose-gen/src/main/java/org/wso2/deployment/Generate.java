@@ -18,36 +18,69 @@ public class Generate {
      * @param model JSON object with links and nodes
      * @return list of dir names that can be looked up in KB
      */
-    static List<String> toKnowledgeBaseNames(String product, JSONObject model) {
+    static List<String> toKnowledgeBaseNames(int serviceID, JSONObject model) {
         List<String> fileNames = new ArrayList<>();
         JSONArray services = model.getJSONArray("services");
-        for (int i = 0; i < services.length(); i++) {
-            JSONObject service = services.getJSONObject(i);
-            String type = getType(service);
-            JSONArray profiles = service.optJSONArray("profiles");
-            if (type.equals(product)) {
-                if (profiles != null && profiles.length() == 1) {
-                    fileNames.add(withProfile(type, profiles.getString(0)));
-                } else {
-                    fileNames.add(type);
-                }
+
+//        for (int i = 0; i < services.length(); i++) {
+//            JSONObject service = services.getJSONObject(i);
+//            String type = getType(service);
+//            JSONArray profiles = service.optJSONArray("profiles");
+//            if (type.equals(product)) {
+//                if (profiles != null) {
+//                    if (profiles.length() == 1) {
+//                        fileNames.add(withProfile(type, profiles.getString(0)));
+//                    }
+//                } else {
+//                    fileNames.add(type);
+//                }
+//            }
+//            JSONArray links = service.optJSONArray("links");
+//            if (links != null) {
+//                for (int j = 0; j < links.length(); j++) {
+//                    JSONObject link = links.getJSONObject(i);
+//                    int linkIndex = link.getInt("serviceId");
+//                    JSONObject linkedService = services.getJSONObject(linkIndex);
+//                    String linkedType = getType(linkedService);
+//                    if (type.equals(product)) {
+//                        fileNames.add(type + "," + linkedType);
+//                    } else if (linkedType.equals(product)) {
+//                        fileNames.add(linkedType + "," + type);
+//                    }
+//                }
+//
+//            }
+//        }
+
+        JSONObject service = services.getJSONObject(serviceID);
+        String type = getType(service);
+        JSONArray profiles = service.optJSONArray("profiles");
+        if (profiles != null) {
+            if (profiles.length() == 1) {
+                fileNames.add(withProfile(type, profiles.getString(0)));
             }
-            JSONArray links = service.optJSONArray("links");
-            if (links != null) {
-                for (int j = 0; j < links.length(); j++) {
-                    JSONObject link = links.getJSONObject(i);
-                    int linkIndex = link.getInt("serviceId");
-                    JSONObject linkedService = services.getJSONObject(linkIndex);
+        } else {
+            fileNames.add(type);
+        }
+
+        JSONArray links = model.getJSONArray("links");
+        if (links != null) {
+            for (int j = 0; j < links.length(); j++) {
+                JSONObject link = links.getJSONObject(j);
+                int sourceID = link.getInt("source");
+                int targetID = link.getInt("target");
+                if (sourceID == serviceID) {
+                    JSONObject linkedService = services.getJSONObject(targetID);
                     String linkedType = getType(linkedService);
-                    if (type.equals(product)) {
-                        fileNames.add(type + "," + linkedType);
-                    } else if (linkedType.equals(product)) {
-                        fileNames.add(linkedType + "," + type);
-                    }
+                    fileNames.add(type + "," + linkedType);
                 }
 
+
+
             }
+
         }
+
         Collections.sort(fileNames);
         return fileNames;
     }
