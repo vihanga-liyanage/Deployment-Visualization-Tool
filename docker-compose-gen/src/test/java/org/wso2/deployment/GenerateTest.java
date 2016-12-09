@@ -1,5 +1,6 @@
 package org.wso2.deployment;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -11,11 +12,6 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 
 public class GenerateTest {
-
-//    @Test(expectedExceptions = Exception.class)
-//    public void testEmpty() throws Exception {
-//        List<String> dirNames = Generate.toKnowledgeBaseNames(0, new JSONObject("{}"));
-//    }
 
     @Test
     public void testSimpleProduct() throws Exception {
@@ -32,13 +28,6 @@ public class GenerateTest {
         Assert.assertEquals(dirNames, singletonList("wso2am_store"));
     }
 
-//    @Test
-//    public void testNonExistingProduct() throws Exception {
-//        String model = "{\"services\":[{\"type\":\"wso2am-analytics\"}]}";
-//        List<String> dirNames = Generate.toKnowledgeBaseNames(1, new JSONObject(model));
-//        Assert.assertEquals(dirNames, Collections.emptyList());
-//    }
-//
     @Test
     public void testLink() throws Exception {
         String model = "{\"services\":[{\"type\":\"database\",\"profiles\":[]},{\"type\":\"wso2am\",\"profiles\""
@@ -118,5 +107,23 @@ public class GenerateTest {
 
         dirNames = Generate.toKnowledgeBaseNames(1, modelJson);
         Assert.assertEquals(dirNames, Arrays.asList("wso2am_keymanager,wso2am_publisher", "wso2am_keymanager,wso2am_store", "wso2am_traffic-manager,wso2am_publisher", "wso2am_traffic-manager,wso2am_store"));
+    }
+
+    @Test
+    public void testReadJSONModel() throws Exception {
+        String modelPath = "/var/www/html/Deployment-Visualization-Tool/docker-compose-gen/src/main/java/org/wso2/deployment/model1.json";
+        JSONObject model = Generate.getJSONModel(modelPath);
+
+        JSONArray services = model.getJSONArray("services");
+        Assert.assertNotNull(services);
+    }
+
+    @Test
+    public void testgetAllKnowledgeBaseNames() throws Exception {
+        String modelPath = "/var/www/html/Deployment-Visualization-Tool/docker-compose-gen/src/main/java/org/wso2/deployment/model.json";
+        List<String> dirNames;
+
+        dirNames = Generate.getAllKnowledgeBaseNames(modelPath);
+        Assert.assertNotNull(dirNames);
     }
 }

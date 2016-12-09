@@ -3,9 +3,12 @@ package org.wso2.deployment;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.nio.file.Files;
 
 /**
  * Main class to generate docker compose artifacts form model json
@@ -13,6 +16,33 @@ import java.util.List;
 public class Generate {
     public static void main(String[] args) {
     }
+
+    static List<String> getAllKnowledgeBaseNames(String modelPath) {
+        List<String> fileNames = new ArrayList<>();
+        JSONObject model = getJSONModel(modelPath);
+        JSONArray services = model.getJSONArray("services");
+        for (int i = 0; i < services.length(); i ++) {
+            fileNames.addAll(toKnowledgeBaseNames(i, model));
+        }
+        print(fileNames);
+        return fileNames;
+    }
+
+
+    /**
+     * @param modelPath path to the JSON model file
+     * @return created JSON object by reading the file
+     */
+    static JSONObject getJSONModel(String modelPath){
+        String modelStr = null;
+        try {
+            modelStr = new String(Files.readAllBytes(Paths.get(modelPath)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new JSONObject(modelStr);
+    }
+
 
     /**
      * @param model JSON object with links and nodes
@@ -35,7 +65,6 @@ public class Generate {
                 fileNames.add(serviceName);
             }
         }
-
 
         //Resolve links
         JSONArray links = model.getJSONArray("links");
@@ -93,6 +122,12 @@ public class Generate {
                     fileNames.add(serviceName + "," + withProfile(linkedType, profiles.getString(k)));
                 }
             }
+        }
+    }
+
+    private static void print(List<String> fileNames) {
+        for (int i = 0; i < fileNames.size(); i ++) {
+            System.out.println(fileNames.get(i));
         }
     }
 }

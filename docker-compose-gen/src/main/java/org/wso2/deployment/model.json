@@ -43,7 +43,7 @@
 		"ports":[
 			"9447:9443"
 		],
-		"profiles":["Traffic Manager"]
+		"profiles":["traffic-manager"]
 	},
 	{
 		"type":"wso2am",
@@ -52,7 +52,7 @@
 		"ports":[
 			"9443:9443"
 		],
-		"profiles":["Key Manager"]
+		"profiles":["keymanager"]
 	},
 	{
 		"type":"wso2am",
@@ -61,7 +61,7 @@
 		"ports":[
 			"9444:9443"
 		],
-		"profiles":["Gateway Manager"]
+		"profiles":["gateway-manager"]
 	},
 	{
 		"type":"wso2am",
@@ -71,7 +71,7 @@
 			"8280:8280",
 			"8243:8243"
 		],
-		"profiles":["Gateway Worker"]
+		"profiles":["gateway-worker"]
 	},
 	{
 		"type":"load-balancer",

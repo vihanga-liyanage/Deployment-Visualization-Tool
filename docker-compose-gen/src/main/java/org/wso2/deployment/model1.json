@@ -1,0 +1,22 @@
+{"services":[
+	{
+		"type":"database",
+		"name":"apim_rdbms",
+		"image":"mysql:5.5",
+		"ports":[],
+		"profiles":[]
+	},
+	{
+		"type":"wso2am",
+		"name":"publisher",
+		"image":"docker.wso2.com/wso2am:2.0.0",
+		"ports":[
+			"443:9443",
+			"80:9763",
+			"8280:8280",
+			"8243:8243"
+		],
+		"profiles":["publisher"]
+	}
+],
+"links":[]}
