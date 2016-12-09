@@ -45,9 +45,16 @@ public class Generate {
                 int sourceID = link.getInt("source");
                 int targetID = link.getInt("target");
 
+                JSONObject linkedService = null;
                 if (sourceID == serviceID) {
                     //links start from this service
-                    JSONObject linkedService = services.getJSONObject(targetID);
+                    linkedService = services.getJSONObject(targetID);
+                } else if (targetID == serviceID) {
+                    //links end from this service
+                    linkedService = services.getJSONObject(sourceID);
+                }
+
+                if (linkedService != null) {
                     String linkedType = getType(linkedService);
 
                     JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
@@ -56,46 +63,10 @@ public class Generate {
                         for (int p = 0; p < profiles.length(); p++) {
                             serviceName = withProfile(type, profiles.getString(p));
 
-                            if (linkedServiceProfiles != null) {
-                                if (linkedServiceProfiles.length() == 0) {
-                                    fileNames.add(serviceName + "," + linkedType);
-                                } else {
-                                    for (int k = 0; k < linkedServiceProfiles.length(); k++) {
-                                        fileNames.add(serviceName + "," + withProfile(linkedType, linkedServiceProfiles.getString(k)));
-                                    }
-                                }
-                            }
+                            addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
                         }
                     } else {
-                        if (linkedServiceProfiles != null) {
-                            if (linkedServiceProfiles.length() == 0) {
-                                fileNames.add(serviceName + "," + linkedType);
-                            } else {
-                                for (int k = 0; k < linkedServiceProfiles.length(); k++) {
-                                    fileNames.add(serviceName + "," + withProfile(linkedType, linkedServiceProfiles.getString(k)));
-                                }
-                            }
-                        }
-                    }
-
-
-
-                }
-
-                if (targetID == serviceID) {
-                    //links end from this service
-                    JSONObject linkedService = services.getJSONObject(sourceID);
-                    String linkedType = getType(linkedService);
-
-                    JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
-                    if (linkedServiceProfiles != null) {
-                        if (linkedServiceProfiles.length() == 0) {
-                            fileNames.add(serviceName + "," + linkedType);
-                        } else {
-                            for (int k = 0; k < linkedServiceProfiles.length(); k++) {
-                                fileNames.add(serviceName + "," + withProfile(linkedType, linkedServiceProfiles.getString(k)));
-                            }
-                        }
+                        addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
                     }
                 }
             }
@@ -111,5 +82,17 @@ public class Generate {
 
     private static String getType(JSONObject service) {
         return service.getString("type");
+    }
+
+    private static void addLinks(JSONArray profiles, String serviceName, List<String> fileNames, String linkedType) {
+        if (profiles != null) {
+            if (profiles.length() == 0) {
+                fileNames.add(serviceName + "," + linkedType);
+            } else {
+                for (int k = 0; k < profiles.length(); k++) {
+                    fileNames.add(serviceName + "," + withProfile(linkedType, profiles.getString(k)));
+                }
+            }
+        }
     }
 }
