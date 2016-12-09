@@ -1,8 +1,14 @@
 package org.wso2.deployment;
 
+import difflib.DiffUtils;
+import difflib.Patch;
+import difflib.PatchFailedException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +17,10 @@ import java.util.List;
  * Main class to generate docker compose artifacts form model json
  */
 public class Generate {
-    public static void main(String[] args) {
+    public static final String DIFF = ".diff";
+
+    public static void main(String[] args) throws IOException {
+//        apply(0, Paths.get("../knowledge-base/wso2am_publisher"), Paths.get("/home/manu/setups/carbon/wso2am-2.0.0/"), Paths.get("/tmp/wso2am-2.0.0"));
     }
 
     /**
@@ -23,6 +32,7 @@ public class Generate {
         JSONArray services = model.getJSONArray("services");
 
         //Resolve self object
+
         JSONObject service = services.getJSONObject(serviceID);
         String type = getType(service);
         JSONArray profiles = service.optJSONArray("profiles");
@@ -34,8 +44,9 @@ public class Generate {
                 serviceName = withProfile(type, profiles.getString(0));
                 fileNames.add(serviceName);
             }
+        } else {
+            fileNames.add(type);
         }
-
 
         //Resolve links
         JSONArray links = model.getJSONArray("links");
@@ -44,7 +55,6 @@ public class Generate {
                 JSONObject link = links.getJSONObject(j);
                 int sourceID = link.getInt("source");
                 int targetID = link.getInt("target");
-
                 JSONObject linkedService = null;
                 if (sourceID == serviceID) {
                     //links start from this service
@@ -64,7 +74,8 @@ public class Generate {
                             serviceName = withProfile(type, profiles.getString(p));
 
                             addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
-                        }
+            }
+
                     } else {
                         addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
                     }
@@ -95,4 +106,41 @@ public class Generate {
             }
         }
     }
+
+    public static void apply(int level, Path diffDir, Path cleanDir, Path targetDir) {
+        try {
+            Files.list(diffDir).forEach(file -> {
+                int count = diffDir.getNameCount();
+                Path fileName = file.getFileName();
+                if (Files.isDirectory(file)) {
+                    apply(level + 1, file, cleanDir.resolve(fileName), targetDir.resolve(fileName));
+                } else {
+                    String fileNameStr = fileName.toString();
+                    if (fileNameStr.endsWith(DIFF)) {
+                        String fileNameWithoutDiff = fileNameStr.substring(0, fileNameStr.length() - DIFF.length());
+                        applyDiff(file, cleanDir.resolve(fileNameWithoutDiff), targetDir.resolve(fileNameWithoutDiff));
+                    }
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void applyDiff(Path diffFile, Path cleanFile, Path targetDir) {
+        try {
+            System.out.println(targetDir);
+            List<String> diff = Files.readAllLines(diffFile);
+            List<String> clean = Files.readAllLines(cleanFile);
+            diff.add(0, "+++");
+            Patch<String> patch = DiffUtils.parseUnifiedDiff(diff);
+            List<String> patched = DiffUtils.patch(clean, patch);
+
+            Files.createDirectories(targetDir.getParent());
+            Files.write(targetDir, patched);
+        } catch (IOException | PatchFailedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
