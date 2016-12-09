@@ -6,9 +6,12 @@ import difflib.PatchFailedException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +23,7 @@ public class Generate {
     public static final String DIFF = ".diff";
 
     public static void main(String[] args) throws IOException {
-//        apply(0, Paths.get("../knowledge-base/wso2am_publisher"), Paths.get("/home/manu/setups/carbon/wso2am-2.0.0/"), Paths.get("/tmp/wso2am-2.0.0"));
+        apply(0, Paths.get("../knowledge-base/wso2am_publisher"), Paths.get("/home/manu/setups/carbon/wso2am-2.0.0/"), Paths.get("/tmp/wso2am-2.0.0"));
     }
 
     /**
@@ -74,7 +77,7 @@ public class Generate {
                             serviceName = withProfile(type, profiles.getString(p));
 
                             addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
-            }
+                        }
 
                     } else {
                         addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
@@ -118,11 +121,34 @@ public class Generate {
                     String fileNameStr = fileName.toString();
                     if (fileNameStr.endsWith(DIFF)) {
                         String fileNameWithoutDiff = fileNameStr.substring(0, fileNameStr.length() - DIFF.length());
-                        applyDiff(file, cleanDir.resolve(fileNameWithoutDiff), targetDir.resolve(fileNameWithoutDiff));
+                        applyDiffNative(file, cleanDir.resolve(fileNameWithoutDiff), targetDir.resolve(fileNameWithoutDiff));
                     }
                 }
             });
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void applyDiffNative(Path diffFile, Path cleanFile, Path targetDir) {
+        try {
+            Files.createDirectories(targetDir.getParent());
+            if (!Files.isRegularFile(targetDir)) {
+                Files.copy(cleanFile, targetDir);
+            }
+            System.out.println("patch " + targetDir + " < " + diffFile);
+            Process process = new ProcessBuilder("patch", targetDir.toString()).start();
+
+            PrintWriter writer = new PrintWriter(process.getOutputStream());
+            BufferedReader reader = Files.newBufferedReader(diffFile);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.println(line);
+            }
+            writer.close();
+
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
