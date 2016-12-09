@@ -22,63 +22,43 @@ public class Generate {
         List<String> fileNames = new ArrayList<>();
         JSONArray services = model.getJSONArray("services");
 
-//        for (int i = 0; i < services.length(); i++) {
-//            JSONObject service = services.getJSONObject(i);
-//            String type = getType(service);
-//            JSONArray profiles = service.optJSONArray("profiles");
-//            if (type.equals(product)) {
-//                if (profiles != null) {
-//                    if (profiles.length() == 1) {
-//                        fileNames.add(withProfile(type, profiles.getString(0)));
-//                    }
-//                } else {
-//                    fileNames.add(type);
-//                }
-//            }
-//            JSONArray links = service.optJSONArray("links");
-//            if (links != null) {
-//                for (int j = 0; j < links.length(); j++) {
-//                    JSONObject link = links.getJSONObject(i);
-//                    int linkIndex = link.getInt("serviceId");
-//                    JSONObject linkedService = services.getJSONObject(linkIndex);
-//                    String linkedType = getType(linkedService);
-//                    if (type.equals(product)) {
-//                        fileNames.add(type + "," + linkedType);
-//                    } else if (linkedType.equals(product)) {
-//                        fileNames.add(linkedType + "," + type);
-//                    }
-//                }
-//
-//            }
-//        }
-
+        //Resolve self object
         JSONObject service = services.getJSONObject(serviceID);
         String type = getType(service);
         JSONArray profiles = service.optJSONArray("profiles");
+        String serviceName = type;
         if (profiles != null) {
-            if (profiles.length() == 1) {
-                fileNames.add(withProfile(type, profiles.getString(0)));
+            if (profiles.length() == 0) {
+                fileNames.add(serviceName);
+            } else if (profiles.length() == 1) {
+                serviceName = withProfile(type, profiles.getString(0));
+                fileNames.add(serviceName);
             }
-        } else {
-            fileNames.add(type);
         }
 
+
+        //Resolve links
         JSONArray links = model.getJSONArray("links");
         if (links != null) {
             for (int j = 0; j < links.length(); j++) {
                 JSONObject link = links.getJSONObject(j);
                 int sourceID = link.getInt("source");
                 int targetID = link.getInt("target");
+
                 if (sourceID == serviceID) {
                     JSONObject linkedService = services.getJSONObject(targetID);
                     String linkedType = getType(linkedService);
-                    fileNames.add(type + "," + linkedType);
+
+                    JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
+                    if (linkedServiceProfiles != null) {
+                        if (linkedServiceProfiles.length() == 0) {
+                            fileNames.add(serviceName + "," + linkedType);
+                        } else if (linkedServiceProfiles.length() == 1) {
+                            fileNames.add(serviceName + "," + withProfile(linkedType, linkedServiceProfiles.getString(0)));
+                        }
+                    }
                 }
-
-
-
             }
-
         }
 
         Collections.sort(fileNames);
