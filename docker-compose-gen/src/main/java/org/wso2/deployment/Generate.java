@@ -193,6 +193,11 @@ public class Generate {
                     }
                 }
             });
+
+            if (!Files.newDirectoryStream(diffDir).iterator().hasNext()) {
+                System.out.println(diffDir + " - Empty");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
