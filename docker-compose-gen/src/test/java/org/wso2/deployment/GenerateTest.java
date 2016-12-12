@@ -95,7 +95,8 @@ public class GenerateTest {
         List<String> dirNames;
 
         dirNames = Generate.toKnowledgeBaseNames(0, modelJson);
-        Assert.assertEquals(dirNames, Arrays.asList("wso2am_publisher,wso2am_keymanager", "wso2am_publisher,wso2am_traffic-manager", "wso2am_store,wso2am_keymanager", "wso2am_store,wso2am_traffic-manager"));
+        Assert.assertEquals(dirNames, Arrays.asList("wso2am_publisher,wso2am_keymanager", "wso2am_publisher,wso2am_traffic-manager",
+                "wso2am_store,wso2am_keymanager", "wso2am_store,wso2am_traffic-manager"));
     }
 
     @Test
@@ -106,12 +107,25 @@ public class GenerateTest {
         List<String> dirNames;
 
         dirNames = Generate.toKnowledgeBaseNames(1, modelJson);
-        Assert.assertEquals(dirNames, Arrays.asList("wso2am_keymanager,wso2am_publisher", "wso2am_keymanager,wso2am_store", "wso2am_traffic-manager,wso2am_publisher", "wso2am_traffic-manager,wso2am_store"));
+        Assert.assertEquals(dirNames, Arrays.asList("wso2am_keymanager,wso2am_publisher",
+                "wso2am_keymanager,wso2am_store", "wso2am_traffic-manager,wso2am_publisher",
+                "wso2am_traffic-manager,wso2am_store"));
+    }
+
+    @Test
+    public void testSkipLoadBalancer() throws Exception {
+        String model = "{\"services\":[{\"type\":\"wso2am\",\"profiles\":[\"publisher\"]},{\"type\":\"load-balancer\""
+                + ",\"profiles\":[]}],\"links\":[{\"source\":1,\"target\":0}]}";
+        JSONObject modelJson = new JSONObject(model);
+        List<String> dirNames;
+
+        dirNames = Generate.toKnowledgeBaseNames(0, modelJson);
+        Assert.assertEquals(dirNames, Arrays.asList("wso2am_publisher"));
     }
 
     @Test
     public void testReadJSONModel() throws Exception {
-        String modelPath = "/var/www/html/Deployment-Visualization-Tool/docker-compose-gen/src/main/java/org/wso2/deployment/model1.json";
+        String modelPath = "src/resources/model1.json";
         JSONObject model = Generate.getJSONModel(modelPath);
 
         JSONArray services = model.getJSONArray("services");
@@ -120,7 +134,7 @@ public class GenerateTest {
 
     @Test
     public void testgetAllKnowledgeBaseNames() throws Exception {
-        String modelPath = "/var/www/html/Deployment-Visualization-Tool/docker-compose-gen/src/main/java/org/wso2/deployment/model.json";
+        String modelPath = "src/resources/model.json";
         List<String> dirNames;
 
         dirNames = Generate.getAllKnowledgeBaseNames(modelPath);

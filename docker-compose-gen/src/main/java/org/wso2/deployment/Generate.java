@@ -21,9 +21,42 @@ import java.util.List;
  */
 public class Generate {
     public static final String DIFF = ".diff";
+    public static final String CLEAN_PRODUCT_LOCATION = "/home/vihanga/Downloads/Compare/";
+    public static final String TARGET_LOCATION = "/tmp/Deployment-Visualization-Tool/pattern-3/";
 
     public static void main(String[] args) throws IOException {
-        apply(0, Paths.get("../knowledge-base/wso2am_publisher"), Paths.get("/home/manu/setups/carbon/wso2am-2.0.0/"), Paths.get("/tmp/wso2am-2.0.0"));
+        String modelPath = "src/resources/model.json";
+        List<String> fileNames = getAllKnowledgeBaseNames(modelPath);
+        fileNames.forEach(fileName -> {
+            //Ignore database, svn and load-balancer
+            if (!fileName.startsWith("database") && !fileName.startsWith("svn") && !fileName.startsWith("load-balancer")) {
+                String diffDir = "../knowledge-base/" + fileName, product;
+
+                //Get first service if it's a pair
+                if (fileName.contains(",")) {
+                    fileName = fileName.split(",")[0];
+                }
+
+                String targetDir = TARGET_LOCATION + fileName;
+
+                //Separate product and profile
+                if (fileName.contains("_")) {
+                    product = fileName.split("_")[0];
+                } else {
+                    product = fileName;
+                }
+
+                //Setup cleanDir
+                String version = "2.0.0"; //temp solution
+                String cleanDir = CLEAN_PRODUCT_LOCATION + product + "-" + version;
+
+//                System.out.println(diffDir + "\t\t" + cleanDir + "\t\t" + targetDir);
+                apply(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
+
+            }
+
+        });
+
     }
 
     static List<String> getAllKnowledgeBaseNames(String modelPath) {
@@ -33,7 +66,7 @@ public class Generate {
         for (int i = 0; i < services.length(); i ++) {
             fileNames.addAll(toKnowledgeBaseNames(i, model));
         }
-        print(fileNames);
+//        print(fileNames);
         return fileNames;
     }
 
@@ -62,52 +95,54 @@ public class Generate {
         JSONArray services = model.getJSONArray("services");
 
         //Resolve self object
-
         JSONObject service = services.getJSONObject(serviceID);
         String type = getType(service);
         JSONArray profiles = service.optJSONArray("profiles");
         String serviceName = type;
-        if (profiles != null) {
-            if (profiles.length() == 0) {
-                fileNames.add(serviceName);
-            } else if (profiles.length() == 1) {
-                serviceName = withProfile(type, profiles.getString(0));
-                fileNames.add(serviceName);
-            }
-        } else {
-            fileNames.add(type);
-        }
-
-        //Resolve links
-        JSONArray links = model.getJSONArray("links");
-        if (links != null) {
-            for (int j = 0; j < links.length(); j++) {
-                JSONObject link = links.getJSONObject(j);
-                int sourceID = link.getInt("source");
-                int targetID = link.getInt("target");
-                JSONObject linkedService = null;
-                if (sourceID == serviceID) {
-                    //links start from this service
-                    linkedService = services.getJSONObject(targetID);
-                } else if (targetID == serviceID) {
-                    //links end from this service
-                    linkedService = services.getJSONObject(sourceID);
+        if (!"load-balancer".equals(type)) {
+            if (profiles != null) {
+                if (profiles.length() == 0) {
+                    fileNames.add(serviceName);
+                } else if (profiles.length() == 1) {
+                    serviceName = withProfile(type, profiles.getString(0));
+                    fileNames.add(serviceName);
                 }
+            } else {
+                fileNames.add(type);
+            }
 
-                if (linkedService != null) {
-                    String linkedType = getType(linkedService);
+            //Resolve links
+            JSONArray links = model.getJSONArray("links");
+            if (null != links) {
+                for (int j = 0; j < links.length(); j++) {
+                    JSONObject link = links.getJSONObject(j);
+                    int sourceID = link.getInt("source");
+                    int targetID = link.getInt("target");
+                    JSONObject linkedService = null;
+                    if (sourceID == serviceID) {
+                        //links start from this service
+                        linkedService = services.getJSONObject(targetID);
+                    } else if (targetID == serviceID) {
+                        //links end from this service
+                        linkedService = services.getJSONObject(sourceID);
+                    }
 
-                    JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
-                    if (profiles.length() > 1) {
-                        //If source service had more than one profile
-                        for (int p = 0; p < profiles.length(); p++) {
-                            serviceName = withProfile(type, profiles.getString(p));
+                    if (linkedService != null) {
+                        String linkedType = getType(linkedService);
+                        if (!"load-balancer".equals(linkedType)) {
+                            JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
 
-                            addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
+                            //If original service had more than one profile
+                            if (profiles.length() > 1) {
+                                for (int p = 0; p < profiles.length(); p++) {
+                                    String tempServiceName = withProfile(type, profiles.getString(p));
+
+                                    addLinks(linkedServiceProfiles, tempServiceName, fileNames, linkedType);
+                                }
+                            } else {
+                                addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
+                            }
                         }
-
-                    } else {
-                        addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
                     }
                 }
             }

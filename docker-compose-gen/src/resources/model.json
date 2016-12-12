@@ -25,16 +25,16 @@
 		"ports":[
 			"9446:9443"
 		],
-		"profiles":["Store"]
+		"profiles":["store"]
 	},
 	{
-		"type":"wso2am_analytics",
+		"type":"wso2am-analytics",
 		"name":"analytics",
 		"image":"docker.wso2.com/wso2am-analytics:2.0.0",
 		"ports":[
 			"9448:9444"
 		],
-		"profiles":["Analytics"]
+		"profiles":[]
 	},
 	{
 		"type":"wso2am",
@@ -132,10 +132,6 @@
 	{
 		"source":6,
 		"target":7
-	},
-	{
-		"source":3,
-		"target":1
 	},
 	{
 		"source":8,
