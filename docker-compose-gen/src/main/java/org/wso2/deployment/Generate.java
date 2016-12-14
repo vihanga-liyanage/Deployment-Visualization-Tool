@@ -114,7 +114,7 @@ public class Generate {
 
         //Resolve self object
         JSONObject service = services.getJSONObject(serviceID);
-        String type = getType(service);
+        String type = service.getString("type");
         JSONArray profiles = service.optJSONArray("profiles");
         String serviceName = type;
         if (!"load-balancer".equals(type)) {
@@ -146,7 +146,7 @@ public class Generate {
                     }
 
                     if (linkedService != null) {
-                        String linkedType = getType(linkedService);
+                        String linkedType = linkedService.getString("type");
                         if (!"load-balancer".equals(linkedType)) {
                             JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
 
@@ -172,10 +172,6 @@ public class Generate {
 
     private static String withProfile(String type, String profile) {
         return type + "_" + profile;
-    }
-
-    private static String getType(JSONObject service) {
-        return service.getString("type");
     }
 
     private static void addLinks(JSONArray profiles, String serviceName, List<String> fileNames, String linkedType) {
@@ -366,5 +362,74 @@ public class Generate {
         link.put("target", serviceMap.get(target));
 
         return link;
+    }
+
+    static String getXMLFromJSON(JSONObject model) {
+        String xml = "<mxGraphModel><root><Diagram id=\"0\"><mxCell/></Diagram><Layer id=\"1\"><mxCell parent=\"0\"/></Layer>";
+        int elementID = 2;
+        Map<Integer, String> serviceMap = new HashMap<>();
+
+        //Resolve services
+        JSONArray services = model.getJSONArray("services");
+        for (int i=0; i<services.length(); i++) {
+            JSONObject service = services.getJSONObject(i);
+            String type = service.getString("type");
+
+            //Add id and profile
+            JSONArray profiles = service.optJSONArray("profiles");
+            if (profiles.length() < 1) {
+                xml += "<Image label=\"\" id=\"" + elementID + "\">";
+                //Adding services to map
+                serviceMap.put(elementID, type);
+
+            } else if (profiles.length() == 1) {
+                xml += "<Image label=\"" + profiles.get(0) + "\" id=\"" + elementID + "\">";
+                //Adding services to map
+                serviceMap.put(elementID, type + "_" + profiles.get(0));
+
+            } else {
+                xml += "<Image label=\"";
+                for (int j=0; j<profiles.length(); j++) {
+                    xml += profiles.get(j) + "/";
+                }
+                xml += "\" id=\"" + elementID + "\">";
+                //Adding services to map
+                serviceMap.put(elementID, type);
+            }
+
+            //Add style, i.e type
+            xml += "<mxCell style=\"" + type
+                    + "\" vertex=\"1\" parent=\"1\"><mxGeometry x=\"0\" y=\"0\" width=\"100\" "
+                    + "height=\"100\" as=\"geometry\"/></mxCell></Image>";
+
+            elementID ++;
+        }
+
+        //Resolve links
+        JSONArray links = model.getJSONArray("links");
+        for (int i=0; i<links.length(); i++) {
+            JSONObject link = links.getJSONObject(i);
+            int source = link.getInt("source") + 2;
+            int target = link.getInt("target") + 2;
+            xml += "<Connector id=\"" + elementID
+                    + "\"><mxCell edge=\"1\" parent=\"1\" source=\"" + source + "\" target=\"" + target + "\"";
+
+            //Adding different colors to links based on source
+            if (serviceMap.get(source).contains("database")){
+                xml += " style=\"strokeColor=#e900ff;startArrow=classic;\"";
+            } else if (serviceMap.get(source).contains("wso2am-analytics")){
+                xml += " style=\"strokeColor=#3aa210;dashed=1;\"";
+            } else if (serviceMap.get(source).contains("svn")){
+                xml += " style=\"strokeColor=#3aa210;startArrow=classic;\"";
+            } else if (serviceMap.get(source).contains("traffic-manager")){
+                xml += " style=\"strokeColor=#dd0009;startArrow=classic;dashed=1;\"";
+            } else if (serviceMap.get(source).contains("gateway-worker")){
+                xml += " style=\"strokeColor=#3aa210;dashed=1;\"";
+            }
+            xml += "><mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></Connector>";
+            elementID ++;
+        }
+        xml += "</root></mxGraphModel>";
+        return xml;
     }
 }
