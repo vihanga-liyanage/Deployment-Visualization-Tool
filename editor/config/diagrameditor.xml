@@ -91,7 +91,7 @@
 		</add>
 		<add as="WSO2_Complex_Event_Processor">
 			<Image label="" href="">
-				<mxCell vertex="1" style="wso2_complex_event_processor">
+				<mxCell vertex="1" style="wso2-complex-event-processor">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
@@ -105,14 +105,14 @@
 		</add>
 		<add as="WSO2_Identity_Server">
 			<Image label="" href="">
-				<mxCell vertex="1" style="wso2_identity_server">
+				<mxCell vertex="1" style="wso2-identity-server">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="WSO2_Machine_Learner">
 			<Image label="" href="">
-				<mxCell vertex="1" style="wso2_machine_learner">
+				<mxCell vertex="1" style="wso2-machine-learner">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
@@ -133,14 +133,14 @@
 		</add>
 		<add as="WSO2_DAS">
 			<Image label="" href="">
-				<mxCell vertex="1" style="wso2am_analytics">
+				<mxCell vertex="1" style="wso2am-analytics">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="WSO2_IoT_Server">
 			<Image label="" href="">
-				<mxCell vertex="1" style="wso2_iot_server">
+				<mxCell vertex="1" style="wso2-iot-server">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
@@ -296,7 +296,7 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2-am.png"/>
 			</add>
-			<add as="wso2_complex_event_processor">
+			<add as="wso2-complex-event-processor">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2_complex_event_processor.png"/>
@@ -306,12 +306,12 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2-esb.png"/>
 			</add>
-			<add as="wso2_identity_server">
+			<add as="wso2-identity-server">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2-is.png"/>
 			</add>
-			<add as="wso2_machine_learner">
+			<add as="wso2-machine-learner">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2_machine_learner.png"/>
@@ -326,12 +326,12 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/publisher.png"/>
 			</add>
-			<add as="wso2am_analytics">
+			<add as="wso2am-analytics">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2_das.png"/>
 			</add>
-			<add as="wso2_iot_server">
+			<add as="wso2-iot-server">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2_iot_server.png"/>

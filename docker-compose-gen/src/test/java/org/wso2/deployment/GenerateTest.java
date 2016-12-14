@@ -133,7 +133,7 @@ public class GenerateTest {
     }
 
     @Test
-    public void testgetAllKnowledgeBaseNames() throws Exception {
+    public void testGetAllKnowledgeBaseNames() throws Exception {
         String modelPath = "src/resources/model.json";
         List<String> dirNames;
 
@@ -192,6 +192,20 @@ public class GenerateTest {
 
         JSONObject test = Generate.getJSONFromXML(xml);
         Assert.assertEquals(test.toString(), resultJSON.toString());
+
+        //Extended test with multiple profiles
+        xml = "<mxGraphModel><root><Diagram id=\"0\"><mxCell/></Diagram><Layer id=\"1\"><mxCell parent=\"0\"/>"
+                + "</Layer><Image label=\"publisher/store\" id=\"3\"><mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">"
+                + "</mxCell></Image><Image label=\"keymanager/traffic-manager\" id=\"4\">"
+                + "<mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\"></mxCell></Image><Connector id=\"5\">"
+                + "<mxCell edge=\"1\" parent=\"1\" source=\"3\" target=\"4\"></mxCell></Connector></root></mxGraphModel>";
+
+        resultJSONStr = "{\"services\":[{\"type\":\"wso2am\",\"profiles\":[\"publisher\",\"store\"]},{\"type\":\"wso2am\""
+                + ",\"profiles\":[\"keymanager\",\"traffic-manager\"]}],\"links\":[{\"source\":0,\"target\":1}]}";
+        resultJSON = new JSONObject(resultJSONStr);
+
+        test = Generate.getJSONFromXML(xml);
+        Assert.assertEquals(test.toString(), resultJSON.toString());
     }
 
     @Test
@@ -238,5 +252,124 @@ public class GenerateTest {
 
         JSONObject test = Generate.getJSONFromXML(xml);
         Assert.assertEquals(test.toString(), resultJSON.toString());
+    }
+
+    //Testing getXMLFromJSON
+    @Test
+    public void testXMLIdentifyBasicService() throws Exception {
+        String modelStr = "{\"services\":[{\"type\":\"database\",\"profiles\":[]}],\"links\":[]}";
+        JSONObject model = new JSONObject(modelStr);
+
+        String resultXML = "<mxGraphModel><root><Diagram id=\"0\"><mxCell/></Diagram><Layer id=\"1\">"
+                + "<mxCell parent=\"0\"/></Layer><Image label=\"\" id=\"2\">"
+                + "<mxCell style=\"database\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/>"
+                + "</mxCell></Image></root></mxGraphModel>";
+        String test = Generate.getXMLFromJSON(model);
+
+        Assert.assertEquals(resultXML, test);
+    }
+
+    @Test
+    public void testXMLIdentifyServices() throws Exception {
+        String modelStr = "{\"services\":[{\"type\":\"database\",\"profiles\":[]},{\"type\":\"wso2am\",\"profiles\":[]}],\"links\":[]}";
+        JSONObject model = new JSONObject(modelStr);
+
+        String resultXML = "<mxGraphModel><root><Diagram id=\"0\"><mxCell/></Diagram><Layer id=\"1\"><mxCell parent=\"0\"/>"
+                + "</Layer><Image label=\"\" id=\"2\"><mxCell style=\"database\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image>"
+                + "<Image label=\"\" id=\"3\"><mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image></root></mxGraphModel>";
+        String test = Generate.getXMLFromJSON(model);
+
+        Assert.assertEquals(resultXML, test);
+    }
+
+    @Test
+    public void testXMLIdentifyServiceWithProfile() throws Exception {
+        String modelStr = "{\"services\":[{\"type\":\"wso2am\",\"profiles\":[\"publisher\"]}],\"links\":[]}";
+        JSONObject model = new JSONObject(modelStr);
+
+        String resultXML = "<mxGraphModel><root><Diagram id=\"0\"><mxCell/></Diagram><Layer id=\"1\"><mxCell parent=\"0\"/>"
+                + "</Layer><Image label=\"publisher\" id=\"2\"><mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image></root></mxGraphModel>";
+        String test = Generate.getXMLFromJSON(model);
+
+        Assert.assertEquals(resultXML, test);
+    }
+
+    @Test
+    public void testXMLIdentifyLink() throws Exception {
+        String modelStr = "{\"services\":[{\"type\":\"wso2am\",\"profiles\":[\"publisher\"]},{\"type\":\"wso2am\",\"profiles\":"
+                + "[\"store\"]}],\"links\":[{\"source\":0,\"target\":1}]}";
+        JSONObject model = new JSONObject(modelStr);
+
+        String resultXML = "<mxGraphModel><root><Diagram id=\"0\"><mxCell/></Diagram><Layer id=\"1\"><mxCell parent=\"0\"/>"
+                + "</Layer><Image label=\"publisher\" id=\"2\"><mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image>"
+                + "<Image label=\"store\" id=\"3\"><mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image>"
+                + "<Connector id=\"4\"><mxCell edge=\"1\" parent=\"1\" source=\"2\" target=\"3\">"
+                + "<mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></Connector></root></mxGraphModel>";
+        String test = Generate.getXMLFromJSON(model);
+
+        Assert.assertEquals(test, resultXML);
+    }
+
+    @Test
+    public void testXMLIdentifyLinksWithColors() throws Exception {
+        String modelStr = "{\"services\":[{\"type\":\"database\",\"profiles\":[]},{\"type\":\"wso2am\",\"profiles\":"
+                + "[\"publisher\"]},{\"type\":\"wso2am\",\"profiles\":[\"store\"]}],\"links\":[{\"source\":0,\"target\""
+                + ":1},{\"source\":1,\"target\":2}]}";
+        JSONObject model = new JSONObject(modelStr);
+
+        String resultXML = "<mxGraphModel><root><Diagram id=\"0\"><mxCell/></Diagram><Layer id=\"1\"><mxCell parent=\"0\"/>"
+                + "</Layer><Image label=\"\" id=\"2\"><mxCell style=\"database\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image>"
+                + "<Image label=\"publisher\" id=\"3\"><mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image>"
+                + "<Image label=\"store\" id=\"4\"><mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image>"
+                + "<Connector id=\"5\"><mxCell edge=\"1\" parent=\"1\" source=\"2\" target=\"3\" style=\"strokeColor=#e900ff;startArrow=classic;\">"
+                + "<mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></Connector><Connector id=\"6\">"
+                + "<mxCell edge=\"1\" parent=\"1\" source=\"3\" target=\"4\"><mxGeometry relative=\"1\" as=\"geometry\"/>"
+                + "</mxCell></Connector></root></mxGraphModel>";
+        String test = Generate.getXMLFromJSON(model);
+
+        Assert.assertEquals(test, resultXML);
+    }
+
+    @Test
+    public void testXMLIdentifyLinks() throws Exception {
+        String modelStr = "{\"services\":[{\"type\":\"database\",\"profiles\":[]},{\"type\":\"wso2am\",\"profiles\":"
+                + "[\"publisher\"]},{\"type\":\"wso2am\",\"profiles\":[\"store\"]}],\"links\":[{\"source\":0,\"target\":1}"
+                + ",{\"source\":0,\"target\":2},{\"source\":1,\"target\":2}]}";
+        JSONObject model = new JSONObject(modelStr);
+
+        String resultXML = "<mxGraphModel><root><Diagram id=\"0\"><mxCell/></Diagram><Layer id=\"1\"><mxCell parent=\"0\"/>"
+                + "</Layer><Image label=\"\" id=\"2\"><mxCell style=\"database\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image>"
+                + "<Image label=\"publisher\" id=\"3\"><mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image>"
+                + "<Image label=\"store\" id=\"4\"><mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">"
+                + "<mxGeometry x=\"0\" y=\"0\" width=\"100\" height=\"100\" as=\"geometry\"/></mxCell></Image>"
+                + "<Connector id=\"5\"><mxCell edge=\"1\" parent=\"1\" source=\"2\" target=\"3\" "
+                + "style=\"strokeColor=#e900ff;startArrow=classic;\"><mxGeometry relative=\"1\" as=\"geometry\"/>"
+                + "</mxCell></Connector><Connector id=\"6\"><mxCell edge=\"1\" parent=\"1\" source=\"2\" target=\"4\" "
+                + "style=\"strokeColor=#e900ff;startArrow=classic;\"><mxGeometry relative=\"1\" as=\"geometry\"/>"
+                + "</mxCell></Connector><Connector id=\"7\"><mxCell edge=\"1\" parent=\"1\" source=\"3\" target=\"4\">"
+                + "<mxGeometry relative=\"1\" as=\"geometry\"/></mxCell></Connector></root></mxGraphModel>";
+        String test = Generate.getXMLFromJSON(model);
+
+        Assert.assertEquals(test, resultXML);
+    }
+
+    @Test
+    public void testXMLsample() throws Exception {
+        String modelStr = "{\"services\":[{\"type\":\"database\",\"name\":\"apim_rdbms\",\"image\":\"mysql:5.5\",\"ports\":[],\"profiles\":[]},{\"type\":\"wso2am\",\"name\":\"publisher\",\"image\":\"docker.wso2.com/wso2am:2.0.0\",\"ports\":[\"443:9443\",\"80:9763\",\"8280:8280\",\"8243:8243\"],\"profiles\":[\"publisher\"]},{\"type\":\"wso2am\",\"name\":\"store\",\"image\":\"docker.wso2.com/wso2am:2.0.0\",\"ports\":[\"9446:9443\"],\"profiles\":[\"store\"]},{\"type\":\"wso2am-analytics\",\"name\":\"analytics\",\"image\":\"docker.wso2.com/wso2am-analytics:2.0.0\",\"ports\":[\"9448:9444\"],\"profiles\":[]},{\"type\":\"wso2am\",\"name\":\"traffic-manager\",\"image\":\"docker.wso2.com/wso2am:2.0.0\",\"ports\":[\"9447:9443\"],\"profiles\":[\"traffic-manager\"]},{\"type\":\"wso2am\",\"name\":\"keymanager\",\"image\":\"docker.wso2.com/wso2am:2.0.0\",\"ports\":[\"9443:9443\"],\"profiles\":[\"keymanager\"]},{\"type\":\"wso2am\",\"name\":\"gateway-manager\",\"image\":\"docker.wso2.com/wso2am:2.0.0\",\"ports\":[\"9444:9443\"],\"profiles\":[\"gateway-manager\"]},{\"type\":\"wso2am\",\"name\":\"gateway-worker\",\"image\":\"docker.wso2.com/wso2am:2.0.0\",\"ports\":[\"8280:8280\",\"8243:8243\"],\"profiles\":[\"gateway-worker\"]},{\"type\":\"load-balancer\",\"name\":\"load-balancer\",\"image\":\"\",\"ports\":[],\"profiles\":[]},{\"type\":\"svn\",\"name\":\"svn\",\"image\":\"\",\"ports\":[],\"profiles\":[]}],\"links\":[{\"source\":0,\"target\":1},{\"source\":0,\"target\":2},{\"source\":0,\"target\":3},{\"source\":0,\"target\":4},{\"source\":0,\"target\":5},{\"source\":1,\"target\":2},{\"source\":3,\"target\":1},{\"source\":3,\"target\":2},{\"source\":3,\"target\":7},{\"source\":4,\"target\":7},{\"source\":6,\"target\":7},{\"source\":8,\"target\":1},{\"source\":8,\"target\":2},{\"source\":8,\"target\":3},{\"source\":8,\"target\":4},{\"source\":8,\"target\":5},{\"source\":8,\"target\":6},{\"source\":8,\"target\":7},{\"source\":9,\"target\":6},{\"source\":9,\"target\":7}]}";
+        JSONObject model = new JSONObject(modelStr);
+
+        String test = Generate.getXMLFromJSON(model);
+        System.out.println(test);
     }
 }
