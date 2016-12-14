@@ -1,0 +1,150 @@
+<mxGraphModel>
+    <root>
+        <Diagram label="My Diagram" href="http://www.jgraph.com/" id="0">
+            <mxCell/>
+        </Diagram>
+        <Layer label="Default Layer" id="1">
+            <mxCell parent="0"/>
+        </Layer>
+        <Image label="" href="" id="2">
+            <mxCell style="database;fontSize=16;" parent="1" vertex="1">
+                <mxGeometry x="641" y="181" width="100" height="100" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="Publisher" href="" id="3">
+            <mxCell style="wso2am;fontSize=16;" parent="1" vertex="1">
+                <mxGeometry x="501" y="561" width="100" height="100" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="Analytics" href="" id="4">
+            <mxCell style="wso2am_analytics;fontSize=16;" parent="1" vertex="1">
+                <mxGeometry x="661" y="401" width="100" height="100" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="Traffic Manager" href="" id="5">
+            <mxCell style="wso2am;fontSize=16;" parent="1" vertex="1">
+                <mxGeometry x="287.875" y="111" width="100" height="100" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="Key Manager" href="" id="6">
+            <mxCell style="wso2am;fontSize=16;" parent="1" vertex="1">
+                <mxGeometry x="871" y="251" width="100" height="100" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="Gateway Manager" href="" id="7">
+            <mxCell style="wso2am;fontSize=16;" parent="1" vertex="1">
+                <mxGeometry x="256.625" y="651" width="100" height="100" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="Gateway Worker" href="" id="8">
+            <mxCell style="wso2am;fontSize=16;" parent="1" vertex="1">
+                <mxGeometry x="221" y="381" width="100" height="100" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="Store" href="" id="9">
+            <mxCell style="wso2am;fontSize=16;" parent="1" vertex="1">
+                <mxGeometry x="531" y="1" width="100" height="100" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="" href="" id="10">
+            <mxCell style="load-balancer;fontSize=16;" parent="1" vertex="1">
+                <mxGeometry x="451" y="311" width="100" height="100" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="" href="" id="11">
+            <mxCell style="svn;fontSize=16;" parent="1" vertex="1">
+                <mxGeometry x="1" y="581" width="100" height="100" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Connector label="" href="" id="12">
+            <mxCell style="strokeColor=#e900ff;startArrow=classic;noEdgeStyle=1;" parent="1" source="2" target="3" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="13">
+            <mxCell style="strokeColor=#e900ff;startArrow=classic;noEdgeStyle=1;" parent="1" source="2" target="4" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="14">
+            <mxCell style="strokeColor=#e900ff;startArrow=classic;noEdgeStyle=1;" parent="1" source="2" target="5" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="15">
+            <mxCell style="strokeColor=#e900ff;startArrow=classic;noEdgeStyle=1;" parent="1" source="2" target="6" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="16">
+            <mxCell style="strokeColor=#e900ff;startArrow=classic;noEdgeStyle=1;" parent="1" source="2" target="9" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="17">
+            <mxCell style="strokeColor=#3aa210;dashed=1;noEdgeStyle=1;" parent="1" source="4" target="3" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="18">
+            <mxCell style="strokeColor=#3aa210;dashed=1;noEdgeStyle=1;" parent="1" source="4" target="9" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="19">
+            <mxCell style="strokeColor=#dd0009;startArrow=classic;dashed=1;noEdgeStyle=1;" parent="1" source="5" target="8" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="20">
+            <mxCell style="strokeColor=#3aa210;dashed=1;noEdgeStyle=1;" parent="1" source="8" target="4" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="21">
+            <mxCell style="startArrow=classic;noEdgeStyle=1;" parent="1" source="10" target="3" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="22">
+            <mxCell style="startArrow=classic;noEdgeStyle=1;" parent="1" source="10" target="4" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="23">
+            <mxCell style="startArrow=classic;noEdgeStyle=1;" parent="1" source="10" target="5" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="24">
+            <mxCell style="startArrow=classic;noEdgeStyle=1;" parent="1" source="10" target="6" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="25">
+            <mxCell style="startArrow=classic;noEdgeStyle=1;" parent="1" source="10" target="7" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="26">
+            <mxCell style="startArrow=classic;noEdgeStyle=1;" parent="1" source="10" target="8" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="27">
+            <mxCell style="startArrow=classic;noEdgeStyle=1;" parent="1" source="10" target="9" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="28">
+            <mxCell style="strokeColor=#3aa210;startArrow=classic;noEdgeStyle=1;" parent="1" source="11" target="7" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+        <Connector label="" href="" id="29">
+            <mxCell style="strokeColor=#3aa210;startArrow=classic;noEdgeStyle=1;" parent="1" source="11" target="8" edge="1">
+                <mxGeometry relative="1" as="geometry"/>
+            </mxCell>
+        </Connector>
+    </root>
+</mxGraphModel>

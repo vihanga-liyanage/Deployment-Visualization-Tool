@@ -140,4 +140,103 @@ public class GenerateTest {
         dirNames = Generate.getAllKnowledgeBaseNames(modelPath);
         Assert.assertNotNull(dirNames);
     }
+
+    //Testing getJSONFromXML
+    @Test
+    public void testIdentifyBasicService() throws Exception {
+        String xml = "<mxGraphModel>\n" + "  <root>\n"
+                + "    <Diagram label=\"My Diagram\" href=\"http://www.jgraph.com/\" id=\"0\">\n" + "      <mxCell/>\n"
+                + "    </Diagram>\n" + "    <Layer label=\"Default Layer\" id=\"1\">\n"
+                + "      <mxCell parent=\"0\"/>\n" + "    </Layer>\n" + "    <Image label=\"publisher\" href=\"\" id=\"34\">\n"
+                + "      <mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">\n"
+                + "        <mxGeometry x=\"140\" y=\"240\" width=\"100\" height=\"100\" as=\"geometry\"/>\n"
+                + "      </mxCell>\n" + "    </Image>\n" + "  </root>\n" + "</mxGraphModel>";
+
+        String resultJSONStr = "{\"services\":[{\"type\":\"wso2am\",\"profiles\":[\"publisher\"]}],\"links\":[]}";
+        JSONObject resultJSON = new JSONObject(resultJSONStr);
+
+        JSONObject test = Generate.getJSONFromXML(xml);
+        Assert.assertEquals(test.toString(), resultJSON.toString());
+    }
+
+    @Test
+    public void testIdentifyServices() throws Exception {
+        String xml = "<mxGraphModel><root><Diagram label=\"My Diagram\" href=\"http://www.jgraph.com/\" id=\"0\">"
+                + "<mxCell/></Diagram><Layer label=\"Default Layer\" id=\"1\"><mxCell parent=\"0\"/></Layer>"
+                + "<Image label=\"publisher\" href=\"\" id=\"34\"><mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">"
+                + "</mxCell></Image><Image label=\"\" href=\"\" id=\"35\"><mxCell style=\"database\" vertex=\"1\""
+                + " parent=\"1\"></mxCell></Image>"
+                + "</root></mxGraphModel>";
+
+        String resultJSONStr = "{\"services\":[{\"type\":\"wso2am\",\"profiles"
+                + "\":[\"publisher\"]},{\"type\":\"database\",\"profiles\":[]}],\"links\":[]}";
+
+        JSONObject resultJSON = new JSONObject(resultJSONStr);
+
+        JSONObject test = Generate.getJSONFromXML(xml);
+        Assert.assertEquals(test.toString(), resultJSON.toString());
+    }
+
+    @Test
+    public void testIdentifyServiceWithProfiles() throws Exception {
+        String xml = "<mxGraphModel>\n" + "  <root>\n"
+                + "    <Diagram label=\"My Diagram\" href=\"http://www.jgraph.com/\" id=\"0\">\n" + "      <mxCell/>\n"
+                + "    </Diagram>\n" + "    <Layer label=\"Default Layer\" id=\"1\">\n"
+                + "      <mxCell parent=\"0\"/>\n" + "    </Layer>\n" + "    <Image label=\"publisher/store\" href=\"\" id=\"34\">\n"
+                + "      <mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">\n"
+                + "        <mxGeometry x=\"140\" y=\"240\" width=\"100\" height=\"100\" as=\"geometry\"/>\n"
+                + "      </mxCell>\n" + "    </Image>\n" + "  </root>\n" + "</mxGraphModel>";
+
+        String resultJSONStr = "{\"services\":[{\"type\":\"wso2am\",\"profiles\":[\"publisher\",\"store\"]}],\"links\":[]}";
+        JSONObject resultJSON = new JSONObject(resultJSONStr);
+
+        JSONObject test = Generate.getJSONFromXML(xml);
+        Assert.assertEquals(test.toString(), resultJSON.toString());
+    }
+
+    @Test
+    public void testIdentifyLink() throws Exception {
+        String xml = "<mxGraphModel>\n" + "    <root>\n"
+                + "        <Diagram label=\"My Diagram\" href=\"http://www.jgraph.com/\" id=\"0\">\n"
+                + "            <mxCell/>\n" + "        </Diagram>\n"
+                + "        <Layer label=\"Default Layer\" id=\"1\">\n" + "            <mxCell parent=\"0\"/>\n"
+                + "        </Layer>\n" + "        <Image label=\"publisher\" href=\"\" id=\"34\">\n"
+                + "            <mxCell style=\"wso2am\" vertex=\"1\" parent=\"1\">\n"
+                + "                <mxGeometry x=\"440\" y=\"310\" width=\"100\" height=\"100\" as=\"geometry\"/>\n"
+                + "            </mxCell>\n" + "        </Image>\n" + "        <Image label=\"\" href=\"\" id=\"35\">\n"
+                + "            <mxCell style=\"database\" vertex=\"1\" parent=\"1\">\n"
+                + "                <mxGeometry x=\"70\" y=\"90\" width=\"100\" height=\"100\" as=\"geometry\"/>\n"
+                + "            </mxCell>\n" + "        </Image>\n"
+                + "        <Connector label=\"\" href=\"\" id=\"36\">\n"
+                + "            <mxCell edge=\"1\" parent=\"1\" source=\"35\" target=\"34\">\n"
+                + "                <mxGeometry relative=\"1\" as=\"geometry\"/>\n" + "            </mxCell>\n"
+                + "        </Connector>\n" + "    </root>\n" + "</mxGraphModel>";
+
+        String resultJSONStr = "{\"services\":[{\"type\":\"wso2am\",\"profiles\":[\"publisher\"]},{\"type\":\"database\""
+                + ",\"profiles\":[]}],\"links\":[{\"source\":0,\"target\":1}]}";
+
+        JSONObject resultJSON = new JSONObject(resultJSONStr);
+
+        JSONObject test = Generate.getJSONFromXML(xml);
+        Assert.assertEquals(test.toString(), resultJSON.toString());
+    }
+
+    @Test
+    public void testIdentifyLinks() throws Exception {
+        String xml = "<mxGraphModel><root><Image label=\"\" id=\"2\"><mxCell style=\"database\" ></mxCell></Image>"
+                + "<Image label=\"publisher\" id=\"3\"><mxCell style=\"wso2am\" ></mxCell></Image><Image label=\"store\""
+                + " href=\"\" id=\"4\"><mxCell style=\"wso2am\" ></mxCell></Image><Connector label=\"\" id=\"5\">"
+                + "<mxCell  source=\"2\" target=\"4\"></mxCell></Connector><Connector label=\"\"  id=\"6\"><mxCell "
+                + "source=\"2\" target=\"3\"></mxCell></Connector><Connector label=\"\" href=\"\" id=\"7\"><mxCell "
+                + "source=\"3\" target=\"4\"></mxCell></Connector></root></mxGraphModel>";
+
+        String resultJSONStr = "{\"services\":[{\"type\":\"database\",\"profiles\":[]},{\"type\":\"wso2am\",\"profiles\""
+                + ":[\"publisher\"]},{\"type\":\"wso2am\",\"profiles\":[\"store\"]}],\"links\":[{\"source\":0,\"target\":2}"
+                + ",{\"source\":0,\"target\":1},{\"source\":1,\"target\":2}]}";
+
+        JSONObject resultJSON = new JSONObject(resultJSONStr);
+
+        JSONObject test = Generate.getJSONFromXML(xml);
+        Assert.assertEquals(test.toString(), resultJSON.toString());
+    }
 }

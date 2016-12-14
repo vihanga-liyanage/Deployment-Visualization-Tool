@@ -4,7 +4,9 @@ import difflib.DiffUtils;
 import difflib.Patch;
 import difflib.PatchFailedException;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.XML;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,9 +14,7 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Main class to generate docker compose artifacts form model json
@@ -57,6 +57,25 @@ public class Generate {
 
         });
 
+//        String xmlPath = "src/resources/test.xml";
+//        String TEST_XML_STRING = null;
+//        int PRETTY_PRINT_INDENT_FACTOR = 4;
+//        try {
+//            TEST_XML_STRING = new String(Files.readAllBytes(Paths.get(xmlPath)));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//            JSONObject xmlJSONObj = XML.toJSONObject(TEST_XML_STRING);
+//
+//            String jsonPrettyPrintString = xmlJSONObj.toString(PRETTY_PRINT_INDENT_FACTOR);
+//            System.out.println(jsonPrettyPrintString);
+//
+//        } catch (JSONException e) {
+//            System.out.println(e.toString());
+//        }
+
     }
 
     static List<String> getAllKnowledgeBaseNames(String modelPath) {
@@ -70,7 +89,6 @@ public class Generate {
         return fileNames;
     }
 
-
     /**
      * @param modelPath path to the JSON model file
      * @return created JSON object by reading the file
@@ -82,9 +100,9 @@ public class Generate {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return new JSONObject(modelStr);
     }
-
 
     /**
      * @param model JSON object with links and nodes
@@ -240,5 +258,113 @@ public class Generate {
         } catch (IOException | PatchFailedException e) {
             e.printStackTrace();
         }
+    }
+
+    static JSONObject getJSONFromXML(String xmlString) {
+        JSONObject temp = XML.toJSONObject(xmlString);
+//        System.out.println(temp.toString(4));
+
+        JSONObject result = new JSONObject();
+
+        JSONObject mxGraphModel = temp.getJSONObject("mxGraphModel");
+        JSONObject root = mxGraphModel.getJSONObject("root");
+
+        Map<Integer, Integer> serviceMap = new HashMap<>();
+
+        //Resolve images, i.e services
+        JSONArray services = new JSONArray();
+        if (root.get("Image") instanceof JSONArray) {
+            //More than one images exists
+            JSONArray images = root.getJSONArray("Image");
+
+            for (int i = 0; i < images.length(); i ++) {
+                JSONObject image = images.getJSONObject(i);
+
+                //Adding new service into services array
+                services.put(processService((JSONObject)image, serviceMap, i));
+            }
+
+        } else {
+            //Only one image exists
+            JSONObject image = root.getJSONObject("Image");
+
+            //Adding new service into services array
+            services.put(processService((JSONObject)image, serviceMap, 0));
+
+        }
+
+        //Resolve connectors, i.e links
+        JSONArray links = new JSONArray();
+        if (root.has("Connector")) {
+            if (root.get("Connector") instanceof JSONArray) {
+                //More than one images exists
+                JSONArray connectors = root.getJSONArray("Connector");
+
+                for (int i = 0; i < connectors.length(); i++) {
+                    JSONObject connector = connectors.getJSONObject(i);
+
+                    //Adding new service into services array
+                    links.put(processLink((JSONObject) connector, serviceMap));
+                }
+
+            } else {
+                //Only one image exists
+                JSONObject connector = root.getJSONObject("Connector");
+
+                //Adding new service into services array
+                links.put(processLink((JSONObject) connector, serviceMap));
+
+            }
+        }
+        result.put("services", services);
+        result.put("links", links);
+//        System.out.println(serviceMap);
+        return result;
+    }
+
+    private static JSONObject processService(JSONObject image, Map serviceMap, int serviceID) {
+        //Constructing new service
+        JSONObject mxCell = image.getJSONObject("mxCell");
+        String type = mxCell.getString("style");
+        String profileStr = image.getString("label");
+        JSONObject service = new JSONObject();
+        service.put("type", type);
+
+        if (profileStr.contains("/")) {
+            //If more than one profiles exists
+            JSONArray profiles = new JSONArray();
+            String[] profileArray = profileStr.split("/");
+            for (String profile : profileArray) {
+                profiles.put(profile);
+            }
+            service.put("profiles", profiles);
+        } else {
+            service.put("profiles", new JSONArray("[" + profileStr + "]"));
+        }
+
+        //Add service ids to map
+        int imageID = image.getInt("id");
+        serviceMap.put(imageID, serviceID);
+
+        return service;
+    }
+
+    private static JSONObject processLink(JSONObject connector, Map serviceMap) {
+        JSONObject mxCell = connector.getJSONObject("mxCell");
+        int source = mxCell.getInt("source");
+        int target = mxCell.getInt("target");
+
+        //Swap if source is greater than target
+        if (source > target) {
+            int temp = source;
+            source = target;
+            target = temp;
+        }
+
+        JSONObject link = new JSONObject();
+        link.put("source", serviceMap.get(source));
+        link.put("target", serviceMap.get(target));
+
+        return link;
     }
 }
