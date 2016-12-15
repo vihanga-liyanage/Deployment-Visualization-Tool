@@ -21,17 +21,24 @@ import java.util.*;
  */
 public class Generate {
     public static final String DIFF = ".diff";
-    public static final String CLEAN_PRODUCT_LOCATION = "/home/vihanga/Downloads/Compare/";
+//    public static final String CLEAN_PRODUCT_LOCATION = "/home/vihanga/Downloads/Compare/";
     public static final String TARGET_LOCATION = "/tmp/Deployment-Visualization-Tool/pattern-3/";
 
     public static void main(String[] args) throws IOException {
         String modelPath = "src/resources/model.json";
+        if(args.length!=1){
+            System.err.print("USAGE TODO");
+            System.exit(25);
+        }
+
+        String cleanProductLocation = args[0];
         List<String> fileNames = getAllKnowledgeBaseNames(modelPath);
         fileNames.forEach(fileName -> {
             //Ignore database, svn and load-balancer
             if (!fileName.startsWith("database") && !fileName.startsWith("svn") && !fileName.startsWith("load-balancer")) {
                 String diffDir = "../knowledge-base/" + fileName, product;
 
+                System.out.println(fileName);
                 //Get first service if it's a pair
                 if (fileName.contains(",")) {
                     fileName = fileName.split(",")[0];
@@ -48,7 +55,7 @@ public class Generate {
 
                 //Setup cleanDir
                 String version = "2.0.0"; //temp solution
-                String cleanDir = CLEAN_PRODUCT_LOCATION + product + "-" + version;
+                String cleanDir = cleanProductLocation + product + "-" + version;
 
 //                System.out.println(diffDir + "\t\t" + cleanDir + "\t\t" + targetDir);
                 apply(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
@@ -204,6 +211,8 @@ public class Generate {
                     if (fileNameStr.endsWith(DIFF)) {
                         String fileNameWithoutDiff = fileNameStr.substring(0, fileNameStr.length() - DIFF.length());
                         applyDiffNative(file, cleanDir.resolve(fileNameWithoutDiff), targetDir.resolve(fileNameWithoutDiff));
+                    }else{
+
                     }
                 }
             });
@@ -223,8 +232,8 @@ public class Generate {
             if (!Files.isRegularFile(targetDir)) {
                 Files.copy(cleanFile, targetDir);
             }
-            System.out.println("patch " + targetDir + " < " + diffFile);
-            Process process = new ProcessBuilder("patch", targetDir.toString()).start();
+            System.out.println("patch -f " + targetDir + " < " + diffFile);
+            Process process = new ProcessBuilder("patch", "-f", targetDir.toString()).start();
 
             PrintWriter writer = new PrintWriter(process.getOutputStream());
             BufferedReader reader = Files.newBufferedReader(diffFile);

@@ -1,12 +1,3 @@
-@@ -543,7 +543,7 @@
-                 <Password>wso2carbon</Password>
-             </TrustStore>
-         </parameter>
--        <!--<parameter name="HostnameVerifier">DefaultAndLocalhost</parameter>-->
-+        <parameter name="HostnameVerifier">AllowAll</parameter>
-             <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
-     </transportSender>
-
 @@ -628,7 +628,7 @@
       getting this node to join the cluster.
       -->

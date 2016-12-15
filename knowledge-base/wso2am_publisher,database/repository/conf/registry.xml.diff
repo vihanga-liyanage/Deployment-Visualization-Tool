@@ -1,11 +1,13 @@
+--- /home/vihanga/Downloads/Compare/wso2am-2.0.0/repository/conf/registry.xml	2016-07-15 22:11:00.000000000 +0530
++++ /home/vihanga/Downloads/Compare/wso2am-publisher/repository/conf/registry.xml	2016-10-27 08:48:43.801508000 +0530
 @@ -30,6 +30,25 @@
          <dataSource>jdbc/WSO2CarbonDB</dataSource>
      </dbConfig>
-
+ 
 +    <dbConfig name="govregistry">
 +        <dataSource>jdbc/WSO2REG_DB</dataSource>
 +    </dbConfig>
-+    <remoteInstance url="https://dummy.wso2.com">
++    <remoteInstance url="https://publisher">
 +        <id>gov</id>
 +        <cacheId>root@jdbc:mysql://apim_rdbms:3306/regdb</cacheId>
 +        <dbConfig>govregistry</dbConfig>
@@ -22,5 +24,5 @@
 +        <targetPath>/_system/config</targetPath>
 +    </mount>
      <!-- This handler provides the feature to add a simlink to a given resource -->
-
+ 
      <handler class="org.wso2.carbon.registry.extensions.handlers.ExtensionsSymLinkHandler">
