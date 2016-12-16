@@ -45,7 +45,7 @@ public class Generate {
                     fileName = fileName.split(",")[0];
                 }
 
-                String targetDir = targetLocation + fileName;
+                String targetDir = targetLocation + fileName + "/carbon";
 
                 //Separate product and profile
                 if (fileName.contains("_")) {
