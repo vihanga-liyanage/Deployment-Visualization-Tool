@@ -21,17 +21,18 @@ import java.util.*;
  */
 public class Generate {
     public static final String DIFF = ".diff";
-//    public static final String CLEAN_PRODUCT_LOCATION = "/home/vihanga/Downloads/Compare/";
-    public static final String TARGET_LOCATION = "/tmp/Deployment-Visualization-Tool/pattern-3/";
 
     public static void main(String[] args) throws IOException {
         String modelPath = "src/resources/model.json";
-        if(args.length!=1){
-            System.err.print("USAGE TODO");
+        if(args.length!=2){
+            System.err.print("Usage: Generate CLEAN_PRODUCT_LOCATION TARGET_LOCATION");
             System.exit(25);
         }
 
+        //Reading arguments
         String cleanProductLocation = args[0];
+        String targetLocation = args[1];
+
         List<String> fileNames = getAllKnowledgeBaseNames(modelPath);
         fileNames.forEach(fileName -> {
             //Ignore database, svn and load-balancer
@@ -44,7 +45,7 @@ public class Generate {
                     fileName = fileName.split(",")[0];
                 }
 
-                String targetDir = TARGET_LOCATION + fileName;
+                String targetDir = targetLocation + fileName;
 
                 //Separate product and profile
                 if (fileName.contains("_")) {

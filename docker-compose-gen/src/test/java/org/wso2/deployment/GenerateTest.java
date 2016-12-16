@@ -125,7 +125,7 @@ public class GenerateTest {
 
     @Test
     public void testReadJSONModel() throws Exception {
-        String modelPath = "src/resources/model1.json";
+        String modelPath = "src/resources/model.json";
         JSONObject model = Generate.getJSONModel(modelPath);
 
         JSONArray services = model.getJSONArray("services");
