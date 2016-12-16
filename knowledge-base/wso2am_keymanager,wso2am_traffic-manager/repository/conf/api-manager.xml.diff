@@ -1,0 +1,34 @@
+@@ -462,10 +462,10 @@
+     <ThrottlingConfigurations>
+         <EnableAdvanceThrottling>true</EnableAdvanceThrottling>
+         <DataPublisher>
+-            <Enabled>true</Enabled>
++            <Enabled>false</Enabled>
+             <Type>Binary</Type>
+-            <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
+-            <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>
++            <ReceiverUrlGroup>tcp://traffic-manager:9611</ReceiverUrlGroup>
++            <AuthUrlGroup>ssl://traffic-manager:9711</AuthUrlGroup>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+             <DataPublisherPool>
+@@ -479,7 +479,7 @@
+             </DataPublisherThreadPool>
+         </DataPublisher>
+         <PolicyDeployer>
+-            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
++            <ServiceURL>https://traffic-manager:9443/services/</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+         </PolicyDeployer>
+@@ -489,8 +489,8 @@
+             <Period>3600000</Period-->
+         </BlockCondition>
+         <JMSConnectionDetails>
+-            <Enabled>true</Enabled>
+-            <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
++            <Enabled>false</Enabled>
++            <ServiceURL>tcp://traffic-manager:5672</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+             <Destination>throttleData</Destination>

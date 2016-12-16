@@ -11,9 +11,8 @@ import org.json.XML;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 /**
@@ -32,6 +31,32 @@ public class Generate {
         //Reading arguments
         String cleanProductLocation = args[0];
         String targetLocation = args[1];
+
+
+//Deleting target dir - temp code
+        Path rootPath = Paths.get(targetLocation);
+
+        try {
+            Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+//                    System.out.println("delete file: " + file.toString());
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+//                    System.out.println("delete dir: " + dir.toString());
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+            System.out.println(targetLocation + " Deleted successfully!");
+        } catch(IOException e){
+            System.out.println(targetLocation + " Directory not found!");
+        }
+//Temp code end
 
         List<String> fileNames = getAllKnowledgeBaseNames(modelPath);
         fileNames.forEach(fileName -> {
