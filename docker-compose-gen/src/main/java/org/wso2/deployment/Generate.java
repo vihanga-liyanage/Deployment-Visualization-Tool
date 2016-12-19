@@ -10,6 +10,7 @@ import org.json.XML;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -237,15 +238,17 @@ public class Generate {
                     if (fileNameStr.endsWith(DIFF)) {
                         String fileNameWithoutDiff = fileNameStr.substring(0, fileNameStr.length() - DIFF.length());
                         applyDiffNative(file, cleanDir.resolve(fileNameWithoutDiff), targetDir.resolve(fileNameWithoutDiff));
-                    }else{
-
+                    } else if (!fileNameStr.endsWith("gitignore")){
+                        try {
+                            Files.createDirectories(targetDir);
+                            Files.copy(file, targetDir.resolve(fileNameStr));
+                            System.out.println("cp " + file + " " + targetDir.resolve(fileNameStr));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });
-
-            if (!Files.newDirectoryStream(diffDir).iterator().hasNext()) {
-                System.out.println(diffDir + " - Empty");
-            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -259,15 +262,15 @@ public class Generate {
                 Files.copy(cleanFile, targetDir);
             }
             System.out.println("patch -f " + targetDir + " < " + diffFile);
-            Process process = new ProcessBuilder("patch", "-f", targetDir.toString()).start();
+            Process process = new ProcessBuilder("patch", "-f", targetDir.toString(), diffFile.toString()).start();
 
-            PrintWriter writer = new PrintWriter(process.getOutputStream());
-            BufferedReader reader = Files.newBufferedReader(diffFile);
-            String line;
-            while ((line = reader.readLine()) != null) {
-                writer.println(line);
-            }
-            writer.close();
+//            PrintWriter writer = new PrintWriter(process.getOutputStream());
+//            BufferedReader reader = Files.newBufferedReader(diffFile);
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                writer.println(line);
+//            }
+//            writer.close();
 
             process.waitFor();
         } catch (IOException | InterruptedException e) {
