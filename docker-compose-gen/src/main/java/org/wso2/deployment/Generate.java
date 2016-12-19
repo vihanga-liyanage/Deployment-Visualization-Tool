@@ -71,7 +71,7 @@ public class Generate {
                     fileName = fileName.split(",")[0];
                 }
 
-                String targetDir = targetLocation + fileName + "/carbon";
+                String targetDir = targetLocation + fileName;
 
                 //Separate product and profile
                 if (fileName.contains("_")) {
@@ -232,7 +232,13 @@ public class Generate {
                 int count = diffDir.getNameCount();
                 Path fileName = file.getFileName();
                 if (Files.isDirectory(file)) {
-                    apply(level + 1, file, cleanDir.resolve(fileName), targetDir.resolve(fileName));
+                    Path subCleanDir;
+                    if(level==0 && fileName.toString().equals("carbon")){
+                        subCleanDir = cleanDir;
+                    }else{
+                        subCleanDir= cleanDir.resolve(fileName);
+                    }
+                    apply(level + 1, file, subCleanDir, targetDir.resolve(fileName));
                 } else {
                     String fileNameStr = fileName.toString();
                     if (fileNameStr.endsWith(DIFF)) {
@@ -263,14 +269,6 @@ public class Generate {
             }
             System.out.println("patch -f " + targetDir + " < " + diffFile);
             Process process = new ProcessBuilder("patch", "-f", targetDir.toString(), diffFile.toString()).start();
-
-//            PrintWriter writer = new PrintWriter(process.getOutputStream());
-//            BufferedReader reader = Files.newBufferedReader(diffFile);
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                writer.println(line);
-//            }
-//            writer.close();
 
             process.waitFor();
         } catch (IOException | InterruptedException e) {
