@@ -62,7 +62,7 @@ public class Generate {
         List<String> fileNames = getAllKnowledgeBaseNames(modelPath);
         fileNames.forEach(fileName -> {
             //Ignore database, svn and load-balancer
-            if (!fileName.startsWith("database") && !fileName.startsWith("svn") && !fileName.startsWith("load-balancer")) {
+            if (!fileName.startsWith("svn") && !fileName.startsWith("load-balancer")) {
                 String diffDir = "../knowledge-base/" + fileName, product;
 
                 System.out.println(fileName);
@@ -84,8 +84,10 @@ public class Generate {
                 String version = "2.0.0"; //temp solution
                 String cleanDir = cleanProductLocation + product + "-" + version;
 
-//                System.out.println(diffDir + "\t\t" + cleanDir + "\t\t" + targetDir);
-                apply(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
+                if (Files.exists(Paths.get(diffDir))) {
+//                    System.out.println(diffDir + "\t\t" + cleanDir + "\t\t" + targetDir);
+                    apply(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
+                }
 
             }
 

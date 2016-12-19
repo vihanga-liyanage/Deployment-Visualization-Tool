@@ -1,5 +1,3 @@
---- /tmp/Deployment-Visualization-Tool/pattern-3/wso2am_gateway-worker/carbon/repository/conf/api-manager.xml	2016-12-19 08:58:11.670248936 +0530
-+++ "/home/vihanga/Downloads/Compare/Complete pattern-3/wso2am_gateway-worker/carbon/repository/conf/api-manager.xml"	2016-10-27 08:48:43.797508000 +0530
 @@ -216,7 +216,7 @@
               -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
               -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
