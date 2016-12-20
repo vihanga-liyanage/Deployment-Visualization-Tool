@@ -1,17 +1,16 @@
 package org.wso2.deployment;
 
+import com.esotericsoftware.yamlbeans.YamlWriter;
 import difflib.DiffUtils;
 import difflib.Patch;
 import difflib.PatchFailedException;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
@@ -33,23 +32,18 @@ public class Generate {
         String cleanProductLocation = args[0];
         String targetLocation = args[1];
 
-
-//Deleting target dir - temp code
+        //Deleting target dir
         Path rootPath = Paths.get(targetLocation);
-
         try {
             Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-//                    System.out.println("delete file: " + file.toString());
                     Files.delete(file);
                     return FileVisitResult.CONTINUE;
                 }
-
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                     Files.delete(dir);
-//                    System.out.println("delete dir: " + dir.toString());
                     return FileVisitResult.CONTINUE;
                 }
             });
@@ -57,8 +51,15 @@ public class Generate {
         } catch(IOException e){
             System.out.println(targetLocation + " Directory not found!");
         }
-//Temp code end
 
+        //Creating docker compose yaml file
+        Path composeFile = Paths.get(targetLocation + "/docker-compose.yml");
+        String line = "version: '2'\nservices:\n  svn:\n    image: docker.wso2.com/svnrepo\n";
+        Files.createDirectories(Paths.get(targetLocation));
+        Files.createFile(composeFile);
+        Files.write(composeFile, line.getBytes());
+
+        //process all file names
         List<String> fileNames = getAllKnowledgeBaseNames(modelPath);
         fileNames.forEach(fileName -> {
             //Ignore database, svn and load-balancer
@@ -69,6 +70,9 @@ public class Generate {
                 //Get first service if it's a pair
                 if (fileName.contains(",")) {
                     fileName = fileName.split(",")[0];
+                } else {
+                    //Append details to compose file
+                    addToComposeFile(Paths.get(diffDir + "/dockerfilePart.yml"), fileName, composeFile);
                 }
 
                 String targetDir = targetLocation + fileName;
@@ -85,13 +89,28 @@ public class Generate {
                 String cleanDir = cleanProductLocation + product + "-" + version;
 
                 if (Files.exists(Paths.get(diffDir))) {
-//                    System.out.println(diffDir + "\t\t" + cleanDir + "\t\t" + targetDir);
                     apply(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
                 }
 
             }
 
         });
+
+        //Coping artifacts folder
+        Path sourcePath = Paths.get(cleanProductLocation + "/artifacts");
+        Path targetPath = Paths.get(targetLocation + "/artifacts/");
+        Files.createDirectory(targetPath);
+        try {
+            Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.copy(file, targetPath.resolve(file.getFileName()));
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch(IOException e){
+            e.printStackTrace();
+        }
 
 //        String xmlPath = "src/resources/test.xml";
 //        String TEST_XML_STRING = null;
@@ -246,7 +265,7 @@ public class Generate {
                     if (fileNameStr.endsWith(DIFF)) {
                         String fileNameWithoutDiff = fileNameStr.substring(0, fileNameStr.length() - DIFF.length());
                         applyDiffNative(file, cleanDir.resolve(fileNameWithoutDiff), targetDir.resolve(fileNameWithoutDiff));
-                    } else if (!fileNameStr.endsWith("gitignore")){
+                    } else if (!fileNameStr.endsWith("gitignore") && !fileNameStr.endsWith(".yml")){
                         try {
                             Files.createDirectories(targetDir);
                             Files.copy(file, targetDir.resolve(fileNameStr));
@@ -469,5 +488,22 @@ public class Generate {
         }
         xml += "</root></mxGraphModel>";
         return xml;
+    }
+
+    public static void addToComposeFile(Path partFile, String dirname, Path out){
+
+        try {
+            List<String> lines = Files.readAllLines(partFile);
+            for (String line : lines) {
+                if (line.contains("$dirname")) {
+                    line = line.replace("$dirname", dirname);
+                }
+                line += "\n";
+                Files.write(out, line.getBytes(), StandardOpenOption.APPEND);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

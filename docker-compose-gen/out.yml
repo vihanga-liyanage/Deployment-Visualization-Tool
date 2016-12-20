@@ -1,0 +1,15 @@
+database:
+    build:
+        dockerfile: database/Dockerfile
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+  database:
+    build:
+      dockerfile: database/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  database:
+    build:
+      dockerfile: database/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: root

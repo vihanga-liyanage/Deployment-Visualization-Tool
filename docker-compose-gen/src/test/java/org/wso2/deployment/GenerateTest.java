@@ -5,9 +5,13 @@ import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.*;
+
 
 import static java.util.Collections.singletonList;
 
@@ -371,5 +375,12 @@ public class GenerateTest {
 
         String test = Generate.getXMLFromJSON(model);
         System.out.println(test);
+    }
+
+    @Test
+    public void testaddToComposeFile() throws Exception {
+        Path partFile = Paths.get("../knowledge-base/database/dockerfilePart.yml");
+        Path out = Paths.get("out.yml");
+        Generate.addToComposeFile(partFile, "database", out);
     }
 }
