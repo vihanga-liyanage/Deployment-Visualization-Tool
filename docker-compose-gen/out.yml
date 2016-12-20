@@ -13,3 +13,9 @@ database:
       dockerfile: database/Dockerfile
     environment:
       MYSQL_ROOT_PASSWORD: root
+  database:
+    build:
+      context: .
+      dockerfile: database/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: root

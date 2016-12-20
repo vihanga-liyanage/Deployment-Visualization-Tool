@@ -1,6 +1,5 @@
 package org.wso2.deployment;
 
-import com.esotericsoftware.yamlbeans.YamlWriter;
 import difflib.DiffUtils;
 import difflib.Patch;
 import difflib.PatchFailedException;
@@ -8,9 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
@@ -265,6 +263,7 @@ public class Generate {
                     if (fileNameStr.endsWith(DIFF)) {
                         String fileNameWithoutDiff = fileNameStr.substring(0, fileNameStr.length() - DIFF.length());
                         applyDiffNative(file, cleanDir.resolve(fileNameWithoutDiff), targetDir.resolve(fileNameWithoutDiff));
+
                     } else if (!fileNameStr.endsWith("gitignore") && !fileNameStr.endsWith(".yml")){
                         try {
                             Files.createDirectories(targetDir);
