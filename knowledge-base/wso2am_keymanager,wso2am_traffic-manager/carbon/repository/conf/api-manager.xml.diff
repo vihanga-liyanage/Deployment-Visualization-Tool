@@ -7,8 +7,8 @@
              <Type>Binary</Type>
 -            <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
 -            <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>
-+            <ReceiverUrlGroup>tcp://traffic-manager:9611</ReceiverUrlGroup>
-+            <AuthUrlGroup>ssl://traffic-manager:9711</AuthUrlGroup>
++            <ReceiverUrlGroup>tcp://wso2am_traffic-manager:9611</ReceiverUrlGroup>
++            <AuthUrlGroup>ssl://wso2am_traffic-manager:9711</AuthUrlGroup>
              <Username>${admin.username}</Username>
              <Password>${admin.password}</Password>
              <DataPublisherPool>
@@ -17,7 +17,7 @@
          </DataPublisher>
          <PolicyDeployer>
 -            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
-+            <ServiceURL>https://traffic-manager:9443/services/</ServiceURL>
++            <ServiceURL>https://wso2am_traffic-manager:9443/services/</ServiceURL>
              <Username>${admin.username}</Username>
              <Password>${admin.password}</Password>
          </PolicyDeployer>
@@ -28,7 +28,7 @@
 -            <Enabled>true</Enabled>
 -            <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
 +            <Enabled>false</Enabled>
-+            <ServiceURL>tcp://traffic-manager:5672</ServiceURL>
++            <ServiceURL>tcp://wso2am_traffic-manager:5672</ServiceURL>
              <Username>${admin.username}</Username>
              <Password>${admin.password}</Password>
              <Destination>throttleData</Destination>

@@ -6,3 +6,13 @@
 +        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
          <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
          <!--ThriftClientPort>10397</ThriftClientPort-->
+
+@@ -460,7 +460,7 @@
+         </WhiteListedURIs>
+     </RESTAPI>
+     <ThrottlingConfigurations>
+-        <EnableAdvanceThrottling>true</EnableAdvanceThrottling>
++        <EnableAdvanceThrottling>false</EnableAdvanceThrottling>
+         <DataPublisher>
+             <Enabled>true</Enabled>
+             <Type>Binary</Type>

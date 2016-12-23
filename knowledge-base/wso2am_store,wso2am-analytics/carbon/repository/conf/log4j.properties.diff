@@ -12,7 +12,7 @@
  log4j.appender.DAS_AGENT.userName=admin
  log4j.appender.DAS_AGENT.password=admin
 -log4j.appender.DAS_AGENT.url=tcp://localhost:7612
-+log4j.appender.DAS_AGENT.url=tcp://analytics:7612
++log4j.appender.DAS_AGENT.url=tcp://wso2am-analytics:7612
  log4j.appender.DAS_AGENT.maxTolerableConsecutiveFailure=5
  log4j.appender.DAS_AGENT.streamDef=loganalyzer:1.0.0
  log4j.logger.trace.messages=TRACE,CARBON_TRACE_LOGFILE

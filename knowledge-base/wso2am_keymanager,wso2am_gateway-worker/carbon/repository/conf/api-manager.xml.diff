@@ -3,7 +3,7 @@
                  <Password>${admin.password}</Password>
                  <!-- Endpoint URLs for the APIs hosted in this API gateway.-->
 -                <GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
-+                <GatewayEndpoint>http://gateway-worker:8280,https://gateway-worker:8243</GatewayEndpoint>
++                <GatewayEndpoint>http://wso2am_gateway-worker:8280,https://wso2am_gateway-worker:8243</GatewayEndpoint>
              </Environment>
          </Environments>
      </APIGateway>

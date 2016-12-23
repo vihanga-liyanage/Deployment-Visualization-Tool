@@ -30,7 +30,7 @@
          <!-- The host name or IP address of this member -->
 
 -        <parameter name="localMemberHost">127.0.0.1</parameter>
-+        <parameter name="localMemberHost">publisher</parameter>
++        <parameter name="localMemberHost">wso2am_publisher</parameter>
 
          <!--
              The bind adress of this member. The difference between localMemberHost & localMemberBindAddress
@@ -39,7 +39,7 @@
          <members>
              <member>
 -                <hostName>127.0.0.1</hostName>
-+                <hostName>store</hostName>
++                <hostName>wso2am_store</hostName>
                  <port>4000</port>
              </member>
          </members>

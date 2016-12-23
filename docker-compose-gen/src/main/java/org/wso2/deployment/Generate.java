@@ -52,7 +52,7 @@ public class Generate {
 
         //Creating docker compose yaml file
         Path composeFile = Paths.get(targetLocation + "/docker-compose.yml");
-        String line = "version: '2'\nservices:\n  svn:\n    image: docker.wso2.com/svnrepo\n";
+        String line = "version: '2'\nservices:\n  svnrepo:\n    image: docker.wso2.com/svnrepo\n";
         Files.createDirectories(Paths.get(targetLocation));
         Files.createFile(composeFile);
         Files.write(composeFile, line.getBytes());
@@ -60,8 +60,8 @@ public class Generate {
         //process all file names
         List<String> fileNames = getAllKnowledgeBaseNames(modelPath);
         fileNames.forEach(fileName -> {
-            //Ignore database, svn and load-balancer
-            if (!fileName.startsWith("svn") && !fileName.startsWith("load-balancer")) {
+            //Ignore database, svnrepo and load-balancer
+            if (!fileName.startsWith("svnrepo") && !fileName.startsWith("load-balancer")) {
                 String diffDir = "../knowledge-base/" + fileName, product;
 
                 System.out.println(fileName);
@@ -475,7 +475,7 @@ public class Generate {
                 xml += " style=\"strokeColor=#e900ff;startArrow=classic;\"";
             } else if (serviceMap.get(source).contains("wso2am-analytics")){
                 xml += " style=\"strokeColor=#3aa210;dashed=1;\"";
-            } else if (serviceMap.get(source).contains("svn")){
+            } else if (serviceMap.get(source).contains("svnrepo")){
                 xml += " style=\"strokeColor=#3aa210;startArrow=classic;\"";
             } else if (serviceMap.get(source).contains("traffic-manager")){
                 xml += " style=\"strokeColor=#dd0009;startArrow=classic;dashed=1;\"";

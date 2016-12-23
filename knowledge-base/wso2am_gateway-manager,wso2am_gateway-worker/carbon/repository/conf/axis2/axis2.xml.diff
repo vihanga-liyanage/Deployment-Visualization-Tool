@@ -39,7 +39,7 @@
          <!-- The host name or IP address of this member -->
 
 -        <parameter name="localMemberHost">127.0.0.1</parameter>
-+        <parameter name="localMemberHost">gateway-manager</parameter>
++        <parameter name="localMemberHost">wso2am_gateway-manager</parameter>
 
          <!--
              The bind adress of this member. The difference between localMemberHost & localMemberBindAddress
@@ -57,7 +57,7 @@
          <members>
              <member>
 -                <hostName>127.0.0.1</hostName>
-+                <hostName>gateway-worker</hostName>
++                <hostName>wso2am_gateway-worker</hostName>
                  <port>4000</port>
              </member>
          </members>

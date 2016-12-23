@@ -35,7 +35,7 @@
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:mysql://apim_rdbms:3306/apimgtdb?autoReconnect=true</url>
+                    <url>jdbc:mysql://database:3306/apimgtdb?autoReconnect=true</url>
                     <username>root</username>
                     <password>root</password>
                     <defaultAutoCommit>false</defaultAutoCommit>
@@ -57,7 +57,7 @@
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:mysql://apim_rdbms:3306/userdb?autoReconnect=true</url>
+                    <url>jdbc:mysql://database:3306/userdb?autoReconnect=true</url>
                     <username>root</username>
                     <password>root</password>
                     <driverClassName>com.mysql.jdbc.Driver</driverClassName>
@@ -78,7 +78,7 @@
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:mysql://apim_rdbms:3306/regdb?autoReconnect=true</url>
+                    <url>jdbc:mysql://database:3306/regdb?autoReconnect=true</url>
                     <username>root</username>
                     <password>root</password>
                     <driverClassName>com.mysql.jdbc.Driver</driverClassName>

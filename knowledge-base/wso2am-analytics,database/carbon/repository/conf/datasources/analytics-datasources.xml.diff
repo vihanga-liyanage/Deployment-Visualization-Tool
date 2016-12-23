@@ -6,7 +6,7 @@
 -                    <username>wso2carbon</username>
 -                    <password>wso2carbon</password>
 -                    <driverClassName>org.h2.Driver</driverClassName>
-+                    <url>jdbc:mysql://apim_rdbms:3306/stats_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
++                    <url>jdbc:mysql://database:3306/stats_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
 +                    <username>root</username>
 +                    <password>root</password>
 +                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
@@ -30,7 +30,7 @@
 -                    <username>wso2carbon</username>
 -                    <password>wso2carbon</password>
 -                    <driverClassName>org.h2.Driver</driverClassName>
-+                    <url>jdbc:mysql://apim_rdbms:3306/stats_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
++                    <url>jdbc:mysql://database:3306/stats_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
 +                    <username>root</username>
 +                    <password>root</password>
 +                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>

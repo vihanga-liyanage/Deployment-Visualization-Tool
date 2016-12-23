@@ -82,7 +82,7 @@
 			"profiles":[]
 		},
 		{
-			"type":"svn",
+			"type":"svnrepo",
 			"name":"svn",
 			"image":"",
 			"ports":[],

@@ -3,7 +3,7 @@
              <Password>wso2carbon</Password>
              <!-- Private Key alias-->
 -            <KeyAlias>wso2carbon</KeyAlias>
-+            <KeyAlias>keymanager</KeyAlias>
++            <KeyAlias>wso2am_keymanager</KeyAlias>
              <!-- Private Key password-->
              <KeyPassword>wso2carbon</KeyPassword>
          </KeyStore>

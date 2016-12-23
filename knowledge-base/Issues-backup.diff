@@ -87,7 +87,7 @@ No link between publisher and store - draw
          <members>
              <member>
 -                <hostName>127.0.0.1</hostName>
-+                <hostName>store</hostName>
++                <hostName>wso2am_store</hostName>
                  <port>4000</port>
              </member>
          </members>
@@ -98,7 +98,7 @@ Why there is no link between publisher and key manager? - wso2am-*,wso2am-keyman
      <AuthManager>
          <!-- Server URL of the Authentication service -->
 -        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
-+        <ServerURL>https://keymanager:9443/services/</ServerURL>
++        <ServerURL>https://wso2am_keymanager:9443/services/</ServerURL>
          <!-- Admin username for the Authentication manager. -->
          <Username>${admin.username}</Username>
          <!-- Admin password for the Authentication manager. -->
@@ -109,14 +109,14 @@ Same with follow components
                  <Description>This is a hybrid gateway that handles both production and sandbox token traffic.</Description>
                  <!-- Server URL of the API gateway -->
 -                <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
-+                <ServerURL>https://gateway-manager:9443/services/</ServerURL>
++                <ServerURL>https://wso2am_gateway-manager:9443/services/</ServerURL>
                 <!-- Admin username for the API gateway. -->
                  <Username>${admin.username}</Username>
                  <!-- Admin password for the API gateway.-->
                  <Password>${admin.password}</Password>
                  <!-- Endpoint URLs for the APIs hosted in this API gateway.-->
 -                <GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
-+                <GatewayEndpoint>http://gateway-worker:8280,https://gateway-worker:8243</GatewayEndpoint>
++                <GatewayEndpoint>http://wso2am_gateway-worker:8280,https://wso2am_gateway-worker:8243</GatewayEndpoint>
              </Environment>
          </Environments>
      </APIGateway>
@@ -126,7 +126,7 @@ Same with follow components
      <APIKeyValidator>
          <!-- Server URL of the API key manager -->
 -        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
-+        <ServerURL>https://keymanager:9443/services/</ServerURL>
++        <ServerURL>https://wso2am_keymanager:9443/services/</ServerURL>
  
          <!-- Admin username for API key manager. -->
          <Username>${admin.username}</Username>
@@ -147,7 +147,7 @@ self
          <CompareCaseInsensitively>true</CompareCaseInsensitively>
          <DisplayURL>false</DisplayURL>
 -        <URL>https://localhost:${mgt.transport.https.port}/store</URL>
-+        <URL>https://store:9446/store</URL>
++        <URL>https://wso2am_store:9446/store</URL>
  
          <!-- Server URL of the API Store. -->
          <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
@@ -158,7 +158,7 @@ self
          </DataPublisher>
          <PolicyDeployer>
 -            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
-+            <ServiceURL>https://traffic-manager:9443/services/</ServiceURL>
++            <ServiceURL>https://wso2am_traffic-manager:9443/services/</ServiceURL>
              <Username>${admin.username}</Username>
              <Password>${admin.password}</Password>
          </PolicyDeployer>
@@ -212,10 +212,10 @@ No link between publisher and traffic manager - *,traffic-manager
  # register some connection factories
  # connectionfactory.[jndiname] = [ConnectionURL]
 -connectionfactory.TopicConnectionFactory = amqp://admin:admin@clientid/carbon?brokerlist='tcp://localhost:5672'
-+connectionfactory.TopicConnectionFactory = amqp://admin:admin@clientid/carbon?brokerlist='tcp://traffic-manager:5672'
++connectionfactory.TopicConnectionFactory = amqp://admin:admin@clientid/carbon?brokerlist='tcp://wso2am_traffic-manager:5672'
 
 -connectionfactory.QueueConnectionFactory = amqp://admin:admin@clientID/test?brokerlist='tcp://localhost:5672'
-+connectionfactory.QueueConnectionFactory = amqp://admin:admin@clientID/test?brokerlist='tcp://traffic-manager:5672'
++connectionfactory.QueueConnectionFactory = amqp://admin:admin@clientID/test?brokerlist='tcp://wso2am_traffic-manager:5672'
 
  # register some queues in JNDI using the form
  # queue.[jndiName] = [physicalName]
@@ -241,14 +241,14 @@ No direct link between keymanager and gateway-manager / gateway-worker - ignore
                  <Description>This is a hybrid gateway that handles both production and sandbox token traffic.</Description>
                  <!-- Server URL of the API gateway -->
 -                <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
-+                <ServerURL>https://gateway-manager:9443/services/</ServerURL>
++                <ServerURL>https://wso2am_gateway-manager:9443/services/</ServerURL>
                 <!-- Admin username for the API gateway. -->
                  <Username>${admin.username}</Username>
                  <!-- Admin password for the API gateway.-->
                  <Password>${admin.password}</Password>
                  <!-- Endpoint URLs for the APIs hosted in this API gateway.-->
 -                <GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
-+                <GatewayEndpoint>http://gateway-worker:8280,https://gateway-worker:8243</GatewayEndpoint>
++                <GatewayEndpoint>http://wso2am_gateway-worker:8280,https://wso2am_gateway-worker:8243</GatewayEndpoint>
              </Environment>
          </Environments>
      </APIGateway>
@@ -260,8 +260,8 @@ No link to analytics - ignore, * other part
               {tcp://localhost:7612/,tcp://localhost:7613},{tcp://localhost:7712/,tcp://localhost:7713/} -->
 -        <DASServerURL>{tcp://localhost:7612}</DASServerURL>
 -        <!--DASAuthServerURL>{ssl://localhost:7712}</DASAuthServerURL-->
-+        <DASServerURL>tcp://analytics:7612</DASServerURL>
-+        <DASAuthServerURL>ssl://analytics:7712</DASAuthServerURL>
++        <DASServerURL>tcp://wso2am-analytics:7612</DASServerURL>
++        <DASAuthServerURL>ssl://wso2am-analytics:7712</DASAuthServerURL>
          <!-- Administrator username to login to the remote DAS server. -->
 -        <DASUsername>${admin.username}</DASUsername>
 +        <DASUsername>admin</DASUsername>
@@ -276,7 +276,7 @@ No link to analytics - ignore, * other part
 -        <DASRestApiURL>https://localhost:9444</DASRestApiURL>
 -        <DASRestApiUsername>${admin.username}</DASRestApiUsername>
 -        <DASRestApiPassword>${admin.password}</DASRestApiPassword>
-+        <DASRestApiURL>https://analytics:9444</DASRestApiURL>
++        <DASRestApiURL>https://wso2am-analytics:9444</DASRestApiURL>
 +        <DASRestApiUsername>admin</DASRestApiUsername>
 +        <DASRestApiPassword>admin</DASRestApiPassword>
  
@@ -301,8 +301,8 @@ No link to analytics - ignore, * other part
              <Type>Binary</Type>
 -            <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
 -            <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>
-+            <ReceiverUrlGroup>tcp://traffic-manager:9611</ReceiverUrlGroup>
-+            <AuthUrlGroup>ssl://traffic-manager:9711</AuthUrlGroup>
++            <ReceiverUrlGroup>tcp://wso2am_traffic-manager:9611</ReceiverUrlGroup>
++            <AuthUrlGroup>ssl://wso2am_traffic-manager:9711</AuthUrlGroup>
              <Username>${admin.username}</Username>
              <Password>${admin.password}</Password>
              <DataPublisherPool>
@@ -311,7 +311,7 @@ No link to analytics - ignore, * other part
          </DataPublisher>
          <PolicyDeployer>
 -            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
-+            <ServiceURL>https://traffic-manager:9443/services/</ServiceURL>
++            <ServiceURL>https://wso2am_traffic-manager:9443/services/</ServiceURL>
              <Username>${admin.username}</Username>
              <Password>${admin.password}</Password>
          </PolicyDeployer>
@@ -322,7 +322,7 @@ No link to analytics - ignore, * other part
 -            <Enabled>true</Enabled>
 -            <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
 +            <Enabled>false</Enabled>
-+            <ServiceURL>tcp://traffic-manager:5672</ServiceURL>
++            <ServiceURL>tcp://wso2am_traffic-manager:5672</ServiceURL>
              <Username>${admin.username}</Username>
              <Password>${admin.password}</Password>
              <Destination>throttleData</Destination>
@@ -378,8 +378,8 @@ No link to analytics - gateway_manager,analytics
               {tcp://localhost:7612/,tcp://localhost:7613},{tcp://localhost:7712/,tcp://localhost:7713/} -->
 -        <DASServerURL>{tcp://localhost:7612}</DASServerURL>
 -        <!--DASAuthServerURL>{ssl://localhost:7712}</DASAuthServerURL-->
-+        <DASServerURL>tcp://analytics:7612</DASServerURL>
-+        <DASAuthServerURL>ssl://analytics:7712</DASAuthServerURL>
++        <DASServerURL>tcp://wso2am-analytics:7612</DASServerURL>
++        <DASAuthServerURL>ssl://wso2am-analytics:7712</DASAuthServerURL>
          <!-- Administrator username to login to the remote DAS server. -->
 -        <DASUsername>${admin.username}</DASUsername>
 +        <DASUsername>admin</DASUsername>
@@ -394,7 +394,7 @@ No link to analytics - gateway_manager,analytics
 -        <DASRestApiURL>https://localhost:9444</DASRestApiURL>
 -        <DASRestApiUsername>${admin.username}</DASRestApiUsername>
 -        <DASRestApiPassword>${admin.password}</DASRestApiPassword>
-+        <DASRestApiURL>https://analytics:9444</DASRestApiURL>
++        <DASRestApiURL>https://wso2am-analytics:9444</DASRestApiURL>
 +        <DASRestApiUsername>admin</DASRestApiUsername>
 +        <DASRestApiPassword>admin</DASRestApiPassword>
  
@@ -407,7 +407,7 @@ No link to key manager  - *,keymanager
      <APIKeyValidator>
          <!-- Server URL of the API key manager -->
 -        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
-+        <ServerURL>https://keymanager:9443/services/</ServerURL>
++        <ServerURL>https://wso2am_keymanager:9443/services/</ServerURL>
  
          <!-- Admin username for API key manager. -->
          <Username>${admin.username}</Username>
@@ -439,7 +439,7 @@ repository/deployment/server/synapse-configs/default/api/_AuthorizeAPI_.xml - ig
              <send>
                  <endpoint>
 -                    <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/authorize">
-+                    <http uri-template="https://keymanager:9443/oauth2/authorize">
++                    <http uri-template="https://wso2am_keymanager:9443/oauth2/authorize">
                          <timeout>
                              <duration>60000</duration>
                              <responseAction>fault</responseAction>
@@ -452,7 +452,7 @@ repository/deployment/server/synapse-configs/default/api/_RevokeAPI_.xml - ignor
              <send>
                  <endpoint>
 -                    <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/revoke">
-+                    <http uri-template="https://keymanager:9443/oauth2/revoke">
++                    <http uri-template="https://wso2am_keymanager:9443/oauth2/revoke">
                          <timeout>
                              <duration>60000</duration>
                              <responseAction>fault</responseAction>
@@ -465,7 +465,7 @@ repository/deployment/server/synapse-configs/default/api/_TokenAPI_.xml - ignore
              <send>
                  <endpoint>
 -                     <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/token">
-+                     <http uri-template="https://keymanager:9443/oauth2/token">
++                     <http uri-template="https://wso2am_keymanager:9443/oauth2/token">
                          <timeout>
                              <duration>60000</duration>
                              <responseAction>fault</responseAction>
@@ -478,7 +478,7 @@ repository/deployment/server/synapse-configs/default/api/_UserInfoAPI_.xml - ign
              <send>
                  <endpoint>
 -                    <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/userinfo">
-+                    <http uri-template="https://keymanager:9443/oauth2/userinfo">
++                    <http uri-template="https://wso2am_keymanager:9443/oauth2/userinfo">
                          <timeout>
                              <duration>60000</duration>
                              <responseAction>fault</responseAction>
@@ -561,7 +561,7 @@ repository/conf/axis2/axis2.xml
          <members>
              <member>
 -                <hostName>127.0.0.1</hostName>
-+                <hostName>gateway-manager</hostName>
++                <hostName>wso2am_gateway-manager</hostName>
                  <port>4000</port>
              </member>
          </members>
@@ -599,7 +599,7 @@ repository/conf/api-manager.xml
      <APIKeyValidator>
          <!-- Server URL of the API key manager -->
 -        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
-+        <ServerURL>https://keymanager:9443/services/</ServerURL>
++        <ServerURL>https://wso2am_keymanager:9443/services/</ServerURL>
  
          <!-- Admin username for API key manager. -->
          <Username>${admin.username}</Username>
@@ -619,8 +619,8 @@ repository/conf/api-manager.xml
              <Type>Binary</Type>
 -            <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
 -            <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>
-+            <ReceiverUrlGroup>tcp://traffic-manager:9611</ReceiverUrlGroup>
-+            <AuthUrlGroup>ssl://traffic-manager:9711</AuthUrlGroup>
++            <ReceiverUrlGroup>tcp://wso2am_traffic-manager:9611</ReceiverUrlGroup>
++            <AuthUrlGroup>ssl://wso2am_traffic-manager:9711</AuthUrlGroup>
              <Username>${admin.username}</Username>
              <Password>${admin.password}</Password>
              <DataPublisherPool>
@@ -629,7 +629,7 @@ repository/conf/api-manager.xml
          </DataPublisher>
          <PolicyDeployer>
 -            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
-+            <ServiceURL>https://traffic-manager:9443/services/</ServiceURL>
++            <ServiceURL>https://wso2am_traffic-manager:9443/services/</ServiceURL>
              <Username>${admin.username}</Username>
              <Password>${admin.password}</Password>
          </PolicyDeployer>
@@ -638,7 +638,7 @@ repository/conf/api-manager.xml
          <JMSConnectionDetails>
              <Enabled>true</Enabled>
 -            <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
-+            <ServiceURL>tcp://traffic-manager:5672</ServiceURL>
++            <ServiceURL>tcp://wso2am_traffic-manager:5672</ServiceURL>
              <Username>${admin.username}</Username>
              <Password>${admin.password}</Password>
              <Destination>throttleData</Destination>
