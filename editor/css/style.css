@@ -40,12 +40,13 @@
     width:100%;
     overflow:hidden;
     cursor:default;
+    height: 760px;
     min-height: 670px;
     background-color: white;
 }
 
 #xml {
-    min-height: 670px;
+    min-height: 760px;
     width:100%;
     display:none;
     border-style:none;

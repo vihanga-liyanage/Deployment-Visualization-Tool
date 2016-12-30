@@ -217,6 +217,7 @@
 				currentIconSet: null,
 				mouseDown: function(sender, me)
 				{
+				    console.log("mouseDown");
 					// Hides icons on mouse down
 					if (this.currentState != null)
 					{
@@ -515,7 +516,7 @@
 						<!-- Toolbar Here -->
 					</td>
 					<td id="graph_container" valign="top" class="col-md-9">
-						<div id="graph">
+						<div id="graph" >
 							<!-- Graph Here -->
 							<center id="splash" style="padding-top:530px;">
 								<img src="images/loading.gif">
@@ -528,91 +529,6 @@
 				</tr>
 			</tbody>
 		</table>
-
-
-	</div>
-
-	<div style="display: none">
-		<canvas id="drawing_pad"></canvas>
-
-		<!--Resource dialog box-->
-		<div id="slide" title="Basic dialog" class="well popup_content">
-			<table>
-				<tr>
-					<td>
-						<img id="slide_img" src="./icons/dashboard.png" width="100px" style="padding-right: 20px">
-					</td>
-					<td>
-						<h4 id="slide_header">Product Name</h4>
-						<p style="font-size: 14px;">Best related resources based on users.</p>
-					</td>
-				</tr>
-			</table>
-			<br>
-			<p id="slide_content">Here is some links to data.</p>
-		</div>
-
-		<!--Contact popup-->
-		<div id="contact_popup" class="well popup_content">
-
-			<table>
-				<tr>
-					<td>
-						<div id="contact_popup_img" class="graph_final"></div>
-						<!--<img id="contact_popup_img" src="./icons/dashboard.png" width="800px" style="padding-right: 50px;padding-left: 50px;">-->
-					</td>
-					<td>
-
-						<h4 id="contact_popup_header">Product Name</h4>
-						<br>
-						<form action="http://google.com" id="">
-							<div class="form-group">
-								<label for="exampleInputEmail1">First Name</label>
-								<input type="text" class="form-control" id="exampleName" placeholder="First Name">
-							</div>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Last Name</label>
-								<input type="text" class="form-control" id="exampleLast" placeholder="Last Name">
-							</div>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Email address</label>
-								<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
-							</div>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Contact Number</label>
-								<input type="text" class="form-control" id="exampleContact" placeholder="Contact Number">
-							</div>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Job Title</label>
-								<input type="text" class="form-control" id="exampleJob" placeholder="Job Title">
-							</div>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Company</label>
-								<input type="text" class="form-control" id="exampleCompany" placeholder="Company">
-							</div>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Country</label>
-								<input type="text" class="form-control" id="exampleCountry" placeholder="Country">
-							</div>
-							<div class="form-group">
-								<label for="exampleInputEmail1">Comments on the design</label>
-								<textarea type="text" class="form-control" id="exampleComments" placeholder="Comments"></textarea>
-							</div>
-
-							<button id="final_form_submit" type="submit" class="btn  btn-success">Submit</button>
-						</form>
-
-					</td>
-				</tr>
-			</table>
-
-
-		</div>
-
-		<div id="success_popup" class="well popup_content">
-			Your form submitted successfully!
-		</div>
-
 	</div>
 </div>
 </body>
