@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.*;
@@ -109,6 +110,9 @@ public class Generate {
         } catch(IOException e){
             e.printStackTrace();
         }
+
+        //Compress directory
+        zip(targetLocation);
 
 //        String xmlPath = "src/resources/test.xml";
 //        String TEST_XML_STRING = null;
@@ -504,5 +508,24 @@ public class Generate {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String zip(String targetLocation) {
+
+        String zipFile = targetLocation.substring(0, targetLocation.length()-1) + ".zip";
+
+
+        try {
+            System.out.println("zip -r " + zipFile + " " + ".");
+            Process process = null;
+            ProcessBuilder p = new ProcessBuilder("zip", "-r", zipFile, ".");
+            p.directory(new File(targetLocation));
+            process = p.start();
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return zipFile;
     }
 }
