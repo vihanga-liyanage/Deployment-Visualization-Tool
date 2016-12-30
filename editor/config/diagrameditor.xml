@@ -423,6 +423,7 @@
 			<!--]]>-->
 		<!--</add>-->
 
+		<add as="Connector" template="connector" icon="images/wso2/arrow.png"/>
 		<add as="Dashboard" template="Dashboard" icon="images/wso2/dashboard.png"/>
 		<add as="Data Stream" template="Data_Stream" icon="images/wso2/data_stream.png"/>
 		<add as="Load Balancer" template="Load_Balancer" icon="images/wso2/load-balancer.png"/>
