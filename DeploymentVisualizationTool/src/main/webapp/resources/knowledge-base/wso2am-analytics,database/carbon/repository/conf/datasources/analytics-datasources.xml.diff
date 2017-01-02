@@ -1,0 +1,48 @@
+@@ -13,17 +13,16 @@
+             <description>The datasource used for analytics record store</description>
+             <definition type="RDBMS">
+                 <configuration>
+-                    <url>jdbc:h2:repository/database/ANALYTICS_EVENT_STORE;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000</url>
+-                    <username>wso2carbon</username>
+-                    <password>wso2carbon</password>
+-                    <driverClassName>org.h2.Driver</driverClassName>
++                    <url>jdbc:mysql://database:3306/stats_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
++                    <username>root</username>
++                    <password>root</password>
++                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                     <maxActive>50</maxActive>
+                     <maxWait>60000</maxWait>
++                    <testOnBorrow>true</testOnBorrow>
+                     <validationQuery>SELECT 1</validationQuery>
++                    <validationInterval>30000</validationInterval>
+                     <defaultAutoCommit>false</defaultAutoCommit>
+-                    <initialSize>0</initialSize>
+-                    <testWhileIdle>true</testWhileIdle>
+-                    <minEvictableIdleTimeMillis>4000</minEvictableIdleTimeMillis>
+                 </configuration>
+             </definition>
+         </datasource>
+@@ -33,17 +32,16 @@
+             <description>The datasource used for analytics record store</description>
+             <definition type="RDBMS">
+                 <configuration>
+-                    <url>jdbc:h2:repository/database/ANALYTICS_PROCESSED_DATA_STORE;AUTO_SERVER=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000</url>
+-                    <username>wso2carbon</username>
+-                    <password>wso2carbon</password>
+-                    <driverClassName>org.h2.Driver</driverClassName>
++                    <url>jdbc:mysql://database:3306/stats_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
++                    <username>root</username>
++                    <password>root</password>
++                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                     <maxActive>50</maxActive>
+                     <maxWait>60000</maxWait>
++                    <testOnBorrow>true</testOnBorrow>
+                     <validationQuery>SELECT 1</validationQuery>
++                    <validationInterval>30000</validationInterval>
+                     <defaultAutoCommit>false</defaultAutoCommit>
+-                    <initialSize>0</initialSize>
+-                    <testWhileIdle>true</testWhileIdle>
+-                    <minEvictableIdleTimeMillis>4000</minEvictableIdleTimeMillis>
+                 </configuration>
+             </definition>
+         </datasource>

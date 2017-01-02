@@ -1,0 +1,686 @@
+Issues with building the knowledge base
+
+Pattern-3
+
+
+####################
+# wso2am-publisher #
+####################
+
+repository/components/api-publisher/configuration/org.eclipse.equinox.simpleconfigurator/bundles.info
+=====================================================================================================
+
+Why following two lines are added? - self
+@@ -239,6 +239,8 @@
+ org.wso2.carbon.core.services,4.4.7,../plugins/org.wso2.carbon.core.services_4.4.7.jar,4,true
+ org.wso2.carbon.databridge.agent,5.1.0,../plugins/org.wso2.carbon.databridge.agent_5.1.0.jar,4,true
+ org.wso2.carbon.databridge.commons,5.1.0,../plugins/org.wso2.carbon.databridge.commons_5.1.0.jar,4,true
++org.wso2.carbon.databridge.commons.binary,5.1.0,../plugins/org.wso2.carbon.databridge.commons.binary_5.1.0.jar,4,true
++org.wso2.carbon.databridge.commons.thrift,5.1.0,../plugins/org.wso2.carbon.databridge.commons.thrift_5.1.0.jar,4,true
+ org.wso2.carbon.deployment.synchronizer,4.5.4,../plugins/org.wso2.carbon.deployment.synchronizer_4.5.4.jar,4,true
+ org.wso2.carbon.deployment.synchronizer.subversion,4.5.4,../plugins/org.wso2.carbon.deployment.synchronizer.subversion_4.5.4.jar,4,true
+ org.wso2.carbon.directory.server.manager,5.2.0,../plugins/org.wso2.carbon.directory.server.manager_5.2.0.jar,4,true
+
+
+
+###################################
+# wso2am-publisher / wso2am-store #
+###################################
+
+
+repository/conf/axis2/axis2.xml
+===============================
+
+All hostnames are allowed. - ignore, regenerate cirts
+@@ -543,7 +543,7 @@
+                 <Password>wso2carbon</Password>
+             </TrustStore>
+         </parameter>
+-        <!--<parameter name="HostnameVerifier">DefaultAndLocalhost</parameter>-->
++        <parameter name="HostnameVerifier">AllowAll</parameter>
+             <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
+     </transportSender>
+
+
+repository/conf/api-manager.xml
+===============================
+
+No link between publisher and store - draw
+@@ -628,7 +628,7 @@
+      getting this node to join the cluster.
+      -->
+     <clustering class="org.wso2.carbon.core.clustering.hazelcast.HazelcastClusteringAgent"
+-                enable="false">
++                enable="true">
+
+         <!--
+            This parameter indicates whether the cluster has to be automatically initalized
+@@ -650,7 +650,7 @@
+                     is deemed to have left the cluster, it will be detected by the Group Membership
+                     Service (GMS) using a TCP ping mechanism.
+         -->
+-        <parameter name="membershipScheme">multicast</parameter>
++        <parameter name="membershipScheme">wka</parameter>
+         <!--<parameter name="licenseKey">xxx</parameter>-->
+         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
+
+@@ -658,7 +658,7 @@
+          The clustering domain/group. Nodes in the same group will belong to the same multicast
+          domain. There will not be interference between nodes in different groups.
+         -->
+-        <parameter name="domain">wso2.carbon.domain</parameter>
++        <parameter name="domain">wso2.pub.store.domain</parameter>
+
+         <!-- The multicast address to be used -->
+         <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
+@@ -679,7 +679,7 @@
+         -->
+         <!-- The host name or IP address of this member -->
+
+-        <parameter name="localMemberHost">127.0.0.1</parameter>
++        <parameter name="localMemberHost">publisher</parameter>
+
+         <!--
+             The bind adress of this member. The difference between localMemberHost & localMemberBindAddress
+@@ -720,7 +720,7 @@
+         -->
+         <members>
+             <member>
+-                <hostName>127.0.0.1</hostName>
++                <hostName>wso2am_store</hostName>
+                 <port>4000</port>
+             </member>
+         </members>
+
+Why there is no link between publisher and key manager? - wso2am-*,wso2am-keymanager
+@@ -16,7 +16,7 @@
+          logic relies on this. -->
+     <AuthManager>
+         <!-- Server URL of the Authentication service -->
+-        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
++        <ServerURL>https://wso2am_keymanager:9443/services/</ServerURL>
+         <!-- Admin username for the Authentication manager. -->
+         <Username>${admin.username}</Username>
+         <!-- Admin password for the Authentication manager. -->
+
+Same with follow components
+@@ -87,13 +87,13 @@
+                 <Name>Production and Sandbox</Name>
+                 <Description>This is a hybrid gateway that handles both production and sandbox token traffic.</Description>
+                 <!-- Server URL of the API gateway -->
+-                <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
++                <ServerURL>https://wso2am_gateway-manager:9443/services/</ServerURL>
+                <!-- Admin username for the API gateway. -->
+                 <Username>${admin.username}</Username>
+                 <!-- Admin password for the API gateway.-->
+                 <Password>${admin.password}</Password>
+                 <!-- Endpoint URLs for the APIs hosted in this API gateway.-->
+-                <GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
++                <GatewayEndpoint>http://wso2am_gateway-worker:8280,https://wso2am_gateway-worker:8243</GatewayEndpoint>
+             </Environment>
+         </Environments>
+     </APIGateway>
+
+@@ -202,7 +202,7 @@
+     -->
+     <APIKeyValidator>
+         <!-- Server URL of the API key manager -->
+-        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
++        <ServerURL>https://wso2am_keymanager:9443/services/</ServerURL>
+ 
+         <!-- Admin username for API key manager. -->
+         <Username>${admin.username}</Username>
+
+self
+@@ -216,7 +216,7 @@
+              -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
+              -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
+             -The Gateway uses this parameter to connect to the key validation thrift service. -->
+-        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
++        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
+         <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
+         <!--ThriftClientPort>10397</ThriftClientPort-->
+
+self
+@@ -284,7 +284,7 @@
+         <!--This property is used to indicate how we do user name comparision for token generation https://wso2.org/jira/browse/APIMANAGER-2225-->
+         <CompareCaseInsensitively>true</CompareCaseInsensitively>
+         <DisplayURL>false</DisplayURL>
+-        <URL>https://localhost:${mgt.transport.https.port}/store</URL>
++        <URL>https://wso2am_store:9446/store</URL>
+ 
+         <!-- Server URL of the API Store. -->
+         <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
+
+*,traffic manager
+@@ -479,7 +479,7 @@
+             </DataPublisherThreadPool>
+         </DataPublisher>
+         <PolicyDeployer>
+-            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
++            <ServiceURL>https://wso2am_traffic-manager:9443/services/</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+         </PolicyDeployer>
+
+
+Why follow change? - ignore, configure traffic manager
+@@ -484,12 +484,12 @@        
+             <Password>${admin.password}</Password>
+         </PolicyDeployer>
+         <BlockCondition>
+-            <Enabled>true</Enabled>
++            <Enabled>false</Enabled>
+             <!--InitDelay>300000</InitDelay>
+             <Period>3600000</Period-->
+         </BlockCondition>
+         <JMSConnectionDetails>
+-            <Enabled>true</Enabled>
++            <Enabled>false</Enabled>
+             <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+
+
+repository/conf/carbon.xml
+==========================
+
+Why follow change? - ignore
+@@ -582,11 +582,11 @@
+     -->
+     <DeploymentSynchronizer>
+         <Enabled>false</Enabled>
+-        <AutoCommit>false</AutoCommit>
++        <AutoCommit>true</AutoCommit>
+         <AutoCheckout>true</AutoCheckout>
+         <RepositoryType>svn</RepositoryType>
+-        <SvnUrl>http://svnrepo.example.com/repos/</SvnUrl>
+-        <SvnUser>username</SvnUser>
++        <SvnUrl>http://svnrepo/repo</SvnUrl>
++        <SvnUser>user</SvnUser>
+         <SvnPassword>password</SvnPassword>
+         <SvnUrlAppendTenantId>true</SvnUrlAppendTenantId>
+     </DeploymentSynchronizer>
+
+
+repository/conf/jndi.properties
+===============================
+
+No link between publisher and traffic manager - *,traffic-manager
+@@ -16,9 +16,9 @@
+
+ # register some connection factories
+ # connectionfactory.[jndiname] = [ConnectionURL]
+-connectionfactory.TopicConnectionFactory = amqp://admin:admin@clientid/carbon?brokerlist='tcp://localhost:5672'
++connectionfactory.TopicConnectionFactory = amqp://admin:admin@clientid/carbon?brokerlist='tcp://wso2am_traffic-manager:5672'
+
+-connectionfactory.QueueConnectionFactory = amqp://admin:admin@clientID/test?brokerlist='tcp://localhost:5672'
++connectionfactory.QueueConnectionFactory = amqp://admin:admin@clientID/test?brokerlist='tcp://wso2am_traffic-manager:5672'
+
+ # register some queues in JNDI using the form
+ # queue.[jndiName] = [physicalName]
+
+
+regenerate with wild cards.
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.
+
+
+######################
+# wso2am-key_manager #
+######################
+
+
+repository/conf/api-manager.xml
+================================
+
+No direct link between keymanager and gateway-manager / gateway-worker - ignore
+@@ -87,13 +87,13 @@
+                 <Name>Production and Sandbox</Name>
+                 <Description>This is a hybrid gateway that handles both production and sandbox token traffic.</Description>
+                 <!-- Server URL of the API gateway -->
+-                <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
++                <ServerURL>https://wso2am_gateway-manager:9443/services/</ServerURL>
+                <!-- Admin username for the API gateway. -->
+                 <Username>${admin.username}</Username>
+                 <!-- Admin password for the API gateway.-->
+                 <Password>${admin.password}</Password>
+                 <!-- Endpoint URLs for the APIs hosted in this API gateway.-->
+-                <GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
++                <GatewayEndpoint>http://wso2am_gateway-worker:8280,https://wso2am_gateway-worker:8243</GatewayEndpoint>
+             </Environment>
+         </Environments>
+     </APIGateway>
+
+No link to analytics - ignore, * other part
+@@ -136,20 +136,20 @@
+ 
+              Ex - Multiple Receiver Groups with two receivers each
+              {tcp://localhost:7612/,tcp://localhost:7613},{tcp://localhost:7712/,tcp://localhost:7713/} -->
+-        <DASServerURL>{tcp://localhost:7612}</DASServerURL>
+-        <!--DASAuthServerURL>{ssl://localhost:7712}</DASAuthServerURL-->
++        <DASServerURL>tcp://wso2am-analytics:7612</DASServerURL>
++        <DASAuthServerURL>ssl://wso2am-analytics:7712</DASAuthServerURL>
+         <!-- Administrator username to login to the remote DAS server. -->
+-        <DASUsername>${admin.username}</DASUsername>
++        <DASUsername>admin</DASUsername>
+         <!-- Administrator password to login to the remote DAS server. -->
+-        <DASPassword>${admin.password}</DASPassword>
++        <DASPassword>admin</DASPassword>
+ 
+         <!-- For APIM implemented Statistic client for RDBMS -->
+         <StatsProviderImpl>org.wso2.carbon.apimgt.usage.client.impl.APIUsageStatisticsRdbmsClientImpl</StatsProviderImpl>
+ 
+         <!-- DAS REST API configuration -->
+-        <DASRestApiURL>https://localhost:9444</DASRestApiURL>
+-        <DASRestApiUsername>${admin.username}</DASRestApiUsername>
+-        <DASRestApiPassword>${admin.password}</DASRestApiPassword>
++        <DASRestApiURL>https://wso2am-analytics:9444</DASRestApiURL>
++        <DASRestApiUsername>admin</DASRestApiUsername>
++        <DASRestApiPassword>admin</DASRestApiPassword>
+ 
+         <!-- Below property is used to skip trying to connect to event receiver nodes when publishing events even if
+             the stats enabled flag is set to true. -->
+@@ -216,7 +216,7 @@
+              -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
+              -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
+             -The Gateway uses this parameter to connect to the key validation thrift service. -->
+-        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
++        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
+         <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
+         <!--ThriftClientPort>10397</ThriftClientPort-->
+ 
+ No link to traffic-manager -  ignore
+@@ -462,10 +462,10 @@
+     <ThrottlingConfigurations>
+         <EnableAdvanceThrottling>true</EnableAdvanceThrottling>
+         <DataPublisher>
+-            <Enabled>true</Enabled>
++            <Enabled>false</Enabled>
+             <Type>Binary</Type>
+-            <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
+-            <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>
++            <ReceiverUrlGroup>tcp://wso2am_traffic-manager:9611</ReceiverUrlGroup>
++            <AuthUrlGroup>ssl://wso2am_traffic-manager:9711</AuthUrlGroup>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+             <DataPublisherPool>
+@@ -479,7 +479,7 @@
+             </DataPublisherThreadPool>
+         </DataPublisher>
+         <PolicyDeployer>
+-            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
++            <ServiceURL>https://wso2am_traffic-manager:9443/services/</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+         </PolicyDeployer>
+@@ -489,8 +489,8 @@
+             <Period>3600000</Period-->
+         </BlockCondition>
+         <JMSConnectionDetails>
+-            <Enabled>true</Enabled>
+-            <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
++            <Enabled>false</Enabled>
++            <ServiceURL>tcp://wso2am_traffic-manager:5672</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+             <Destination>throttleData</Destination>
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.
+
+
+##########################
+# wso2am-gateway_manager #
+##########################
+
+
+repository/conf/axis2/axis2.xml
+===============================
+
+What does following changes do? - self
+@@ -543,7 +543,7 @@
+                 <Password>wso2carbon</Password>
+             </TrustStore>
+         </parameter>
+-        <!--<parameter name="HostnameVerifier">DefaultAndLocalhost</parameter>-->
++        <parameter name="HostnameVerifier">AllowAll</parameter>
+             <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
+     </transportSender>
+ 
+@@ -628,7 +628,7 @@
+      getting this node to join the cluster.
+      -->
+     <clustering class="org.wso2.carbon.core.clustering.hazelcast.HazelcastClusteringAgent"
+-                enable="false">
++                enable="true">
+ 
+         <!--
+            This parameter indicates whether the cluster has to be automatically initalized
+@@ -650,7 +650,7 @@
+                     is deemed to have left the cluster, it will be detected by the Group Membership
+                     Service (GMS) using a TCP ping mechanism.
+         -->
+-        <parameter name="membershipScheme">multicast</parameter>
++        <parameter name="membershipScheme">wka</parameter>
+         <!--<parameter name="licenseKey">xxx</parameter>-->
+         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
+ 
+ repository/conf/api-manager.xml
+ ===============================
+
+No link to analytics - gateway_manager,analytics
+ @@ -136,20 +136,20 @@
+ 
+              Ex - Multiple Receiver Groups with two receivers each
+              {tcp://localhost:7612/,tcp://localhost:7613},{tcp://localhost:7712/,tcp://localhost:7713/} -->
+-        <DASServerURL>{tcp://localhost:7612}</DASServerURL>
+-        <!--DASAuthServerURL>{ssl://localhost:7712}</DASAuthServerURL-->
++        <DASServerURL>tcp://wso2am-analytics:7612</DASServerURL>
++        <DASAuthServerURL>ssl://wso2am-analytics:7712</DASAuthServerURL>
+         <!-- Administrator username to login to the remote DAS server. -->
+-        <DASUsername>${admin.username}</DASUsername>
++        <DASUsername>admin</DASUsername>
+         <!-- Administrator password to login to the remote DAS server. -->
+-        <DASPassword>${admin.password}</DASPassword>
++        <DASPassword>admin</DASPassword>
+ 
+         <!-- For APIM implemented Statistic client for RDBMS -->
+         <StatsProviderImpl>org.wso2.carbon.apimgt.usage.client.impl.APIUsageStatisticsRdbmsClientImpl</StatsProviderImpl>
+ 
+         <!-- DAS REST API configuration -->
+-        <DASRestApiURL>https://localhost:9444</DASRestApiURL>
+-        <DASRestApiUsername>${admin.username}</DASRestApiUsername>
+-        <DASRestApiPassword>${admin.password}</DASRestApiPassword>
++        <DASRestApiURL>https://wso2am-analytics:9444</DASRestApiURL>
++        <DASRestApiUsername>admin</DASRestApiUsername>
++        <DASRestApiPassword>admin</DASRestApiPassword>
+ 
+         <!-- Below property is used to skip trying to connect to event receiver nodes when publishing events even if
+             the stats enabled flag is set to true. -->
+
+No link to key manager  - *,keymanager             
+@@ -202,7 +202,7 @@
+     -->
+     <APIKeyValidator>
+         <!-- Server URL of the API key manager -->
+-        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
++        <ServerURL>https://wso2am_keymanager:9443/services/</ServerURL>
+ 
+         <!-- Admin username for API key manager. -->
+         <Username>${admin.username}</Username>
+@@ -216,7 +216,7 @@
+              -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
+              -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
+             -The Gateway uses this parameter to connect to the key validation thrift service. -->
+-        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
++        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
+         <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
+         <!--ThriftClientPort>10397</ThriftClientPort-->
+ 
+ ignore
+@@ -460,7 +460,7 @@
+         </WhiteListedURIs>
+     </RESTAPI>
+     <ThrottlingConfigurations>
+-        <EnableAdvanceThrottling>true</EnableAdvanceThrottling>
++        <EnableAdvanceThrottling>false</EnableAdvanceThrottling>
+         <DataPublisher>
+             <Enabled>true</Enabled>
+             <Type>Binary</Type>
+
+repository/deployment/server/synapse-configs/default/api/_AuthorizeAPI_.xml - ignore
+===========================================================================
+
+@@ -5,7 +5,7 @@
+        <property name="uri.var.hostname" expression="get-property('keyManager.hostname')"/>
+             <send>
+                 <endpoint>
+-                    <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/authorize">
++                    <http uri-template="https://wso2am_keymanager:9443/oauth2/authorize">
+                         <timeout>
+                             <duration>60000</duration>
+                             <responseAction>fault</responseAction>
+
+repository/deployment/server/synapse-configs/default/api/_RevokeAPI_.xml - ignore
+========================================================================
+
+@@ -5,7 +5,7 @@
+        <property name="uri.var.hostname" expression="get-property('keyManager.hostname')"/>
+             <send>
+                 <endpoint>
+-                    <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/revoke">
++                    <http uri-template="https://wso2am_keymanager:9443/oauth2/revoke">
+                         <timeout>
+                             <duration>60000</duration>
+                             <responseAction>fault</responseAction>
+
+repository/deployment/server/synapse-configs/default/api/_TokenAPI_.xml - ignore
+=======================================================================
+
+@@ -5,7 +5,7 @@
+        <property name="uri.var.hostname" expression="get-property('keyManager.hostname')"/>
+             <send>
+                 <endpoint>
+-                     <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/token">
++                     <http uri-template="https://wso2am_keymanager:9443/oauth2/token">
+                         <timeout>
+                             <duration>60000</duration>
+                             <responseAction>fault</responseAction>
+
+repository/deployment/server/synapse-configs/default/api/_UserInfoAPI_.xml - ignore
+==========================================================================
+
+@@ -5,7 +5,7 @@
+        <property name="uri.var.hostname" expression="get-property('keyManager.hostname')"/>
+             <send>
+                 <endpoint>
+-                    <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/userinfo">
++                    <http uri-template="https://wso2am_keymanager:9443/oauth2/userinfo">
+                         <timeout>
+                             <duration>60000</duration>
+                             <responseAction>fault</responseAction>
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.
+
+
+#####################
+# wso2am_analytics- #
+#####################
+
+
+repository/conf/tomcat/catalina-server.xml
+==========================================
+
+Why below change? - self
+@@ -27,6 +27,7 @@
+         -->
+         <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+                    port="9763"
++                   proxyPort="9764"
+                    redirectPort="9443"
+                    bindOnInit="false"
+                    maxHttpHeaderSize="8192"
+@@ -52,6 +53,7 @@
+         -->
+         <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+                    port="9443"
++                   proxyPort="9444"
+                    bindOnInit="false"
+                    sslProtocol="TLS"
+                    sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2"
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.
+
+
+#########################
+# wso2am-gateway_worker #
+#########################
+
+
+repository/conf/axis2/axis2.xml
+===============================
+
+@ -628,7 +628,7 @@
+      getting this node to join the cluster.
+      -->
+     <clustering class="org.wso2.carbon.core.clustering.hazelcast.HazelcastClusteringAgent"
+-                enable="false">
++                enable="true">
+ 
+         <!--
+            This parameter indicates whether the cluster has to be automatically initalized
+@@ -650,7 +650,7 @@
+                     is deemed to have left the cluster, it will be detected by the Group Membership
+                     Service (GMS) using a TCP ping mechanism.
+         -->
+-        <parameter name="membershipScheme">multicast</parameter>
++        <parameter name="membershipScheme">wka</parameter>
+         <!--<parameter name="licenseKey">xxx</parameter>-->
+         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
+ 
+@@ -658,7 +658,7 @@
+          The clustering domain/group. Nodes in the same group will belong to the same multicast
+          domain. There will not be interference between nodes in different groups.
+         -->
+-        <parameter name="domain">wso2.carbon.domain</parameter>
++        <parameter name="domain">wso2.am.domain</parameter>
+ 
+         <!-- The multicast address to be used -->
+         <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
+
+ - clustering link
+@@ -720,7 +720,7 @@
+         -->
+         <members>
+             <member>
+-                <hostName>127.0.0.1</hostName>
++                <hostName>wso2am_gateway-manager</hostName>
+                 <port>4000</port>
+             </member>
+         </members>
+
+repository/conf/axis2/axis2_blocking_client.xml 
+===============================================
+
+@@ -302,6 +302,7 @@
+         <parameter name="Transfer-Encoding">chunked</parameter>
+         <parameter name="cacheHttpClient">true</parameter>
+         <parameter name="defaultMaxConnectionsPerHost">200</parameter>
++        <parameter name="HostnameVerifier">AllowAll</parameter>
+     </transportSender>
+     <transportSender name="jms"
+                      class="org.apache.axis2.transport.jms.JMSSender"/>
+
+repository/conf/axis2/axis2_client.xml
+======================================
+
+@@ -193,6 +193,7 @@
+         <parameter name="Transfer-Encoding">chunked</parameter>
+         <parameter name="SO_TIMEOUT">60000</parameter>
+         <parameter name="CONNECTION_TIMEOUT">60000</parameter>
++        <parameter name="HostnameVerifier">AllowAll</parameter>
+     </transportSender>
+     <!--<transportSender name="java"-->
+     <!--class="org.apache.axis2.transport.java.JavaTransportSender"/>-->
+
+repository/conf/api-manager.xml
+===============================
+
+*,keymanager
+@@ -202,7 +202,7 @@
+     -->
+     <APIKeyValidator>
+         <!-- Server URL of the API key manager -->
+-        <ServerURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServerURL>
++        <ServerURL>https://wso2am_keymanager:9443/services/</ServerURL>
+ 
+         <!-- Admin username for API key manager. -->
+         <Username>${admin.username}</Username>
+@@ -216,7 +216,7 @@
+              -If you need to start two API Manager instances in the same machine, you need to give different ports to "ThriftServerPort" value in two nodes.
+              -ThriftServerHost - Allows to configure a hostname for the thrift server. It uses the carbon hostname by default.
+             -The Gateway uses this parameter to connect to the key validation thrift service. -->
+-        <KeyValidatorClientType>ThriftClient</KeyValidatorClientType>
++        <KeyValidatorClientType>WSClient</KeyValidatorClientType>
+         <ThriftClientConnectionTimeOut>10000</ThriftClientConnectionTimeOut>
+         <!--ThriftClientPort>10397</ThriftClientPort-->
+ 
+ *,traffic-manager
+@@ -464,8 +464,8 @@
+         <DataPublisher>
+             <Enabled>true</Enabled>
+             <Type>Binary</Type>
+-            <ReceiverUrlGroup>tcp://${carbon.local.ip}:${receiver.url.port}</ReceiverUrlGroup>
+-            <AuthUrlGroup>ssl://${carbon.local.ip}:${auth.url.port}</AuthUrlGroup>
++            <ReceiverUrlGroup>tcp://wso2am_traffic-manager:9611</ReceiverUrlGroup>
++            <AuthUrlGroup>ssl://wso2am_traffic-manager:9711</AuthUrlGroup>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+             <DataPublisherPool>
+@@ -479,7 +479,7 @@
+             </DataPublisherThreadPool>
+         </DataPublisher>
+         <PolicyDeployer>
+-            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
++            <ServiceURL>https://wso2am_traffic-manager:9443/services/</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+         </PolicyDeployer>
+@@ -490,7 +490,7 @@
+         </BlockCondition>
+         <JMSConnectionDetails>
+             <Enabled>true</Enabled>
+-            <ServiceURL>tcp://${carbon.local.ip}:${jms.port}</ServiceURL>
++            <ServiceURL>tcp://wso2am_traffic-manager:5672</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+             <Destination>throttleData</Destination>
+
+ - self
+@@ -508,14 +508,14 @@
+                 <JobQueueSize>10</JobQueueSize>
+             </JMSTaskManager>
+         </JMSConnectionDetails>
+-        <JMSEventPublisherParameters>
+-                <java.naming.factory.initial>org.wso2.andes.jndi.PropertiesFileInitialContextFactory</java.naming.factory.initial>
+-                <java.naming.provider.url>repository/conf/jndi.properties</java.naming.provider.url>
+-                <transport.jms.DestinationType>topic</transport.jms.DestinationType>
+-                <transport.jms.Destination>throttleData</transport.jms.Destination>
+-                <transport.jms.ConcurrentPublishers>allow</transport.jms.ConcurrentPublishers>
+-                <transport.jms.ConnectionFactoryJNDIName>TopicConnectionFactory</transport.jms.ConnectionFactoryJNDIName>
+-        </JMSEventPublisherParameters>
++        <!--<JMSEventPublisherParameters>-->
++                <!--<java.naming.factory.initial>org.wso2.andes.jndi.PropertiesFileInitialContextFactory</java.naming.factory.initial>-->
++                <!--<java.naming.provider.url>repository/conf/jndi.properties</java.naming.provider.url>-->
++                <!--<transport.jms.DestinationType>topic</transport.jms.DestinationType>-->
++                <!--<transport.jms.Destination>throttleData</transport.jms.Destination>-->
++                <!--<transport.jms.ConcurrentPublishers>allow</transport.jms.ConcurrentPublishers>-->
++                <!--<transport.jms.ConnectionFactoryJNDIName>TopicConnectionFactory</transport.jms.ConnectionFactoryJNDIName>-->
++        <!--</JMSEventPublisherParameters>-->
+         <!--DefaultLimits>
+             <SubscriptionTierLimits>
+                 <Gold>5000</Gold>
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.
+
+
+##########################
+# wso2am-traffic_manager #
+##########################
+
+
+repository/resources/security/client-truststore.jks, repository/resources/security/wso2cabon.jks
+================================================================================================
+    Content has been changed but cannot read.
+
+
+traffic-manager axis2.xml, registry.xml copy whole file
