@@ -168,7 +168,10 @@
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
 
                 // Set align of the labels to bottom
-                mxConstants.STYLE_VERTICAL_LABEL_POSITION = 'bottom';
+                mxConstants.STYLE_VERTICAL_LABEL_POSITION = mxConstants.ALIGN_BOTTOM;
+                mxConstants.STYLE_LABEL_POSITION = mxConstants.ALIGN_CENTER;
+                
+                mxVertexHandler.prototype.label.y = 0;
 
                 // Enables rotation handle
                 mxVertexHandler.prototype.rotationEnabled = true;
@@ -554,7 +557,7 @@
                                 <input id="source" type="checkbox"/>
                                 View Source
                                 <button id="getModelButton">Get JSON Model</button>
-                                <button id="getConfigurationButton">Get Configuration</button>
+                                <button id="getConfigurationButton">Download Docker Configuration</button>
                             </td>
                         </tr>
                     </tbody>

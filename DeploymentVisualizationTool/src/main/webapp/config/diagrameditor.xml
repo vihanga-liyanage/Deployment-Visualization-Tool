@@ -154,7 +154,7 @@
 		</add>
 		<add as="SVN">
 			<Image label="" href="">
-				<mxCell vertex="1" style="svn">
+				<mxCell vertex="1" style="svnrepo">
 					<mxGeometry as="geometry" width="100" height="100"/>
 				</mxCell>
 			</Image>
@@ -341,10 +341,10 @@
 				<add as="perimeter" value="ellipsePerimeter"/>
 				<add as="image" value="images/wso2/load-balancer.png"/>
 			</add>
-			<add as="svn">
+			<add as="svnrepo">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="ellipsePerimeter"/>
-				<add as="image" value="images/wso2/svn.png"/>
+				<add as="image" value="images/wso2/svnrepo.png"/>
 			</add>
 			<add as="two_way_arrow">
 				<add as="shape" value="arrow"/>
@@ -428,7 +428,7 @@
 		<add as="Data Stream" template="Data_Stream" icon="images/wso2/data_stream.png"/>
 		<add as="Load Balancer" template="Load_Balancer" icon="images/wso2/load-balancer.png"/>
 		<add as="Database" template="Database" icon="images/wso2/database.png"/>
-		<add as="SVN" template="SVN" icon="images/wso2/svn.png"/>
+		<add as="SVN" template="SVN" icon="images/wso2/svnrepo.png"/>
 		<add as="Mobile Phone" template="Mobile_Phone" icon="images/wso2/mobile_phone.png"/>
 		<add as="User" template="User" icon="images/wso2/user.png"/>
 		<add as="Web Page" template="Web_Page" icon="images/wso2/web_page.png"/>

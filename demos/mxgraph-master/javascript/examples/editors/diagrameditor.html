@@ -39,6 +39,10 @@
 		// last step in the editor constructor.
 		function onInit(editor)
 		{
+			// Set align of the labels to bottom
+            mxConstants.STYLE_VERTICAL_LABEL_POSITION = mxConstants.ALIGN_BOTTOM;
+            mxConstants.STYLE_LABEL_POSITION = mxConstants.ALIGN_CENTER;
+
 			// Enables rotation handle
 			mxVertexHandler.prototype.rotationEnabled = true;
 

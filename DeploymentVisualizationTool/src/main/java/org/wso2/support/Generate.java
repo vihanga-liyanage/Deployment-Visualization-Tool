@@ -341,7 +341,10 @@ public class Generate {
                     JSONObject connector = connectors.getJSONObject(i);
 
                     //Adding new service into services array
-                    links.put(processLink((JSONObject) connector, serviceMap));
+                    JSONObject obj = processLink((JSONObject) connector, serviceMap);
+                    if (obj != null) {
+                        links.put(obj);
+                    }
                 }
 
             } else {
@@ -388,21 +391,25 @@ public class Generate {
 
     private static JSONObject processLink(JSONObject connector, Map serviceMap) {
         JSONObject mxCell = connector.getJSONObject("mxCell");
-        int source = mxCell.getInt("source");
-        int target = mxCell.getInt("target");
+        if (mxCell.has("source") && mxCell.has("target")) {
+            int source = mxCell.getInt("source");
+            int target = mxCell.getInt("target");
 
-        //Swap if source is greater than target
-        if (source > target) {
-            int temp = source;
-            source = target;
-            target = temp;
+            //Swap if source is greater than target
+            if (source > target) {
+                int temp = source;
+                source = target;
+                target = temp;
+            }
+
+            JSONObject link = new JSONObject();
+            link.put("source", serviceMap.get(source));
+            link.put("target", serviceMap.get(target));
+
+            return link;
+        } else {
+            return null;
         }
-
-        JSONObject link = new JSONObject();
-        link.put("source", serviceMap.get(source));
-        link.put("target", serviceMap.get(target));
-
-        return link;
     }
 
     public static void addToComposeFile(Path partFile, String dirname, Path out){
@@ -520,13 +527,6 @@ public class Generate {
             System.out.println(rootPath + " Directory not found!");
         }
 
-        //Creating docker compose yaml file
-        Path composeFile = Paths.get(targetLocation + "/docker-compose.yml");
-        String line = "version: '2'\nservices:\n  svnrepo:\n    image: docker.wso2.com/svnrepo\n";
-        Files.createDirectories(Paths.get(targetLocation));
-        Files.createFile(composeFile);
-        Files.write(composeFile, line.getBytes());
-
         //Get all file names
         List<String> fileNames = new ArrayList<>();
         JSONObject model = getJSONFromXML(xmlString);
@@ -534,6 +534,13 @@ public class Generate {
         for (int i = 0; i < services.length(); i ++) {
             fileNames.addAll(toKnowledgeBaseNames(i, model));
         }
+        
+        //Creating docker compose yaml file
+        Path composeFile = Paths.get(targetLocation + "/docker-compose.yml");
+        String line = "version: '2'\nservices:\n  svnrepo:\n    image: docker.wso2.com/svnrepo\n";
+        Files.createDirectories(Paths.get(targetLocation));
+        Files.createFile(composeFile);
+        Files.write(composeFile, line.getBytes());
         
         //process all file names
         fileNames.forEach(fileName -> {
