@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class Generate {
     public static final String DIFF = ".diff";
-    public static final String KNOELEDGE_BASE_LOCATION = "/home/vihanga/Developer/My Projects/WSO2/P3-Visualizing-tool-for-docker/DeploymentVisualizationTool/knowledge-base/";
+    public static final String KNOELEDGE_BASE_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/knowledge-base/";
 
     public static void main(String[] args) throws IOException {
         String modelPath = "src/resources/model.json";
@@ -501,7 +501,7 @@ public class Generate {
     public static String getConfigFromXML(String xmlString) throws IOException {
 
         String cleanProductLocation = "/home/vihanga/Downloads/Compare/";
-        String targetLocation = "/home/vihanga/Developer/My Projects/WSO2/P3-Visualizing-tool-for-docker/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
+        String targetLocation = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
                 
         if (xmlString == null) {
             return "";

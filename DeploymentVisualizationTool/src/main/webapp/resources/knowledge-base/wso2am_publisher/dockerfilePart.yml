@@ -1,8 +1,0 @@
-  $dirname:
-    build:
-      context: .
-      dockerfile: $dirname/Dockerfile
-    environment:
-      - SLEEP=200
-    ports:
-      - "9445:9443"

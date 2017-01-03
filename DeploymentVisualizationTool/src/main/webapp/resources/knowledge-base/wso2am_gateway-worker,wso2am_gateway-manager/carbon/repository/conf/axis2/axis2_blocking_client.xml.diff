@@ -1,8 +1,0 @@
-@@ -302,6 +302,7 @@
-         <parameter name="Transfer-Encoding">chunked</parameter>
-         <parameter name="cacheHttpClient">true</parameter>
-         <parameter name="defaultMaxConnectionsPerHost">200</parameter>
-+        <parameter name="HostnameVerifier">AllowAll</parameter>
-     </transportSender>
-     <transportSender name="jms"
-                      class="org.apache.axis2.transport.jms.JMSSender"/>
