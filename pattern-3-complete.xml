@@ -7,222 +7,222 @@
       <mxCell parent="0"/>
     </Layer>
     <Image label="" href="" id="2">
-      <mxCell style="load-balancer" vertex="1" parent="1">
+      <mxCell style="load-balancer" parent="1" vertex="1">
         <mxGeometry x="-169.63855421686748" y="270" width="100" height="100" as="geometry"/>
       </mxCell>
     </Image>
     <Image label="publisher" href="" id="3">
-      <mxCell style="wso2am" vertex="1" parent="1">
+      <mxCell style="wso2am" parent="1" vertex="1">
         <mxGeometry x="120" y="-120" width="100" height="100" as="geometry"/>
       </mxCell>
     </Image>
     <Image label="store" href="" id="4">
-      <mxCell style="wso2am" vertex="1" parent="1">
+      <mxCell style="wso2am" parent="1" vertex="1">
         <mxGeometry x="450" y="-126.86746987951807" width="100" height="100" as="geometry"/>
       </mxCell>
     </Image>
     <Image label="" href="" id="5">
-      <mxCell style="database" vertex="1" parent="1">
+      <mxCell style="database" parent="1" vertex="1">
         <mxGeometry x="790" width="100" height="100" as="geometry"/>
       </mxCell>
     </Image>
     <Image label="keymanager" href="" id="6">
-      <mxCell style="wso2am" vertex="1" parent="1">
+      <mxCell style="wso2am" parent="1" vertex="1">
         <mxGeometry x="440" y="100" width="100" height="100" as="geometry"/>
       </mxCell>
     </Image>
     <Image label="traffic-manager" href="" id="7">
-      <mxCell style="wso2am" vertex="1" parent="1">
+      <mxCell style="wso2am" parent="1" vertex="1">
         <mxGeometry x="450" y="410" width="100" height="100" as="geometry"/>
       </mxCell>
     </Image>
     <Image label="gateway-manager" href="" id="8">
-      <mxCell style="wso2am" vertex="1" parent="1">
+      <mxCell style="wso2am" parent="1" vertex="1">
         <mxGeometry x="-90" y="470" width="100" height="100" as="geometry"/>
       </mxCell>
     </Image>
     <Image label="gateway-worker" href="" id="9">
-      <mxCell style="wso2am" vertex="1" parent="1">
+      <mxCell style="wso2am" parent="1" vertex="1">
         <mxGeometry x="200" y="590" width="100" height="100" as="geometry"/>
       </mxCell>
     </Image>
     <Image label="" href="" id="10">
-      <mxCell style="svn" vertex="1" parent="1">
+      <mxCell style="svnrepo" parent="1" vertex="1">
         <mxGeometry x="40" y="640" width="100" height="100" as="geometry"/>
       </mxCell>
     </Image>
     <Image label="" href="" id="11">
-      <mxCell style="wso2am-analytics" vertex="1" parent="1">
+      <mxCell style="wso2am-analytics" parent="1" vertex="1">
         <mxGeometry x="650" y="550" width="100" height="100" as="geometry"/>
       </mxCell>
     </Image>
     <Connector label="" href="" id="12">
-      <mxCell edge="1" parent="1" source="5" target="3">
+      <mxCell parent="1" source="5" target="3" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="13">
-      <mxCell edge="1" parent="1" source="5" target="4">
+      <mxCell parent="1" source="5" target="4" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="14">
-      <mxCell edge="1" parent="1" source="5" target="6">
+      <mxCell parent="1" source="5" target="6" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="15">
-      <mxCell edge="1" parent="1" source="5" target="7">
+      <mxCell parent="1" source="5" target="7" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="16">
-      <mxCell edge="1" parent="1" source="5" target="11">
+      <mxCell parent="1" source="5" target="11" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="17">
-      <mxCell edge="1" parent="1" source="5" target="8">
+      <mxCell parent="1" source="5" target="8" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="18">
-      <mxCell edge="1" parent="1" source="5" target="9">
+      <mxCell parent="1" source="5" target="9" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="19">
-      <mxCell edge="1" parent="1" source="10" target="8">
+      <mxCell parent="1" source="10" target="8" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="20">
-      <mxCell edge="1" parent="1" source="10" target="9">
+      <mxCell parent="1" source="10" target="9" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="21">
-      <mxCell edge="1" parent="1" source="8" target="9">
+      <mxCell parent="1" source="8" target="9" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="22">
-      <mxCell edge="1" parent="1" source="3" target="4">
+      <mxCell parent="1" source="3" target="4" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="23">
-      <mxCell edge="1" parent="1" source="3" target="8">
+      <mxCell parent="1" source="3" target="8" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="24">
-      <mxCell edge="1" parent="1" source="3" target="9">
+      <mxCell parent="1" source="3" target="9" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="25">
-      <mxCell edge="1" parent="1" source="3" target="7">
+      <mxCell parent="1" source="3" target="7" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="26">
-      <mxCell edge="1" parent="1" source="3" target="6">
+      <mxCell parent="1" source="3" target="6" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="28">
-      <mxCell edge="1" parent="1" source="4" target="6">
+      <mxCell parent="1" source="4" target="6" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="29">
-      <mxCell edge="1" parent="1" source="4" target="8">
+      <mxCell parent="1" source="4" target="8" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="30">
-      <mxCell edge="1" parent="1" source="4" target="9">
+      <mxCell parent="1" source="4" target="9" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="31">
-      <mxCell edge="1" parent="1" source="11" target="3">
+      <mxCell parent="1" source="11" target="3" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="32">
-      <mxCell edge="1" parent="1" source="11" target="4">
+      <mxCell parent="1" source="11" target="4" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="33">
-      <mxCell edge="1" parent="1" source="11" target="7">
+      <mxCell parent="1" source="11" target="7" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="34">
-      <mxCell edge="1" parent="1" source="11" target="8">
+      <mxCell parent="1" source="11" target="8" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="35">
-      <mxCell edge="1" parent="1" source="11" target="9">
+      <mxCell parent="1" source="11" target="9" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="37">
-      <mxCell edge="1" parent="1" source="7" target="6">
+      <mxCell parent="1" source="7" target="6" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="38">
-      <mxCell edge="1" parent="1" source="7" target="9">
+      <mxCell parent="1" source="7" target="9" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="39">
-      <mxCell edge="1" parent="1" source="6" target="8">
+      <mxCell parent="1" source="6" target="8" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="40">
-      <mxCell edge="1" parent="1" source="6" target="9">
+      <mxCell parent="1" source="6" target="9" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="41">
-      <mxCell edge="1" parent="1" source="2" target="3">
+      <mxCell parent="1" source="2" target="3" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="42">
-      <mxCell edge="1" parent="1" source="2" target="8">
+      <mxCell parent="1" source="2" target="8" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="43">
-      <mxCell edge="1" parent="1" source="2" target="9">
+      <mxCell parent="1" source="2" target="9" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="44">
-      <mxCell edge="1" parent="1" source="2" target="4">
+      <mxCell parent="1" source="2" target="4" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="45">
-      <mxCell edge="1" parent="1" source="2" target="6">
+      <mxCell parent="1" source="2" target="6" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="46">
-      <mxCell edge="1" parent="1" source="2" target="7">
+      <mxCell parent="1" source="2" target="7" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>
     <Connector label="" href="" id="47">
-      <mxCell edge="1" parent="1" source="2" target="11">
+      <mxCell parent="1" source="2" target="11" edge="1">
         <mxGeometry relative="1" as="geometry"/>
       </mxCell>
     </Connector>

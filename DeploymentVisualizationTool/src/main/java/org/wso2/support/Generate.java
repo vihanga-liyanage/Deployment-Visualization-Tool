@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main class to generate docker compose artifacts form model json
@@ -500,15 +502,16 @@ public class Generate {
     
     public static String getConfigFromXML(String xmlString) throws IOException {
 
+        System.out.println("\n\n\n=====================\n\n\n");
         String cleanProductLocation = "/home/vihanga/Downloads/Compare/";
-        String targetLocation = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
+        final String targetLocation = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
                 
         if (xmlString == null) {
             return "";
         }
         
         //Deleting target dir
-        Path rootPath = Paths.get(targetLocation);
+        Path rootPath = Paths.get(targetLocation).getParent();
         try {
             Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
                 @Override
@@ -537,14 +540,29 @@ public class Generate {
         
         //Creating docker compose yaml file
         Path composeFile = Paths.get(targetLocation + "/docker-compose.yml");
-        String line = "version: '2'\nservices:\n  svnrepo:\n    image: docker.wso2.com/svnrepo\n";
+        String line = "version: '2'\nservices:\n";
         Files.createDirectories(Paths.get(targetLocation));
         Files.createFile(composeFile);
         Files.write(composeFile, line.getBytes());
         
+        //Add svnrepo to dockerfile
+        for (int i=0; i<fileNames.size(); i++) {
+            if (fileNames.get(i).startsWith("svnrepo")) {
+                try {
+                    System.out.println("------"+fileNames.get(i));
+                    String svnLine = "  svnrepo:\n    image: docker.wso2.com/svnrepo\n";
+                    Files.write(composeFile, svnLine.getBytes(), StandardOpenOption.APPEND);
+                    break;
+                } catch (IOException ex) {
+                    Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        
         //process all file names
         fileNames.forEach(fileName -> {
-            //Ignore database, svnrepo and load-balancer
+
+            //Ignore svnrepo and load-balance
             if (!fileName.startsWith("svnrepo") && !fileName.startsWith("load-balancer")) {
                 String diffDir = KNOELEDGE_BASE_LOCATION + fileName, product;
 
