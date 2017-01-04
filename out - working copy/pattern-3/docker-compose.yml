@@ -1,0 +1,67 @@
+version: '2'
+services:
+  svnrepo:
+    image: docker.wso2.com/svnrepo
+  database:
+    build:
+      context: .
+      dockerfile: database/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  wso2am_publisher:
+    build:
+      context: .
+      dockerfile: wso2am_publisher/Dockerfile
+    environment:
+      - SLEEP=200
+    ports:
+      - "9445:9443"
+  wso2am_store:
+    build:
+      context: .
+      dockerfile: wso2am_store/Dockerfile
+    environment:
+      - SLEEP=200
+    ports:
+    - "9446:9443"
+  wso2am-analytics:
+    build:
+      context: .
+      dockerfile: wso2am-analytics/Dockerfile
+    environment:
+      - SLEEP=5
+    ports:
+    - "9448:9444"
+  wso2am_traffic-manager:
+    build:
+      context: .
+      dockerfile: wso2am_traffic-manager/Dockerfile
+    environment:
+      - SLEEP=5
+    ports:
+    - "9447:9443"
+  keymanager:
+    build:
+      context: .
+      dockerfile: keymanager/Dockerfile
+    environment:
+      - SLEEP=60
+    ports:
+    - "9443:9443"
+  wso2am_gateway-manager:
+    build:
+      context: .
+      dockerfile: wso2am_gateway-manager/Dockerfile
+    environment:
+      - SLEEP=100
+    ports:
+    - "9444:9443"
+  wso2am_gateway-worker:
+    build:
+      context: .
+      dockerfile: wso2am_gateway-worker/Dockerfile
+    environment:
+      - SLEEP=180
+    ports:
+    - "8280:8280"
+    - "8243:8243"
