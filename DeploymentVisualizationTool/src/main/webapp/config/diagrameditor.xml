@@ -202,9 +202,9 @@
 			</add>
 			<add as="defaultVertex" extend="text">
 				<add as="shape" value="rectangle"/>
-				<add as="fontSize" value="22"/>
 				<add as="align" value="center"/>
 				<add as="verticalAlign" value="middle"/>
+				<add as="fontSize" value="25"/>
 				<add as="labelBackgroundColor" value="white"/>
 				<add as="shadow" value="1"/>
 				<add as="strokeColor" value="#C3D9FF"/>
