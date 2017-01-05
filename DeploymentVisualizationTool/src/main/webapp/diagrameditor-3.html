@@ -69,14 +69,14 @@
                 img.style.top = (state.y - 16) + 'px';
 
                 mxEvent.addGestureListeners(img,
-                        mxUtils.bind(this, function (evt)
-                        {
-                            var s = graph.gridSize;
-                            graph.setSelectionCells(graph.moveCells([state.cell], s, s, true));
-                            mxEvent.consume(evt);
-                            this.destroy();
-                        })
-                        );
+                    mxUtils.bind(this, function (evt)
+                    {
+                        var s = graph.gridSize;
+                        graph.setSelectionCells(graph.moveCells([state.cell], s, s, true));
+                        mxEvent.consume(evt);
+                        this.destroy();
+                    })
+                );
 
                 state.view.graph.container.appendChild(img);
                 this.images.push(img);
@@ -92,27 +92,27 @@
                 img.style.top = (state.y - 16) + 'px';
 
                 mxEvent.addGestureListeners(img,
-                        mxUtils.bind(this, function (evt)
-                        {
-                            // Disables dragging the image
-                            mxEvent.consume(evt);
-                        })
-                        );
+                    mxUtils.bind(this, function (evt)
+                    {
+                        // Disables dragging the image
+                        mxEvent.consume(evt);
+                    })
+                );
 
                 mxEvent.addListener(img, 'click',
-                        mxUtils.bind(this, function (evt)
-                        {
-                            graph.removeCells([state.cell]);
-                            mxEvent.consume(evt);
-                            this.destroy();
-                        })
-                        );
+                    mxUtils.bind(this, function (evt)
+                    {
+                        graph.removeCells([state.cell]);
+                        mxEvent.consume(evt);
+                        this.destroy();
+                    })
+                );
 
                 state.view.graph.container.appendChild(img);
                 this.images.push(img);
 
-                // Info
-                var img = mxUtils.createImage('images/information.png');
+                // Add profile
+                var img = mxUtils.createImage('images/plus.png');
                 img.setAttribute('title', 'More Info');
                 img.style.position = 'absolute';
                 img.style.cursor = 'pointer';
@@ -122,21 +122,21 @@
                 img.style.top = (state.y - 16) + 'px';
 
                 mxEvent.addGestureListeners(img,
-                        mxUtils.bind(this, function (evt)
-                        {
-                            // Disables dragging the image
-                            mxEvent.consume(evt);
-                        })
-                        );
+                    mxUtils.bind(this, function (evt)
+                    {
+                        // Disables dragging the image
+                        mxEvent.consume(evt);
+                    })
+                );
 
                 mxEvent.addListener(img, 'click',
-                        mxUtils.bind(this, function (evt)
-                        {
-                            showComponentInfo(state, evt);
-                            mxEvent.consume(evt);
-                            this.destroy();
-                        })
-                        );
+                    mxUtils.bind(this, function (evt)
+                    {
+                        showAddProfile(state, evt);
+                        mxEvent.consume(evt);
+                        this.destroy();
+                    })
+                );
 
                 state.view.graph.container.appendChild(img);
                 this.images.push(img);
