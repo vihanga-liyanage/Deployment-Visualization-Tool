@@ -195,18 +195,17 @@
 				<add as="shape" value="rectangle"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="fontSize" value="15"/>
-				<add as="align" value="left"/>
-				<add as="verticalAlign" value="top"/>
 				<add as="shadow" value="0"/>
 				<add as="strokeColor" value="none"/>
-				<add as="fillColor" value="none"/>
+				<add as="fillColor" value="white"/>
 				<add as="gradientColor" value="none"/>
 			</add>
 			<add as="defaultVertex" extend="text">
 				<add as="shape" value="rectangle"/>
-				<add as="fontSize" value="15"/>
+				<add as="fontSize" value="25"/>
 				<add as="align" value="center"/>
-				<add as="verticalAlign" value="middle"/>
+				<add as="verticalAlign" value="bottom"/>
+				<add as="labelBackgroundColor" value="white"/>
 				<add as="shadow" value="1"/>
 				<add as="strokeColor" value="#C3D9FF"/>
 				<add as="fillColor" value="#C3D9FF"/>
