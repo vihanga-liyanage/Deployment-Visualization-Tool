@@ -7,7 +7,7 @@
 +    </dbConfig>
 +    <remoteInstance url="https://publisher">
 +        <id>gov</id>
-+        <cacheId>root@jdbc:mysql://apim_rdbms:3306/regdb</cacheId>
++        <cacheId>root@jdbc:mysql://database:3306/regdb</cacheId>
 +        <dbConfig>govregistry</dbConfig>
 +        <readOnly>false</readOnly>
 +        <enableCache>true</enableCache>
