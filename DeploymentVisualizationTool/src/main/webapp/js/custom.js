@@ -10,26 +10,31 @@
         this.profile = "";
     }
 
-    var showAddProfile = function (state, evt) {
+    var showAddProfile = function (state, evt, product) {
+
+        var html = "";
+        if (product == "wso2am") {
+            html =
+                '<div style="font-size: 20px;align-content: flex-end;text-align: left;">' +
+                '<input type="checkbox" style="margin-right: 5px;" id="check1" value="profile"/>profile </br>' +
+                '<input type="checkbox" style="margin-right: 5px;" id="check2" value="store"/>store </br>' +
+                '<input type="checkbox" style="margin-right: 5px;" id="check3" value="keymanager"/>keymanager </br>' +
+                '<input type="checkbox" style="margin-right: 5px;" id="check4" value="traffic-manager"/>traffic-manager </br>' +
+                '<input type="checkbox" style="margin-right: 5px;" id="check5" value="gateway-manager"/>gateway-manager </br>' +
+                '<input type="checkbox" style="margin-right: 5px;" id="check6" value="gateway-worker"/>gateway-worker </br>' +
+                '</div>' +
+                '<div style="margin-top: 15px; font-weight: bold;"></div>';
+        }
 
         $('<div></div>').appendTo('body')
-            .html(
-                '<div style="font-size: 20px;align-content: flex-end;text-align: left;">' +
-                '<input type="checkbox" style="margin-right: 5px;" id="profileCheckBox" value="profile" />profile </br>' +
-                '<input type="checkbox" style="margin-right: 5px;" id="storeCheckBox" />store </br>' +
-                '<input type="checkbox" style="margin-right: 5px;" id="keymanagerCheckBox" />keymanager </br>' +
-                '<input type="checkbox" style="margin-right: 5px;" id="trafficCheckBox" />traffic-manager </br>' +
-                '<input type="checkbox" style="margin-right: 5px;" id="gatewayManagerCheckBox" />gateway-manager </br>' +
-                '<input type="checkbox" style="margin-right: 5px;" id="gatewayWorkerCheckBox" />gateway-worker </br>' +
-                '</div>' +
-                '<div style="margin-top: 15px; font-weight: bold;"></div>')
+            .html(html)
             .dialog({
                 modal: true,
                 title: 'Choose profiles', zIndex: 10000, autoOpen: true,
                 width: '250px', resizable: false,
                 buttons: {
                     Ok: function () {
-                        alert(document.getElementById("profileCheckBox"));
+                        addProfileToService(state);
                         $(this).dialog("close");
                     }
                 },
@@ -39,6 +44,34 @@
             });
     };
 
+    var addProfileToService = function (state) {
+        //Figure out the checked profiles
+        var str = "";
+        if (document.getElementById("check1").checked) {
+            str += '/' + document.getElementById("check1").value;
+        }
+        if (document.getElementById("check2").checked) {
+            str += '/' + document.getElementById("check2").value;
+        }
+        if (document.getElementById("check3").checked) {
+            str += '/' + document.getElementById("check3").value;
+        }
+        if (document.getElementById("check4").checked) {
+            str += '/' + document.getElementById("check4").value;
+        }
+        if (document.getElementById("check5").checked) {
+            str += '/' + document.getElementById("check5").value;
+        }
+        if (document.getElementById("check6").checked) {
+            str += '/' + document.getElementById("check6").value;
+        }
+
+        //Set profile as label of the vertex and refresh
+        var value = state.cell.value;
+        value.setAttribute("label", str.substring(1));
+        state.view.refresh();
+
+    };
     var serviceArray = [];
 
     var getModelFromDocker = function(baseDir, ymlFile, callback)

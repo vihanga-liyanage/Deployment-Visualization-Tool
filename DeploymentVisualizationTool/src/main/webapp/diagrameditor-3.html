@@ -132,7 +132,11 @@
                 mxEvent.addListener(img, 'click',
                     mxUtils.bind(this, function (evt)
                     {
-                        showAddProfile(state, evt);
+                        var product = state.cell.style;
+                        if (product == "wso2am") {
+                            showAddProfile(state, evt, product);
+                        }
+
                         mxEvent.consume(evt);
                         this.destroy();
                     })
@@ -140,8 +144,7 @@
 
                 state.view.graph.container.appendChild(img);
                 this.images.push(img);
-            }
-            ;
+            };
 
             mxIconSet.prototype.destroy = function ()
             {
@@ -297,55 +300,33 @@
 
                 //Listener for connections - change edge color according to source or target
                 editor.graph.addListener(mxEvent.CELL_CONNECTED, function (sender, evt) {
+
                     var edge = evt.getProperty("edge");
-                    //fires only when a target connects
+                    //fires only when a target exits in the connection
                     if (edge.target != null) {
                         var edgeID = edge.id;
                         var sourceStyle = edge.source.style;
                         var targetStyle = edge.target.style;
                         var sourceLabel = edge.source.value.getAttribute("label");
 
-                        //Get xml from the graph node and parse it
-                        var enc = new mxCodec();
-                        var node = enc.encode(editor.graph.getModel());
-                        var xml = mxUtils.getPrettyXml(node);
-                        var parser = new DOMParser();
-                        var xmlObject = parser.parseFromString(xml, "text/xml");
+                        //Get the cell from the graph model
+                        var edgeCell = sender.model.getCell(edgeID);
 
-                        //Get all connector nodes
-                        var connectorArray = xmlObject.getElementsByTagName("Connector");
-                        for (var i=0; i<connectorArray.length; i++) {
-                            //Apply color changes only to the connector that fired the event
-                            if (edgeID == connectorArray[i].id) {
-                                var mxCell = xmlObject.getElementsByTagName("Connector")[i].childNodes[1];
-                                if (sourceStyle == "load-balancer") {
-                                    mxCell.setAttribute("style", "startArrow=classic;");
-                                } else if (sourceStyle == "database" || targetStyle == "database") {
-                                    mxCell.setAttribute("style", "strokeColor=violet;startArrow=classic;");
-                                } else if (sourceStyle == "wso2am-analytics" || targetStyle == "wso2am-analytics") {
-                                    mxCell.setAttribute("style", "strokeColor=green;dashed=1;");
-                                } else if (sourceStyle == "svnrepo" || targetStyle == "svnrepo") {
-                                    mxCell.setAttribute("style", "strokeColor=lightGreen;");
-                                }  else if (sourceLabel == "traffic-manager") {
-                                    mxCell.setAttribute("style", "strokeColor=red;dashed=1;startArrow=classic;");
-                                }
-                                break;
-                            }
+                        //Decide style base on source or target
+                        if (sourceStyle == "load-balancer") {
+                            edgeCell.setStyle("startArrow=classic;");
+                        } else if (sourceStyle == "database" || targetStyle == "database") {
+                            edgeCell.setStyle("strokeColor=violet;startArrow=classic;");
+                        } else if (sourceStyle == "wso2am-analytics" || targetStyle == "wso2am-analytics") {
+                            edgeCell.setStyle("strokeColor=green;dashed=1;");
+                        } else if (sourceStyle == "svnrepo" || targetStyle == "svnrepo") {
+                            edgeCell.setStyle("strokeColor=lightGreen;");
+                        }  else if (sourceLabel == "traffic-manager") {
+                            edgeCell.setStyle("strokeColor=red;dashed=1;startArrow=classic;");
                         }
 
-                        //Redraw graph according to new xml
-                        var xmlText = new XMLSerializer().serializeToString(xmlObject);
-                        var doc = mxUtils.parseXml(xmlText);
-                        var dec = new mxCodec(doc);
-                        dec.decode(doc.documentElement, editor.graph.getModel());
-                        editor.graph.container.focus();
                     }
                 });
-
-//                mxCell connectionCell = (mxCell) evt.getProperty("edge");
-//                boolean source = (Boolean) evt.getProperty("source");
-//				/* source == true when source changed, source == false, when target changed). */
-
                 // </editor-fold>
 
                 // <editor-fold defaultstate="collapsed" desc="Defines a new action to switch between XML and graphical display">
