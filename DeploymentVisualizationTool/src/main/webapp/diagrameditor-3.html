@@ -321,7 +321,7 @@
                             edgeCell.setStyle("strokeColor=green;dashed=1;");
                         } else if (sourceStyle == "svnrepo" || targetStyle == "svnrepo") {
                             edgeCell.setStyle("strokeColor=lightGreen;");
-                        }  else if (sourceLabel == "traffic-manager") {
+                        }  else if (sourceLabel.includes("traffic-manager")) {
                             edgeCell.setStyle("strokeColor=red;dashed=1;startArrow=classic;");
                         }
 

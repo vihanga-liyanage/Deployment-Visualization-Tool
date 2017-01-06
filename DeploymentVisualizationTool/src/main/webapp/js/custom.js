@@ -250,7 +250,7 @@
     
     var genLinks = function(editor) {
 
-        console.log(editor);
+        // console.log(editor);
         var linksPath = "links.json";
         $.getJSON(linksPath, function(json) {
 
