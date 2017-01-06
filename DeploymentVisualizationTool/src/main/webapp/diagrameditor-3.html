@@ -532,7 +532,7 @@
                     editor.execute('getModel');
                 });
 
-                //"Get Configuration" button click action
+                //"Download Configs" button click action
                 function initGetConfiguration() {
                     getConfigurations(editor);
                 }
@@ -543,15 +543,26 @@
                     editor.execute('getConfigurations');
                 });
                 
-                //"Generate Connections" button click action
+                //"Download Configs (autogen links)" button click action
                 function initGenConnections() {
                     getConfigurationsAutoGenLinks(editor);
                 }
                 editor.addAction('getConfigurationsAutoGenLinks', initGenConnections);
-                var genConnectionsButton = document.getElementById('genConnectionsButton');
-                mxEvent.addListener(genConnectionsButton, 'click', function ()
+                var getConfigurationAutoGenLinksButton = document.getElementById('getConfigurationAutoGenLinksButton');
+                mxEvent.addListener(getConfigurationAutoGenLinksButton, 'click', function ()
                 {
                     editor.execute('getConfigurationsAutoGenLinks');
+                });
+                
+                //"Generate Links" button click action
+                function initGenLinkss() {
+                    genLinks(editor);
+                }
+                editor.addAction('genLinks', initGenLinkss);
+                var genLinksButton = document.getElementById('genLinksButton');
+                mxEvent.addListener(genLinksButton, 'click', function ()
+                {
+                    editor.execute('genLinks');
                 });
                 
             }
@@ -591,8 +602,9 @@
                                 <input id="source" type="checkbox"/>
                                 View Source
                                 <button id="getModelButton">Get JSON Model</button>
-                                <button id="getConfigurationButton">Download Docker Configuration</button>
-                                <button id="genConnectionsButton">Generate Links</button>
+                                <button id="getConfigurationButton">Download Configs</button>
+                                <button id="getConfigurationAutoGenLinksButton">Download Configs (autogen links)</button>
+                                <button id="genLinksButton">Generate Links</button>
                             </td>
                         </tr>
                     </tbody>

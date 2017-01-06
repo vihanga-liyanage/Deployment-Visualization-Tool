@@ -247,3 +247,48 @@
     //        window.location.href = data;
         });
     };
+    
+    var genLinks = function(editor) {
+
+        console.log(editor);
+        var linksPath = "links.json";
+        $.getJSON(linksPath, function(json) {
+
+            // console.log(json);
+            var cells = editor.graph.model.cells;
+            var services = new Array();
+            var serviceIDs = new Array();
+            // Process each vertex in the graph model
+            for (i in cells) {
+                var cell = cells[i];
+                if (cell.vertex == 1) {
+                    services.push(getName(cell));
+                    serviceIDs.push(cell.id);
+                }
+            }
+            // console.log(serviceIDs);
+            for (var i=0; i<services.length; i++) {
+                var possibleLinks = json[services[i]];
+                if (possibleLinks != null) {
+                    for (var j=0; j < services.length; j++) {
+                        // console.log("j:" + j + ":" + services[j]);
+                        if (possibleLinks.indexOf(services[j]) != -1) {
+                            // console.log(services[i] + " -> " + services[j]);
+                            // console.log(serviceIDs[i+2] + " : " + serviceIDs[j+2])
+                            editor.graph.connectionHandler.insertEdge(cells[1], null, null, cells[serviceIDs[i]], cells[serviceIDs[j]], null);
+                            editor.graph.view.refresh();
+                        }
+                    }
+                }
+            }
+            // var possibleLinks = json[name];
+        });
+    };
+
+    var getName = function (cell) {
+        var name = cell.style;
+        if (cell.value.attributes[0].value != "") {
+            name += "_" + cell.value.attributes[0].value;
+        }
+        return name;
+    }
