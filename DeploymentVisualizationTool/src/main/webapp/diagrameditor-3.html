@@ -534,14 +534,26 @@
 
                 //"Get Configuration" button click action
                 function initGetConfiguration() {
-                    getConfiguration(editor);
+                    getConfigurations(editor);
                 }
-                editor.addAction('getConfiguration', initGetConfiguration);
+                editor.addAction('getConfigurations', initGetConfiguration);
                 var getConfigurationButton = document.getElementById('getConfigurationButton');
                 mxEvent.addListener(getConfigurationButton, 'click', function ()
                 {
-                    editor.execute('getConfiguration');
+                    editor.execute('getConfigurations');
                 });
+                
+                //"Generate Connections" button click action
+                function initGenConnections() {
+                    getConfigurationsAutoGenLinks(editor);
+                }
+                editor.addAction('getConfigurationsAutoGenLinks', initGenConnections);
+                var genConnectionsButton = document.getElementById('genConnectionsButton');
+                mxEvent.addListener(genConnectionsButton, 'click', function ()
+                {
+                    editor.execute('getConfigurationsAutoGenLinks');
+                });
+                
             }
 
             window.onbeforeunload = function () {
@@ -580,6 +592,7 @@
                                 View Source
                                 <button id="getModelButton">Get JSON Model</button>
                                 <button id="getConfigurationButton">Download Docker Configuration</button>
+                                <button id="genConnectionsButton">Generate Links</button>
                             </td>
                         </tr>
                     </tbody>

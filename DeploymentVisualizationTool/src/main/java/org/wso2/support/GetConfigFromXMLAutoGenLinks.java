@@ -12,14 +12,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.json.JSONObject;
 
 /**
  *
  * @author Vihanga Liyanage <WSO2.Inc>
  */
-@WebServlet(name = "GetJSONModelFromXML", urlPatterns = {"/GetJSONModelFromXML"})
-public class GetJSONModelFromXML extends HttpServlet {
+@WebServlet(name = "GetConfigFromXMLAutoGenLinks", urlPatterns = {"/GetConfigFromXMLAutoGenLinks"})
+public class GetConfigFromXMLAutoGenLinks extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,10 +34,10 @@ public class GetJSONModelFromXML extends HttpServlet {
        
         String xml = request.getParameter("xml");
         PrintWriter out = response.getWriter();
-        System.out.println("servelete - GetJSONModelFromXML");
+            
         if (xml.contains("Image")) {
-            JSONObject json = Generate.getJSONFromXMLAutoGenLinks(xml);
-            out.write(json.toString(4));
+            String downloadURL = Generate.getConfigFromXML(xml, true);
+            out.write(downloadURL);
         } else {
             out.write("Diagram is empty!");
         }

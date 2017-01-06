@@ -16,7 +16,7 @@
         if (product == "wso2am") {
             html =
                 '<div style="font-size: 20px;align-content: flex-end;text-align: left;">' +
-                '<input type="checkbox" style="margin-right: 5px;" id="check1" value="profile"/>profile </br>' +
+                '<input type="checkbox" style="margin-right: 5px;" id="check1" value="publisher"/>publisher </br>' +
                 '<input type="checkbox" style="margin-right: 5px;" id="check2" value="store"/>store </br>' +
                 '<input type="checkbox" style="margin-right: 5px;" id="check3" value="keymanager"/>keymanager </br>' +
                 '<input type="checkbox" style="margin-right: 5px;" id="check4" value="traffic-manager"/>traffic-manager </br>' +
@@ -220,7 +220,7 @@
         });
     };
 
-    var getConfiguration = function(editor) {
+    var getConfigurations = function(editor) {
         var enc = new mxCodec();
         var node = enc.encode(editor.graph.getModel());
         var xml = mxUtils.getPrettyXml(node);
@@ -229,6 +229,20 @@
 
         $.post("GetConfigFromXML", {xml:xml}, function(data) {
     //        alert(data);
+            window.open(data, '_blank');
+    //        window.location.href = data;
+        });
+    };
+    
+    var getConfigurationsAutoGenLinks = function(editor) {
+        var enc = new mxCodec();
+        var node = enc.encode(editor.graph.getModel());
+        var xml = mxUtils.getPrettyXml(node);
+
+        console.log(xml);
+
+        $.post("GetConfigFromXMLAutoGenLinks", {xml:xml}, function(data) {
+            alert(data);
             window.open(data, '_blank');
     //        window.location.href = data;
         });

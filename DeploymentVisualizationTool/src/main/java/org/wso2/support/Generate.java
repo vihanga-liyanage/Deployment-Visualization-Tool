@@ -301,13 +301,13 @@ public class Generate {
     static JSONObject getJSONFromXML(String xmlString) {
         System.out.println("Generate.getJSONFromXML...");
         JSONObject temp = XML.toJSONObject(xmlString);
-//        System.out.println(temp.toString(4));
 
         JSONObject result = new JSONObject();
 
         JSONObject mxGraphModel = temp.getJSONObject("mxGraphModel");
         JSONObject root = mxGraphModel.getJSONObject("root");
 
+        //Map to store service IDs and their model indexes -> serviceID:modelIndex
         Map<Integer, Integer> serviceMap = new HashMap<>();
 
         //Resolve images, i.e services
@@ -361,6 +361,61 @@ public class Generate {
         result.put("services", services);
         result.put("links", links);
 //        System.out.println(serviceMap);
+        return result;
+    }
+    
+    static JSONObject getJSONFromXMLAutoGenLinks(String xmlString) {
+        System.out.println("Generate.getJSONFromXMLAutoGenLinks...");
+        JSONObject temp = XML.toJSONObject(xmlString);
+
+        JSONObject result = new JSONObject();
+
+        JSONObject mxGraphModel = temp.getJSONObject("mxGraphModel");
+        JSONObject root = mxGraphModel.getJSONObject("root");
+
+        //Map to store service IDs and their model indexes -> serviceID:modelIndex
+        Map<Integer, Integer> serviceMap = new HashMap<>();
+
+        //Resolve images, i.e services
+        JSONArray services = new JSONArray();
+        if (root.get("Image") instanceof JSONArray) {
+            //More than one images exists
+            JSONArray images = root.getJSONArray("Image");
+
+            for (int i = 0; i < images.length(); i ++) {
+                JSONObject image = images.getJSONObject(i);
+
+                //Adding new service into services array
+                services.put(processService((JSONObject)image, serviceMap, i));
+            }
+
+        } else {
+            //Only one image exists
+            JSONObject image = root.getJSONObject("Image");
+
+            //Adding new service into services array
+            services.put(processService((JSONObject)image, serviceMap, 0));
+
+        }
+
+        //Resolve connectors, i.e links
+        JSONArray links = new JSONArray();
+        
+        Set<Integer> keys = serviceMap.keySet();
+        Integer[] keyArray = keys.toArray(new Integer[keys.size()]);
+
+        //Add a connection for each pair of services.
+        for (int i=0; i<serviceMap.size(); i++) {
+            for (int j=i; j<serviceMap.size(); j++) {
+                JSONObject link = new JSONObject();
+                link.put("source", serviceMap.get(keyArray[i]));
+                link.put("target", serviceMap.get(keyArray[j]));
+                links.put(link);
+            }
+        }
+
+        result.put("services", services);
+        result.put("links", links);
         return result;
     }
 
@@ -500,7 +555,7 @@ public class Generate {
         return xml;
     }
     
-    public static String getConfigFromXML(String xmlString) throws IOException {
+    public static String getConfigFromXML(String xmlString, boolean gen) throws IOException {
 
         System.out.println("\n\n\n=====================\n\n\n");
         String cleanProductLocation = "/home/vihanga/Downloads/Compare/";
@@ -532,7 +587,12 @@ public class Generate {
 
         //Get all file names
         List<String> fileNames = new ArrayList<>();
-        JSONObject model = getJSONFromXML(xmlString);
+        JSONObject model;
+        if (gen) {
+            model = getJSONFromXMLAutoGenLinks(xmlString);
+        } else {
+            model = getJSONFromXML(xmlString);
+        }
         JSONArray services = model.getJSONArray("services");
         for (int i = 0; i < services.length(); i ++) {
             fileNames.addAll(toKnowledgeBaseNames(i, model));

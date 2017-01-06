@@ -36,7 +36,7 @@ public class GetConfigFromXML extends HttpServlet {
         PrintWriter out = response.getWriter();
             
         if (xml.contains("Image")) {
-            String downloadURL = Generate.getConfigFromXML(xml);
+            String downloadURL = Generate.getConfigFromXML(xml, false);
             out.write(downloadURL);
         } else {
             out.write("Diagram is empty!");
