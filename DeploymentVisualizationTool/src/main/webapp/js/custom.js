@@ -250,45 +250,67 @@
     
     var genLinks = function(editor) {
 
-        // console.log(editor);
+        // get the required knowledge to build the links
         var linksPath = "links.json";
         $.getJSON(linksPath, function(json) {
 
-            // console.log(json);
+            // console.log(editor.graph);
             var cells = editor.graph.model.cells;
-            var services = new Array();
-            var serviceIDs = new Array();
-            // Process each vertex in the graph model
+            var services = new Array(); //store services data -> name and id
+
+            // Push service data into array
             for (i in cells) {
                 var cell = cells[i];
                 if (cell.vertex == 1) {
-                    services.push(getName(cell));
-                    serviceIDs.push(cell.id);
+                    services.push([getName(cell), cell.id]);
                 }
             }
-            // console.log(serviceIDs);
             for (var i=0; i<services.length; i++) {
-                var possibleLinks = json[services[i]];
+                //get possible links to each service from json knowledge base
+                var possibleLinks = json[services[i][0]];
                 if (possibleLinks != null) {
                     for (var j=0; j < services.length; j++) {
-                        // console.log("j:" + j + ":" + services[j]);
-                        if (possibleLinks.indexOf(services[j]) != -1) {
-                            // console.log(services[i] + " -> " + services[j]);
-                            // console.log(serviceIDs[i+2] + " : " + serviceIDs[j+2])
-                            editor.graph.connectionHandler.insertEdge(cells[1], null, null, cells[serviceIDs[i]], cells[serviceIDs[j]], null);
-                            editor.graph.view.refresh();
+
+                        // draw connections if links should exists and not already their.
+                        if (possibleLinks.indexOf(services[j][0]) != -1) {
+                            if (!isConnected(cells[services[i][1]], cells[services[j][1]]))
+                            {
+                                editor.graph.connectionHandler.insertEdge(
+                                    cells[1], //parent
+                                    null, //id
+                                    null, //value
+                                    cells[services[i][1]], //source
+                                    cells[services[j][1]], //target
+                                    null //style
+                                );
+                            }
                         }
                     }
+                    editor.graph.view.refresh();
                 }
             }
-            // var possibleLinks = json[name];
         });
     };
 
+    var isConnected = function (cell1, cell2) {
+        if (cell1.getEdgeCount() == 0)
+            return false;
+        for (var i = 0; i < cell1.getEdgeCount(); i++)
+        {
+            source = cell1.getEdgeAt(i).source;
+            target = cell1.getEdgeAt(i).target;
+            if (source == cell2 || target == cell2)
+                return true;
+        }
+        return false;
+    };
+
+    //Construct service name -> <product>[_<profile-1>][/<profile-2>]...
     var getName = function (cell) {
         var name = cell.style;
-        if (cell.value.attributes[0].value != "") {
+        if (cell.value.attributes[0].value != "")
+        {
             name += "_" + cell.value.attributes[0].value;
         }
         return name;
-    }
+    };
