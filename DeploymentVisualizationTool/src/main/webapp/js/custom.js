@@ -1,6 +1,9 @@
 
     var modelStr = '{"services":[';
-    function serviceNode () {
+    var serviceArray = [];
+
+    var serviceNode = function ()
+    {
         this.id = 0;
         this.type = "";
         this.name = "";
@@ -8,10 +11,11 @@
         this.ports = [];
         this.links = [];
         this.profile = "";
-    }
+    };
 
-    var showAddProfile = function (state, evt, product) {
-
+    //Show a dialog box to select product profiles.
+    var showAddProfile = function (state, evt, product)
+    {
         var html = "";
         if (product == "wso2am") {
             html =
@@ -32,6 +36,7 @@
                 modal: true,
                 title: 'Choose profiles', zIndex: 10000, autoOpen: true,
                 width: '250px', resizable: false,
+                position: { my: 'left top', at: 'left+' + evt.clientX + ' top+' + evt.clientY},
                 buttons: {
                     Ok: function () {
                         addProfileToService(state);
@@ -44,8 +49,9 @@
             });
     };
 
-    var addProfileToService = function (state) {
-        //Figure out the checked profiles
+    var addProfileToService = function (state)
+    {
+        //Get the checked profiles
         var str = "";
         if (document.getElementById("check1").checked) {
             str += '/' + document.getElementById("check1").value;
@@ -66,13 +72,12 @@
             str += '/' + document.getElementById("check6").value;
         }
 
-        //Set profile as label of the vertex and refresh
+        //Add profiles to the label of the vertex and refresh
         var value = state.cell.value;
         value.setAttribute("label", str.substring(1));
         state.view.refresh();
 
     };
-    var serviceArray = [];
 
     var getModelFromDocker = function(baseDir, ymlFile, callback)
     {
@@ -150,15 +155,7 @@
         serviceArray.push(node);
     };
 
-    var getModelString = function () {
-        var modelStr = '{"services":[';
-        for (i in serviceArray)
-        {
-
-        }
-    };
-
-    function readFile(file)
+    var readFile = function (file)
     {
         var allText = "Error";
         var rawFile = new XMLHttpRequest();
@@ -209,18 +206,9 @@
         xobj.send(null);
     }
 
-    var getModel = function(editor) {
-        var enc = new mxCodec();
-        var node = enc.encode(editor.graph.getModel());
-        var xml = mxUtils.getPrettyXml(node);
-
-        console.log("getModel");
-        $.post("GetJSONModelFromXML", {xml:xml}, function(data) {
-            console.log(data);
-        });
-    };
-
-    var getConfigurations = function(editor) {
+    //call back end and let the user download the generated configuration directory
+    var getConfigurations = function(editor)
+    {
         var enc = new mxCodec();
         var node = enc.encode(editor.graph.getModel());
         var xml = mxUtils.getPrettyXml(node);
@@ -228,13 +216,12 @@
         console.log(xml);
 
         $.post("GetConfigFromXML", {xml:xml}, function(data) {
-    //        alert(data);
             window.open(data, '_blank');
-    //        window.location.href = data;
         });
     };
     
-    var getConfigurationsAutoGenLinks = function(editor) {
+    var getConfigurationsAutoGenLinks = function(editor)
+    {
         var enc = new mxCodec();
         var node = enc.encode(editor.graph.getModel());
         var xml = mxUtils.getPrettyXml(node);
@@ -242,13 +229,13 @@
         console.log(xml);
 
         $.post("GetConfigFromXMLAutoGenLinks", {xml:xml}, function(data) {
-            alert(data);
             window.open(data, '_blank');
-    //        window.location.href = data;
         });
     };
-    
-    var genLinks = function(editor) {
+
+    //Generate graph links
+    var genLinks = function(editor)
+    {
 
         // get the required knowledge to build the links
         var linksPath = "links.json";
@@ -292,7 +279,9 @@
         });
     };
 
-    var isConnected = function (cell1, cell2) {
+    //Check if two services have a connection
+    var isConnected = function (cell1, cell2)
+    {
         if (cell1.getEdgeCount() == 0)
             return false;
         for (var i = 0; i < cell1.getEdgeCount(); i++)
@@ -306,7 +295,8 @@
     };
 
     //Construct service name -> <product>[_<profile-1>][/<profile-2>]...
-    var getName = function (cell) {
+    var getName = function (cell)
+    {
         var name = cell.style;
         if (cell.value.attributes[0].value != "")
         {
