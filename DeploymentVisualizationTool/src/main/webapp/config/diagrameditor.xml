@@ -43,119 +43,119 @@
 		<add as="Dashboard">
 			<Image label="" href="">
 				<mxCell vertex="1" style="dashboard">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="Data_Stream">
 			<Image label="" href="">
 				<mxCell vertex="1" style="data_stream">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="Database">
 			<Image label="" href="">
 				<mxCell vertex="1" style="database">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="Mobile_Phone">
 			<Image label="" href="">
 				<mxCell vertex="1" style="mobile_phone">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="User">
 			<Image label="" href="">
 				<mxCell vertex="1" style="user">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="Web_Page">
 			<Image label="" href="">
 				<mxCell vertex="1" style="web_page">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="WSO2_API_Manager">
 			<Image label="" href="">
 				<mxCell vertex="1" style="wso2am">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="WSO2_Complex_Event_Processor">
 			<Image label="" href="">
 				<mxCell vertex="1" style="wso2-complex-event-processor">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="WSO2_Enterprise_Service_Bus">
 			<Image label="" href="">
 				<mxCell vertex="1" style="wso2esb">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="WSO2_Identity_Server">
 			<Image label="" href="">
 				<mxCell vertex="1" style="wso2-identity-server">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="WSO2_Machine_Learner">
 			<Image label="" href="">
 				<mxCell vertex="1" style="wso2-machine-learner">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="ML_Model">
 			<Image label="" href="">
 				<mxCell vertex="1" style="ml_model">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="Publisher">
 			<Image label="" href="">
 				<mxCell vertex="1" style="publisher">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="WSO2_DAS">
 			<Image label="" href="">
 				<mxCell vertex="1" style="wso2am-analytics">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="WSO2_IoT_Server">
 			<Image label="" href="">
 				<mxCell vertex="1" style="wso2-iot-server">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="Load_Balancer">
 			<Image label="" href="">
 				<mxCell vertex="1" style="load-balancer">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
 		<add as="SVN">
 			<Image label="" href="">
 				<mxCell vertex="1" style="svnrepo">
-					<mxGeometry as="geometry" width="100" height="100"/>
+					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
 		</add>
