@@ -18,20 +18,26 @@
     {
         var html = "";
         if (product == "wso2am") {
+            var profiles = ['publisher', 'store', 'keymanager', 'traffic-manager', 'gateway-manager', 'gateway-worker'];
+            html = '<div style="font-size: 20px;align-content: flex-end;text-align: left;">';
+
             //check for already added profiles
+            var oldProfiles = "";
             if (state.cell.value.getAttribute("label")) {
-                console.log(state.cell.value.getAttribute("label"));
+                oldProfiles = state.cell.value.getAttribute("label");
             }
-            html =
-                '<div style="font-size: 20px;align-content: flex-end;text-align: left;">' +
-                '<input type="checkbox" style="margin-right: 5px;" id="check1" value="publisher"/>publisher </br>' +
-                '<input type="checkbox" style="margin-right: 5px;" id="check2" value="store"/>store </br>' +
-                '<input type="checkbox" style="margin-right: 5px;" id="check3" value="keymanager"/>keymanager </br>' +
-                '<input type="checkbox" style="margin-right: 5px;" id="check4" value="traffic-manager"/>traffic-manager </br>' +
-                '<input type="checkbox" style="margin-right: 5px;" id="check5" value="gateway-manager"/>gateway-manager </br>' +
-                '<input type="checkbox" style="margin-right: 5px;" id="check6" value="gateway-worker"/>gateway-worker </br>' +
-                '</div>' +
-                '<div style="margin-top: 15px; font-weight: bold;"></div>';
+
+            for (var i in profiles) {
+                html += '<input type="checkbox" style="margin-right: 5px;" id="check' + i + '" value="' + profiles[i] + '"';
+
+                //If a profile is added already, check the check box by default
+                if (oldProfiles.includes(profiles[i])) {
+                    html += ' checked';
+                }
+                html += '/>' + profiles[i] + '</br>';
+            }
+
+            html += '</div><div style="margin-top: 15px; font-weight: bold;"></div>';
         }
 
         $('<div></div>').appendTo('body')
@@ -57,6 +63,9 @@
     {
         //Get the checked profiles
         var str = "";
+        if (document.getElementById("check0").checked) {
+            str += '/' + document.getElementById("check0").value;
+        }
         if (document.getElementById("check1").checked) {
             str += '/' + document.getElementById("check1").value;
         }
@@ -71,9 +80,6 @@
         }
         if (document.getElementById("check5").checked) {
             str += '/' + document.getElementById("check5").value;
-        }
-        if (document.getElementById("check6").checked) {
-            str += '/' + document.getElementById("check6").value;
         }
 
         //Add profiles to the label of the vertex and refresh
