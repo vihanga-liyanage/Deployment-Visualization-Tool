@@ -555,14 +555,25 @@
                 });
                 
                 //"Generate Links" button click action
-                function initGenLinkss() {
+                function initGenLinks() {
                     genLinks(editor);
                 }
-                editor.addAction('genLinks', initGenLinkss);
+                editor.addAction('genLinks', initGenLinks);
                 var genLinksButton = document.getElementById('genLinksButton');
                 mxEvent.addListener(genLinksButton, 'click', function ()
                 {
                     editor.execute('genLinks');
+                });
+
+                //"clearLinksButton" button click action
+                function initClearLinksButton() {
+                    clearLinks(editor);
+                }
+                editor.addAction('clearLinks', initClearLinksButton);
+                var clearLinksButton = document.getElementById('clearLinksButton');
+                mxEvent.addListener(clearLinksButton, 'click', function ()
+                {
+                    editor.execute('clearLinks');
                 });
                 
             }
@@ -611,6 +622,7 @@
                                 <button id="getConfigurationButton">Download Configs</button>
                                 <button id="getConfigurationAutoGenLinksButton">Download Configs (autogen links)</button>
                                 <button id="genLinksButton">Generate Links</button>
+                                <button id="clearLinksButton">Clear Links</button>
                             </td>
                         </tr>
                     </tbody>

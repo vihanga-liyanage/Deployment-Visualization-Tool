@@ -314,3 +314,10 @@
         }
         return name;
     };
+    
+    //Clear all links in the graph
+    var clearLinks = function (editor) {
+        //select all edges
+        editor.graph.selectCells(false, true);
+        editor.graph.removeCells();
+    };
