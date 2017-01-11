@@ -111,26 +111,6 @@ public class Generate {
         } catch(IOException e){
             e.printStackTrace();
         }
-
-//        String xmlPath = "src/resources/test.xml";
-//        String TEST_XML_STRING = null;
-//        int PRETTY_PRINT_INDENT_FACTOR = 4;
-//        try {
-//            TEST_XML_STRING = new String(Files.readAllBytes(Paths.get(xmlPath)));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            JSONObject xmlJSONObj = XML.toJSONObject(TEST_XML_STRING);
-//
-//            String jsonPrettyPrintString = xmlJSONObj.toString(PRETTY_PRINT_INDENT_FACTOR);
-//            System.out.println(jsonPrettyPrintString);
-//
-//        } catch (JSONException e) {
-//            System.out.println(e.toString());
-//        }
-
     }
 
     static List<String> getAllKnowledgeBaseNames(String modelPath) {
@@ -171,19 +151,23 @@ public class Generate {
         JSONObject service = services.getJSONObject(serviceID);
         String type = service.getString("type");
         JSONArray profiles = service.optJSONArray("profiles");
+        
+//        System.out.println(profiles.toString(4));
         String serviceName = type;
-        if (!"load-balancer".equals(type)) {
+        if (!"load-balancer".equals(type))
+        {
             if (profiles != null) {
-                if (profiles.length() == 0) {
-                    fileNames.add(serviceName);
-                } else if (profiles.length() == 1) {
-                    serviceName = withProfile(type, profiles.getString(0));
-                    fileNames.add(serviceName);
+                if (profiles.length() > 0) {
+                    for (int k = 0; k < profiles.length(); k++) {
+                        serviceName += "_" + profiles.getString(k);
+                    }
                 }
+                fileNames.add(serviceName);
             } else {
                 fileNames.add(type);
             }
 
+//            System.out.println("F1:"+fileNames);
             //Resolve links
             JSONArray links = model.getJSONArray("links");
             if (null != links) {
@@ -206,44 +190,34 @@ public class Generate {
                             JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
 
                             //If original service had more than one profile
-                            if (profiles.length() > 1) {
-                                for (int p = 0; p < profiles.length(); p++) {
-                                    String tempServiceName = withProfile(type, profiles.getString(p));
-
-                                    addLinks(linkedServiceProfiles, tempServiceName, fileNames, linkedType);
-                                }
-                            } else {
+//                            if (profiles.length() > 1) {
+//                                for (int p = 0; p < profiles.length(); p++) {
+//                                    String tempServiceName = withProfile(type, profiles.getString(p));
+//                                    addLinks(linkedServiceProfiles, tempServiceName, fileNames, linkedType);
+//                                }
+//                            } else {
                                 addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
-                            }
+//                            }
                         }
                     }
                 }
             }
+//            System.out.println("F2:"+fileNames);
         }
 
         Collections.sort(fileNames);
         return fileNames;
     }
 
-    private static String withProfile(String type, String profile) {
-        return type + "_" + profile;
-    }
-
+    //Add links to fileNames list -> Eg: wso2am_publisher,database
     private static void addLinks(JSONArray profiles, String serviceName, List<String> fileNames, String linkedType) {
         if (profiles != null) {
-            if (profiles.length() == 0) {
-                fileNames.add(serviceName + "," + linkedType);
-            } else {
+            if (profiles.length() > 0) {
                 for (int k = 0; k < profiles.length(); k++) {
-                    fileNames.add(serviceName + "," + withProfile(linkedType, profiles.getString(k)));
+                    linkedType += "_" + profiles.getString(k);
                 }
             }
-        }
-    }
-
-    private static void print(List<String> fileNames) {
-        for (int i = 0; i < fileNames.size(); i ++) {
-            System.out.println(fileNames.get(i));
+            fileNames.add(serviceName + "," + linkedType);
         }
     }
 
@@ -406,7 +380,7 @@ public class Generate {
 
         //Add a connection for each pair of services.
         for (int i=0; i<serviceMap.size(); i++) {
-            for (int j=i; j<serviceMap.size(); j++) {
+            for (int j=i+1; j<serviceMap.size(); j++) {
                 JSONObject link = new JSONObject();
                 link.put("source", serviceMap.get(keyArray[i]));
                 link.put("target", serviceMap.get(keyArray[j]));
@@ -469,6 +443,7 @@ public class Generate {
         }
     }
 
+    //Add new entry to docker compose file
     public static void addToComposeFile(Path partFile, String dirname, Path out){
 
         try {
@@ -557,7 +532,7 @@ public class Generate {
     
     public static String getConfigFromXML(String xmlString, boolean gen) throws IOException {
 
-        System.out.println("\n\n\n=====================\n\n\n");
+        System.out.println("\n\n\n=====================\n=====================\n=====================\n");
         String cleanProductLocation = "/home/vihanga/Downloads/Compare/";
         final String targetLocation = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
                 

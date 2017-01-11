@@ -18,6 +18,10 @@
     {
         var html = "";
         if (product == "wso2am") {
+            //check for already added profiles
+            if (state.cell.value.getAttribute("label")) {
+                console.log(state.cell.value.getAttribute("label"));
+            }
             html =
                 '<div style="font-size: 20px;align-content: flex-end;text-align: left;">' +
                 '<input type="checkbox" style="margin-right: 5px;" id="check1" value="publisher"/>publisher </br>' +
