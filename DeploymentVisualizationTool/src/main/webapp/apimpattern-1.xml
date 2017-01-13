@@ -1,0 +1,25 @@
+<mxGraphModel>
+    <root>
+        <Diagram label="My Diagram" href="http://www.jgraph.com/" id="0">
+            <mxCell/>
+        </Diagram>
+        <Layer label="Default Layer" id="1">
+            <mxCell parent="0"/>
+        </Layer>
+        <Image label="" href="" id="2">
+            <mxCell style="load-balancer" parent="1" vertex="1">
+                <mxGeometry x="120" y="190" width="80" height="80" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="" href="" id="3">
+            <mxCell style="wso2am" parent="1" vertex="1">
+                <mxGeometry x="450" y="190" width="80" height="80" as="geometry"/>
+            </mxCell>
+        </Image>
+        <Image label="" href="" id="4">
+            <mxCell style="database" parent="1" vertex="1">
+                <mxGeometry x="710" y="190" width="80" height="80" as="geometry"/>
+            </mxCell>
+        </Image>
+    </root>
+</mxGraphModel>

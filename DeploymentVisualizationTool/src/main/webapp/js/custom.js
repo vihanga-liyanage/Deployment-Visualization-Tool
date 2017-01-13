@@ -28,13 +28,13 @@
             }
 
             for (var i in profiles) {
-                html += '<input type="checkbox" style="margin-right: 5px;" id="check' + i + '" value="' + profiles[i] + '"';
+                html += '<label><input type="checkbox" style="margin-right: 5px;" id="check' + i + '" value="' + profiles[i] + '"';
 
                 //If a profile is added already, check the check box by default
                 if (oldProfiles.includes(profiles[i])) {
                     html += ' checked';
                 }
-                html += '/>' + profiles[i] + '</br>';
+                html += '/>' + profiles[i] + '</label></br>';
             }
 
             html += '</div><div style="margin-top: 15px; font-weight: bold;"></div>';
@@ -44,7 +44,7 @@
             .html(html)
             .dialog({
                 modal: true,
-                title: 'Choose profiles', zIndex: 10000, autoOpen: true,
+                title: 'Choose Profiles', zIndex: 10000, autoOpen: true,
                 width: '250px', resizable: false,
                 position: { my: 'left top', at: 'left+' + evt.clientX + ' top+' + evt.clientY},
                 buttons: {
@@ -182,7 +182,7 @@
         };
         rawFile.send(null);
         return allText;
-    }
+    };
 
     //generate the graph by reading the configuration xml
     var generateGraph = function (configXML, editor)
@@ -202,7 +202,7 @@
     };
 
     //function to load the model json file
-    function loadJSON(path, callback)
+    var loadJSON = function (path, callback)
     {
         var xobj = new XMLHttpRequest();
         xobj.overrideMimeType("application/json");
@@ -214,7 +214,7 @@
             }
         };
         xobj.send(null);
-    }
+    };
 
     //call back end and let the user download the generated configuration directory
     var getConfigurations = function(editor)
@@ -239,24 +239,28 @@
         console.log(xml);
 
         $.post("GetConfigFromXMLAutoGenLinks", {xml:xml}, function(data) {
-            window.open(data, '_blank');
+            if (data == "Diagram is empty!") {
+                alert(data);
+            } else {
+                window.open(data, '_blank');
+            }
         });
     };
 
     //Generate graph links
     var genLinks = function(editor)
     {
-
         // get the required knowledge to build the links
         var linksPath = "links.json";
+
         $.getJSON(linksPath, function(json) {
 
             // console.log(editor.graph);
             var cells = editor.graph.model.cells;
-            var services = new Array(); //store services data -> name and id
+            var services = []; //store services data -> name and id
 
             // Push service data into array
-            for (i in cells) {
+            for (var i in cells) {
                 var cell = cells[i];
                 if (cell.vertex == 1) {
                     services.push([getName(cell), cell.id]);
@@ -316,8 +320,65 @@
     };
     
     //Clear all links in the graph
-    var clearLinks = function (editor) {
+    var clearLinks = function (editor) 
+    {
         //select all edges
         editor.graph.selectCells(false, true);
         editor.graph.removeCells();
+    };
+
+    //Load predefine diagram
+    var showLoadDiagramDialog = function (editor)
+    {
+
+        var diagrams = ['apim pattern-1', 'apim pattern-2', 'apim pattern-3', 'apim pattern-5', 'apim pattern-6', 'apim pattern-7',
+            'apim pattern-8', 'apim pattern-9'];
+
+        var html = '<div style="font-size: 20px;align-content: flex-end;text-align: left;">' +
+            '<select id="diagramSelect" style="width: 100%;">';
+
+        for (var i in diagrams) {
+            html += '<option style="padding: 2px;" value="' + diagrams[i] + '">' + diagrams[i] + '</option>';
+        }
+
+        html += '</select></div><div style="margin-top: 15px; font-weight: bold;"></div>';
+
+        $('<div></div>').appendTo('body')
+            .html(html)
+            .dialog({
+                modal: true,
+                title: 'Choose Diagram', zIndex: 10000, autoOpen: true,
+                width: '300px', resizable: false,
+                buttons: {
+                    Ok: function () {
+                        var x = document.getElementById("diagramSelect");
+                        var i = x.selectedIndex;
+                        loadDiagram(editor, x.options[i].text);
+                        $(this).dialog("close");
+                    }
+                },
+                close: function (event, ui) {
+                    $(this).remove();
+                }
+            });
+    };
+
+    //Load a given diagram
+    var loadDiagram = function (editor, diagram)
+    {
+        var diagramPath = diagram.replace(" ", "") + ".xml";
+
+        var client = new XMLHttpRequest();
+        client.open('GET', diagramPath);
+        client.onreadystatechange = function() {
+            var doc = mxUtils.parseXml(client.responseText);
+            var dec = new mxCodec(doc);
+            dec.decode(doc.documentElement, editor.graph.getModel());
+
+            genLinks(editor);
+            editor.graph.container.focus();
+        };
+        client.send();
+
+
     };

@@ -542,7 +542,18 @@
                 {
                     editor.execute('getConfigurations');
                 });
-                
+
+                //"Download Configs" button click action
+                function initLoadDiagram() {
+                    showLoadDiagramDialog(editor);
+                }
+                editor.addAction('showLoadDiagramDialog', initLoadDiagram);
+                var loadDiagramButton = document.getElementById('loadDiagramButton');
+                mxEvent.addListener(loadDiagramButton, 'click', function ()
+                {
+                    editor.execute('showLoadDiagramDialog');
+                });
+
                 //"Download Configs (autogen links)" button click action
                 function initGenConnections() {
                     getConfigurationsAutoGenLinks(editor);
@@ -604,8 +615,8 @@
                             </td>
                             <td id="graph_container" valign="top" class="col-md-9">
                                 <div id="legend">
-                                    <img src="images/wso2/jdbc-connection.png" width="54" style="margin-right: 10px;"/>JDBC Connection</br>
                                     <img src="images/wso2/http-traffic.png" width="54" style="margin-right: 10px;"/>HTTP Traffic</br>
+                                    <img src="images/wso2/jdbc-connection.png" width="54" style="margin-right: 10px;"/>JDBC Connection</br>
                                     <img src="images/wso2/thrift-connection.png" width="54" style="margin-right: 10px;"/>Thrift Connection</br>
                                     <img src="images/wso2/jms-connection.png" width="54" style="margin-right: 10px;"/>JMS Connection</br>
                                 </div>
@@ -618,9 +629,10 @@
                                 <textarea id="xml"></textarea>
                                 <input id="source" type="checkbox"/>
                                 View Source
-                                <button id="getModelButton">Get JSON Model</button>
-                                <button id="getConfigurationButton">Download Configs</button>
-                                <button id="getConfigurationAutoGenLinksButton">Download Configs (autogen links)</button>
+                                <button id="getModelButton" style="display: none">Get JSON Model</button>
+                                <button id="getConfigurationButton" style="display: none">Download Configs</button>
+                                <button id="loadDiagramButton">Load Predefine Diagram</button>
+                                <button id="getConfigurationAutoGenLinksButton">Download Configurations</button>
                                 <button id="genLinksButton">Generate Links</button>
                                 <button id="clearLinksButton">Clear Links</button>
                             </td>
