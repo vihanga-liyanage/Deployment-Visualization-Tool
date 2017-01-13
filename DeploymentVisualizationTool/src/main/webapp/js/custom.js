@@ -165,6 +165,7 @@
         serviceArray.push(node);
     };
 
+    //Read a file and send data as text
     var readFile = function (file)
     {
         var allText = "Error";
@@ -229,7 +230,8 @@
             window.open(data, '_blank');
         });
     };
-    
+
+    //call back end and let the user download the generated configuration directory by auto generating the links
     var getConfigurationsAutoGenLinks = function(editor)
     {
         var enc = new mxCodec();
@@ -330,7 +332,6 @@
     //Load predefine diagram
     var showLoadDiagramDialog = function (editor)
     {
-
         var diagrams = ['apim pattern-1', 'apim pattern-2', 'apim pattern-3', 'apim pattern-5', 'apim pattern-6', 'apim pattern-7',
             'apim pattern-8', 'apim pattern-9'];
 
@@ -380,5 +381,39 @@
         };
         client.send();
 
+
+    };
+
+    //Highlight target cell when dragging another if those cells are mergeable
+    var initCellMerge = function(currentCell, highlight, me, editor)
+    {
+        var tmp = editor.graph.view.getState(me.getCell());
+        var mergeDocPath = "merge.json";
+
+        if (editor.graph.isMouseDown || (tmp != null && !editor.graph.getModel().isVertex(tmp.cell)))
+        {
+            //Apply if target cell is not the dragging cell
+            if (tmp.cell.id != currentCell.id) {
+                //Apply only if the target is not already highlighted
+                if (highlight.state == null) {
+                    var mergeData = JSON.parse(readFile(mergeDocPath));
+
+                    var sourceProduct = currentCell.style;
+                    var targetProduct = tmp.cell.style;
+
+                    if ((sourceProduct == targetProduct) && (mergeData[sourceProduct])) {
+
+                        var sourceProfile = currentCell.value.getAttribute("label").split("/")[0];
+                        var targetProfile = tmp.cell.value.getAttribute("label").split("/")[0];
+                        // console.log(targetProfile);
+                        var mergeableProfiles = mergeData[sourceProduct][sourceProfile];
+                        // console.log(mergeableProfiles);
+                        if ((mergeableProfiles) && (mergeableProfiles.includes(targetProfile))) {
+                            highlight.highlight(editor.graph.view.getState(tmp.cell));
+                        }
+                    }
+                }
+            }
+        }
 
     };

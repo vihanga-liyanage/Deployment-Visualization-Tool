@@ -2,9 +2,10 @@
   "load-balancer": [
     "wso2am",
     "wso2am_publisher",
+    "wso2am_publisher/store",
+    "wso2am_publisher/store/keymanager",
     "wso2am_store",
     "wso2am_store/keymanager",
-    "wso2am_publisher/store",
     "wso2am_keymanager",
     "wso2am_traffic-manager",
     "wso2am_gateway-manager",
@@ -18,6 +19,7 @@
     "wso2am",
     "wso2am_publisher",
     "wso2am_publisher/store",
+    "wso2am_publisher/store/keymanager",
     "wso2am_store",
     "wso2am_store/keymanager",
     "wso2am_keymanager",
@@ -33,7 +35,8 @@
   ],
   "wso2am-analytics": [
     "wso2am_store",
-    "wso2am_store/keymanager"
+    "wso2am_store/keymanager",
+    "wso2am_publisher/store/keymanager"
   ],
   "wso2am_traffic-manager": [
     "wso2am_gateway-worker",

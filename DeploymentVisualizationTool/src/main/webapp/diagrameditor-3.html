@@ -221,12 +221,18 @@
                 // </editor-fold>
 
                 // <editor-fold defaultstate="collapsed" desc="Mouse listeners added here">
+                var currentCell = null;
+                var highlight = new mxCellHighlight(editor.graph, '#55d21e', 3, 1);
+
                 editor.graph.addMouseListener(
                 {
                     currentState: null,
                     currentIconSet: null,
                     mouseDown: function (sender, me)
                     {
+                        //if starting to drag a vertex, store it in currentCell
+                        currentCell = me.getCell();
+
                         // Hides icons on mouse down
                         if (this.currentState != null)
                         {
@@ -236,12 +242,18 @@
                     },
                     mouseMove: function (sender, me)
                     {
+                        //init cell merge
+                        if (me.getCell() && currentCell) {
+                            initCellMerge(currentCell, highlight, me, editor);
+                        } else {
+                            highlight.hide();
+                        }
+
                         if (this.currentState != null && (me.getState() == this.currentState ||
                                 me.getState() == null))
                         {
                             var tol = iconTolerance;
-                            var tmp = new mxRectangle(me.getGraphX() - tol,
-                                    me.getGraphY() - tol, 2 * tol, 2 * tol);
+                            var tmp = new mxRectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol);
 
                             if (mxUtils.intersects(tmp, this.currentState))
                             {
@@ -272,7 +284,13 @@
                             }
                         }
                     },
-                    mouseUp: function (sender, me) { },
+                    mouseUp: function (sender, me)
+                    {
+                        //If a vertex was dragged, now it's dropped, hence null the currentCell
+                        currentCell = null;
+                    },
+                    dragOver: function(evt, cell)
+                    {},
                     dragEnter: function (evt, state)
                     {
                         if (this.currentIconSet == null)
@@ -291,15 +309,11 @@
                 });
 
                 //add listener for drop icon event to trigger suggestions
-                editor.graph.addListener(mxEvent.ADD_CELLS, function (sender, me) {
-//                    console.log(me);
-//                    if (me.properties.cells[0].isVertex() == true) {
-//                        setDetails(me.properties.cells[0].getStyle(), 'graph');
-//                    }
-                });
+                editor.graph.addListener(mxEvent.ADD_CELLS, function (sender, me) {});
 
                 //Listener for connections - change edge color according to source or target
-                editor.graph.addListener(mxEvent.CELL_CONNECTED, function (sender, evt) {
+                editor.graph.addListener(mxEvent.CELL_CONNECTED, function (sender, evt)
+                {
 
                     var edge = evt.getProperty("edge");
                     //fires only when a target exits in the connection
@@ -327,6 +341,14 @@
 
                     }
                 });
+
+                editor.graph.addListener(mxEvent.MOVE_CELLS, function (sender, me)
+                {
+//                    console.log(sender);
+//                    console.log(me);
+                });
+
+
                 // </editor-fold>
 
                 // <editor-fold defaultstate="collapsed" desc="Defines a new action to switch between XML and graphical display">
