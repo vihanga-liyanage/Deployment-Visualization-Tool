@@ -218,12 +218,18 @@
                 var textNode = document.getElementById('xml');
                 var graphNode = editor.graph.container;
                 var sourceInput = document.getElementById('source');
+
+                //Variables for cell merging
+                var currentCell = null;
+                var highlighter = new mxCellHighlight(editor.graph, '#ff2d25', 3, 1);
+                var cellMerge =  {
+                    isMergeable: false,
+                    source: null,
+                    target: null
+                };
                 // </editor-fold>
 
                 // <editor-fold defaultstate="collapsed" desc="Mouse listeners added here">
-                var currentCell = null;
-                var highlight = new mxCellHighlight(editor.graph, '#55d21e', 3, 1);
-
                 editor.graph.addMouseListener(
                 {
                     currentState: null,
@@ -244,9 +250,9 @@
                     {
                         //init cell merge
                         if (me.getCell() && currentCell) {
-                            initCellMerge(currentCell, highlight, me, editor);
+                            initCellMerge(currentCell, highlighter, me, editor, cellMerge);
                         } else {
-                            highlight.hide();
+                            highlighter.hide();
                         }
 
                         if (this.currentState != null && (me.getState() == this.currentState ||
@@ -342,10 +348,13 @@
                     }
                 });
 
+                //Move cell event to invoke cell merge
                 editor.graph.addListener(mxEvent.MOVE_CELLS, function (sender, me)
                 {
-//                    console.log(sender);
-//                    console.log(me);
+                    if (cellMerge.isMergeable) {
+                        mergeCells(editor, cellMerge.source, cellMerge.target);
+                    }
+                    cellMerge.isMergeable = false;
                 });
 
 

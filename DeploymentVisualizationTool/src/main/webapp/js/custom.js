@@ -316,11 +316,23 @@
         var name = cell.style;
         if (cell.value.attributes[0].value != "")
         {
-            name += "_" + cell.value.attributes[0].value;
+            name += "_" + sortProfiles(cell.value.attributes[0].value)
         }
         return name;
     };
-    
+
+    //Sort a given profile string and return with format
+    var sortProfiles = function (profiles)
+    {
+        var profileArray = profiles.split("/");
+        profileArray.sort();
+        var out = profileArray[0];
+        for (var i=1; i<profileArray.length; i++) {
+            out += "/" + profileArray[i];
+        }
+        return out;
+    };
+
     //Clear all links in the graph
     var clearLinks = function (editor) 
     {
@@ -385,35 +397,64 @@
     };
 
     //Highlight target cell when dragging another if those cells are mergeable
-    var initCellMerge = function(currentCell, highlight, me, editor)
+    var initCellMerge = function(currentCell, highlighter, me, editor, cellMerge)
     {
         var tmp = editor.graph.view.getState(me.getCell());
         var mergeDocPath = "merge.json";
 
         if (editor.graph.isMouseDown || (tmp != null && !editor.graph.getModel().isVertex(tmp.cell)))
         {
-            //Apply if target cell is not the dragging cell
+            //Apply only if target cell is not the dragging cell
             if (tmp.cell.id != currentCell.id) {
                 //Apply only if the target is not already highlighted
-                if (highlight.state == null) {
+                if (highlighter.state == null) {
                     var mergeData = JSON.parse(readFile(mergeDocPath));
 
                     var sourceProduct = currentCell.style;
                     var targetProduct = tmp.cell.style;
 
+                    //To merge, both cells should be of same product, and merge meta data should exist.
                     if ((sourceProduct == targetProduct) && (mergeData[sourceProduct])) {
 
                         var sourceProfile = currentCell.value.getAttribute("label").split("/")[0];
                         var targetProfile = tmp.cell.value.getAttribute("label").split("/")[0];
-                        // console.log(targetProfile);
                         var mergeableProfiles = mergeData[sourceProduct][sourceProfile];
-                        // console.log(mergeableProfiles);
+
+                        //Highlight target and set isMergeable true.
                         if ((mergeableProfiles) && (mergeableProfiles.includes(targetProfile))) {
-                            highlight.highlight(editor.graph.view.getState(tmp.cell));
+                            highlighter.highlight(editor.graph.view.getState(tmp.cell));
+                            if (!cellMerge.isMergeable) {
+                                cellMerge.isMergeable = true;
+                                cellMerge.source = currentCell;
+                                cellMerge.target = tmp.cell;
+                            }
+                        } else {
+                            if (cellMerge.isMergeable)
+                                cellMerge.isMergeable = false;
                         }
+                    } else {
+                        if (cellMerge.isMergeable)
+                            cellMerge.isMergeable = false;
                     }
                 }
             }
         }
 
+    };
+
+    //Merge two given cells
+    var mergeCells = function (editor, source, target)
+    {
+        var sourceProfile = source.value.getAttribute("label");
+        var targetProfile = target.value.getAttribute("label");
+
+        var newLabel = sourceProfile + "/" + targetProfile;
+        newLabel = sortProfiles(newLabel);
+        var value = source.value;
+        value.setAttribute("label", newLabel);
+
+        editor.graph.removeCells([target]);
+        editor.graph.view.refresh();
+
+        genLinks(editor);
     };
