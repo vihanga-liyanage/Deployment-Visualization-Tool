@@ -28,7 +28,7 @@
             }
 
             for (var i in profiles) {
-                html += '<label><input type="checkbox" style="margin-right: 5px;" id="check' + i + '" value="' + profiles[i] + '"';
+                html += '<label><input type="checkbox" onclick="test(\'' + i + '\', \'' + profiles + '\')" style="margin-right: 5px;" id="check' + i + '" value="' + profiles[i] + '"';
 
                 //If a profile is added already, check the check box by default
                 if (oldProfiles.includes(profiles[i])) {
@@ -87,6 +87,11 @@
         value.setAttribute("label", str.substring(1));
         state.view.refresh();
 
+    };
+
+    var test = function (id, profiles) {
+        alert(profiles[id]);
+        document.getElementById("check1").disabled = true;
     };
 
     var getModelFromDocker = function(baseDir, ymlFile, callback)
@@ -450,6 +455,7 @@
 
         var newLabel = sourceProfile + "/" + targetProfile;
         newLabel = sortProfiles(newLabel);
+
         var value = source.value;
         value.setAttribute("label", newLabel);
 
