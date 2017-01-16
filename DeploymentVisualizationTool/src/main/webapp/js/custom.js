@@ -2,6 +2,11 @@
     var modelStr = '{"services":[';
     var serviceArray = [];
 
+    //Variable to store merge meta data
+    var mergeDocPath = "merge.json";
+    var mergeData = null;//JSON.parse(readFile(mergeDocPath));
+
+
     var serviceNode = function ()
     {
         this.id = 0;
@@ -28,7 +33,7 @@
             }
 
             for (var i in profiles) {
-                html += '<label><input type="checkbox" onclick="test(\'' + i + '\', \'' + profiles + '\')" style="margin-right: 5px;" id="check' + i + '" value="' + profiles[i] + '"';
+                html += '<label><input type="checkbox" onclick="validateProfileSelection(\'wso2am\', \'' + i + '\', \'' + profiles + '\')" style="margin-right: 5px;" id="check' + i + '" value="' + profiles[i] + '"';
 
                 //If a profile is added already, check the check box by default
                 if (oldProfiles.includes(profiles[i])) {
@@ -59,6 +64,7 @@
             });
     };
 
+    //Modify the label of the cell according to selected profiles
     var addProfileToService = function (state)
     {
         //Get the checked profiles
@@ -89,9 +95,36 @@
 
     };
 
-    var test = function (id, profiles) {
-        alert(profiles[id]);
-        document.getElementById("check1").disabled = true;
+    //Enable or disable profiles based on selected profiles
+    var validateProfileSelection = function (product, id, profiles)
+    {
+        profiles = profiles.split(",");
+        var status = false;
+
+        for (var i=0; i<profiles.length; i++) {
+            status |= document.getElementById("check" + i).checked;
+        }
+        if (!status) {
+            for (var i in profiles) {
+                document.getElementById("check" + i).disabled = false;
+            }
+        } else {
+
+            //Read merge meta data if not already done
+            if (mergeData == null)
+                mergeData = JSON.parse(readFile(mergeDocPath));
+
+            var profile = profiles[id];
+            var mergeableProfiles = mergeData[product][profile];
+
+            if (mergeableProfiles) {
+                for (var i in profiles) {
+                    if ((i != id) && (!mergeableProfiles.includes(profiles[i]))) {
+                        document.getElementById("check" + i).disabled = true;
+                    }
+                }
+            }
+        }
     };
 
     var getModelFromDocker = function(baseDir, ymlFile, callback)
@@ -262,7 +295,6 @@
 
         $.getJSON(linksPath, function(json) {
 
-            // console.log(editor.graph);
             var cells = editor.graph.model.cells;
             var services = []; //store services data -> name and id
 
@@ -349,7 +381,7 @@
     //Load predefine diagram
     var showLoadDiagramDialog = function (editor)
     {
-        var diagrams = ['apim pattern-1', 'apim pattern-2', 'apim pattern-3', 'apim pattern-5', 'apim pattern-6', 'apim pattern-7',
+        var diagrams = ['apim pattern-1', 'apim pattern-2', 'apim pattern-3', 'apim pattern-6', 'apim pattern-7',
             'apim pattern-8', 'apim pattern-9'];
 
         var html = '<div style="font-size: 20px;align-content: flex-end;text-align: left;">' +
@@ -405,15 +437,18 @@
     var initCellMerge = function(currentCell, highlighter, me, editor, cellMerge)
     {
         var tmp = editor.graph.view.getState(me.getCell());
-        var mergeDocPath = "merge.json";
 
+        //Apply only when dragging on top of a vertex
         if (editor.graph.isMouseDown || (tmp != null && !editor.graph.getModel().isVertex(tmp.cell)))
         {
             //Apply only if target cell is not the dragging cell
             if (tmp.cell.id != currentCell.id) {
                 //Apply only if the target is not already highlighted
                 if (highlighter.state == null) {
-                    var mergeData = JSON.parse(readFile(mergeDocPath));
+
+                    //Read merge meta data if not already done
+                    if (mergeData == null)
+                        mergeData = JSON.parse(readFile(mergeDocPath));
 
                     var sourceProduct = currentCell.style;
                     var targetProduct = tmp.cell.style;
@@ -425,7 +460,7 @@
                         var targetProfile = tmp.cell.value.getAttribute("label").split("/")[0];
                         var mergeableProfiles = mergeData[sourceProduct][sourceProfile];
 
-                        //Highlight target and set isMergeable true.
+                        //Highlight target and set isMergeable true if two cells are mergeable.
                         if ((mergeableProfiles) && (mergeableProfiles.includes(targetProfile))) {
                             highlighter.highlight(editor.graph.view.getState(tmp.cell));
                             if (!cellMerge.isMergeable) {
