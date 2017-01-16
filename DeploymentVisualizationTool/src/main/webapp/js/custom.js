@@ -404,8 +404,7 @@
     //Load predefine diagram
     var showLoadDiagramDialog = function (editor)
     {
-        var diagrams = ['apim pattern-1', 'apim pattern-2', 'apim pattern-3', 'apim pattern-6', 'apim pattern-7',
-            'apim pattern-8', 'apim pattern-9'];
+        var diagrams = ['apim pattern-1', 'apim pattern-2', 'apim pattern-3', 'apim pattern-6'];
 
         var html = '<div style="font-size: 20px;align-content: flex-end;text-align: left;">' +
             '<select id="diagramSelect" style="width: 100%;">';
