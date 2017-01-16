@@ -40,7 +40,8 @@
 
                 html += '<label><input type="checkbox" onclick="validateProfileSelection(\'wso2am\', \'' + i + '\', \'' +
                     profiles + '\')" style="margin-right: 5px;" id="check' + i + '" value="' + profiles[i] + '"';
-                //If a profile is added already, check the checkbox by default and disable non mergeable profiles
+
+                //If a profile is added already, check the checkbox by default
                 if (oldProfiles.includes(profiles[i])) {
                     html += ' checked';
                 }
@@ -101,6 +102,7 @@
 
     };
 
+    //Validate profiles if one or more profiles already selected
     var initValidateProfileSelection = function (product, profiles)
     {
         //Read merge meta data if not already done
@@ -135,13 +137,12 @@
                 mergeData = JSON.parse(readFile(mergeDocPath));
 
             var profile = profiles[id];
-            console.log(profile);
+
             var mergeableProfiles = mergeData[product][profile];
 
             if (mergeableProfiles) {
                 for (var i in profiles) {
                     if ((i != id) && (!mergeableProfiles.includes(profiles[i]))) {
-                        console.log(profiles[i]);
                         document.getElementById("check" + i).disabled = true;
                     }
                 }
