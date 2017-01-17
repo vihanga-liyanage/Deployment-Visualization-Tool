@@ -1,0 +1,30 @@
+{
+  "wso2am": {
+    "publisher": [
+      "store",
+      "traffic-manager",
+      "gateway-manager"
+    ],
+    "store": [
+      "publisher",
+      "traffic-manager",
+      "gateway-manager"
+    ],
+    "traffic-manager": [
+      "publisher",
+      "store",
+      "gateway-manager"
+    ],
+    "keymanager": [
+      "gateway-worker"
+    ],
+    "gateway-worker": [
+      "keymanager"
+    ],
+    "gateway-manager": [
+      "publisher",
+      "store",
+      "traffic-manager"
+    ]
+  }
+}

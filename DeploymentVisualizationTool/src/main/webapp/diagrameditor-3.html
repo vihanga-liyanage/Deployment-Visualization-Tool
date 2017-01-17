@@ -317,7 +317,8 @@
                 });
 
                 //add listener for drop icon event to trigger suggestions
-                editor.graph.addListener(mxEvent.ADD_CELLS, function (sender, me) {});
+                editor.graph.addListener(mxEvent.ADD_CELLS, function (sender, me)
+                {});
 
                 //Listener for connections - change edge color according to source or target
                 editor.graph.addListener(mxEvent.CELL_CONNECTED, function (sender, evt)

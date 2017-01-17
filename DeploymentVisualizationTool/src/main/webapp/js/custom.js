@@ -2,8 +2,10 @@
     var modelStr = '{"services":[';
     var serviceArray = [];
 
+    var KNOWLEDGE_BASE_LOCATION = "resources/knowledge-base/";
+
     //Variable to store merge meta data
-    var mergeDocPath = "merge.json";
+    var mergeDocPath = KNOWLEDGE_BASE_LOCATION + "merge.json";
     var mergeData = null;//JSON.parse(readFile(mergeDocPath));
 
 
@@ -314,7 +316,7 @@
     var genLinks = function(editor)
     {
         // get the required knowledge to build the links
-        var linksPath = "links.json";
+        var linksPath = KNOWLEDGE_BASE_LOCATION + "links.json";
 
         $.getJSON(linksPath, function(json) {
 
@@ -404,7 +406,9 @@
     //Load predefine diagram
     var showLoadDiagramDialog = function (editor)
     {
-        var diagrams = ['apim pattern-1', 'apim pattern-2', 'apim pattern-3', 'apim pattern-6'];
+        //These names will be used later to retrieve the xml file by replacing white spaces
+        //apim 2.0.0 pattern-1 -> apim-2.0.0-pattern-1.xml
+        var diagrams = ['apim 2.0.0 pattern-1', 'apim 2.0.0 pattern-2', 'apim 2.0.0 pattern-3', 'apim 2.0.0 pattern-6'];
 
         var html = '<div style="font-size: 20px;align-content: flex-end;text-align: left;">' +
             '<select id="diagramSelect" style="width: 100%;">';
@@ -438,7 +442,9 @@
     //Load a given diagram
     var loadDiagram = function (editor, diagram)
     {
-        var diagramPath = diagram.replace(" ", "") + ".xml";
+        var diagramPath = KNOWLEDGE_BASE_LOCATION + diagram + ".xml";
+        while (diagramPath.includes(" "))
+            diagramPath = diagramPath.replace(" ", "-");
 
         var client = new XMLHttpRequest();
         client.open('GET', diagramPath);
@@ -451,7 +457,6 @@
             editor.graph.container.focus();
         };
         client.send();
-
 
     };
 
