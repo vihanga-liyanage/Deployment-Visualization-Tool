@@ -51,6 +51,13 @@
             }
 
             html += '</div><div style="margin-top: 15px; font-weight: bold;"></div>';
+
+            //Selecting version
+            html += '<hr>Select Version<select id="versionSelect" style="width: 100%;">' +
+                '<option style="padding: 2px;" value="2.0.0">2.0.0</option>' +
+                '<option style="padding: 2px;" value="2.1.0">2.1.0</option>' +
+                '</select>'
+
         }
 
         $('<div></div>').appendTo('body')
