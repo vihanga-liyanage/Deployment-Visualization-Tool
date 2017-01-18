@@ -1,0 +1,9 @@
+@@ -479,7 +479,7 @@
+             </DataPublisherThreadPool>
+         </DataPublisher>
+         <PolicyDeployer>
+-            <ServiceURL>https://localhost:${mgt.transport.https.port}${carbon.context}services/</ServiceURL>
++            <ServiceURL>https://wso2am-2.0.0_traffic-manager:9443/services/</ServiceURL>
+             <Username>${admin.username}</Username>
+             <Password>${admin.password}</Password>
+         </PolicyDeployer>

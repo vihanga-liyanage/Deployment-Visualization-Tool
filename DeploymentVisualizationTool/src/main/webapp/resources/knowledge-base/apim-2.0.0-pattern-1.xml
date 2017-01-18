@@ -12,7 +12,7 @@
             </mxCell>
         </Image>
         <Image label="" href="" id="3">
-            <mxCell style="wso2am" parent="1" vertex="1">
+            <mxCell style="wso2am-2.0.0" parent="1" vertex="1">
                 <mxGeometry x="450" y="190" width="80" height="80" as="geometry"/>
             </mxCell>
         </Image>

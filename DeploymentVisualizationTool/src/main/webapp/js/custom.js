@@ -26,7 +26,7 @@
         var html = "";
         var profiles;
 
-        if (product == "wso2am") {
+        if (product == "wso2am-2.0.0") {
             profiles = ['publisher', 'store', 'keymanager', 'traffic-manager', 'gateway-manager', 'gateway-worker'];
             html = '<div style="font-size: 20px;align-content: flex-end;text-align: left;">';
 
@@ -147,9 +147,8 @@
 
             var profile = profiles[id];
 
-            var mergeableProfiles = mergeData[product][profile];
-
-            if (mergeableProfiles) {
+            if (mergeData[product][profile]) {
+                var mergeableProfiles = mergeData[product][profile];
                 for (var i in profiles) {
                     if ((i != id) && (!mergeableProfiles.includes(profiles[i]))) {
                         document.getElementById("check" + i).disabled = true;

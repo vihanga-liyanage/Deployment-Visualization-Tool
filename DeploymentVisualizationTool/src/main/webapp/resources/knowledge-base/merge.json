@@ -1,5 +1,5 @@
 {
-  "wso2am": {
+  "wso2am-2.0.0": {
     "publisher": [
       "store",
       "traffic-manager",

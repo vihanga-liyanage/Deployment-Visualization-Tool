@@ -12,22 +12,22 @@
             </mxCell>
         </Image>
         <Image label="publisher" href="" id="3">
-            <mxCell style="wso2am" parent="1" vertex="1">
+            <mxCell style="wso2am-2.0.0" parent="1" vertex="1">
                 <mxGeometry x="200" y="40" width="80" height="80" as="geometry"/>
             </mxCell>
         </Image>
         <Image label="store" href="" id="4">
-            <mxCell style="wso2am" parent="1" vertex="1">
+            <mxCell style="wso2am-2.0.0" parent="1" vertex="1">
                 <mxGeometry x="350" y="120" width="80" height="80" as="geometry"/>
             </mxCell>
         </Image>
         <Image label="keymanager" href="" id="5">
-            <mxCell style="wso2am" parent="1" vertex="1">
+            <mxCell style="wso2am-2.0.0" parent="1" vertex="1">
                 <mxGeometry x="540" y="170" width="80" height="80" as="geometry"/>
             </mxCell>
         </Image>
         <Image label="traffic-manager" href="" id="6">
-            <mxCell style="wso2am" parent="1" vertex="1">
+            <mxCell style="wso2am-2.0.0" parent="1" vertex="1">
                 <mxGeometry x="640" y="450" width="80" height="80" as="geometry"/>
             </mxCell>
         </Image>
@@ -37,12 +37,12 @@
             </mxCell>
         </Image>
         <Image label="gateway-manager" href="" id="8">
-            <mxCell style="wso2am" parent="1" vertex="1">
+            <mxCell style="wso2am-2.0.0" parent="1" vertex="1">
                 <mxGeometry x="90" y="480" width="80" height="80" as="geometry"/>
             </mxCell>
         </Image>
         <Image label="gateway-worker" href="" id="9">
-            <mxCell style="wso2am" parent="1" vertex="1">
+            <mxCell style="wso2am-2.0.0" parent="1" vertex="1">
                 <mxGeometry x="390" y="540" width="80" height="80" as="geometry"/>
             </mxCell>
         </Image>
@@ -52,7 +52,7 @@
             </mxCell>
         </Image>
         <Image label="" href="" id="11">
-            <mxCell style="wso2am-analytics" parent="1" vertex="1">
+            <mxCell style="wso2am-analytics-2.0.0" parent="1" vertex="1">
                 <mxGeometry x="530" y="320" width="80" height="80" as="geometry"/>
             </mxCell>
         </Image>

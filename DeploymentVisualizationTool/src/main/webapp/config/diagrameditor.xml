@@ -84,7 +84,7 @@
 		</add>
 		<add as="WSO2_API_Manager">
 			<Image label="" href="">
-				<mxCell vertex="1" style="wso2am">
+				<mxCell vertex="1" style="wso2am-2.0.0">
 					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
@@ -133,7 +133,7 @@
 		</add>
 		<add as="WSO2_DAS">
 			<Image label="" href="">
-				<mxCell vertex="1" style="wso2am-analytics">
+				<mxCell vertex="1" style="wso2am-analytics-2.0.0">
 					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
@@ -291,7 +291,7 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/web_page.png"/>
 			</add>
-			<add as="wso2am">
+			<add as="wso2am-2.0.0">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2-am.png"/>
@@ -326,7 +326,7 @@
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/publisher.png"/>
 			</add>
-			<add as="wso2am-analytics">
+			<add as="wso2am-analytics-2.0.0">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
 				<add as="image" value="images/wso2/wso2_das.png"/>

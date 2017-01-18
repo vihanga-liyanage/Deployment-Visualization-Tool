@@ -12,7 +12,7 @@
             </mxCell>
         </Image>
         <Image label="" href="" id="3">
-            <mxCell style="wso2am" vertex="1" parent="1">
+            <mxCell style="wso2am-2.0.0" vertex="1" parent="1">
                 <mxGeometry x="450" y="140" width="80" height="80" as="geometry"/>
             </mxCell>
         </Image>
@@ -22,7 +22,7 @@
             </mxCell>
         </Image>
         <Image label="" href="" id="5">
-            <mxCell style="wso2am-analytics" vertex="1" parent="1">
+            <mxCell style="wso2am-analytics-2.0.0" vertex="1" parent="1">
                 <mxGeometry x="470" y="420" width="80" height="80" as="geometry"/>
             </mxCell>
         </Image>

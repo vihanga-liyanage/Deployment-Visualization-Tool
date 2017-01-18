@@ -621,7 +621,7 @@ public class Generate {
 
                 //Setup cleanDir
                 String version = "2.0.0"; //temp solution
-                String cleanDir = cleanProductLocation + product + "-" + version;
+                String cleanDir = cleanProductLocation + product;// + "-" + version;
 
                 if (Files.exists(Paths.get(diffDir))) {
                     apply(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
