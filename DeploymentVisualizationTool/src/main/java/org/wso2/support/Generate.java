@@ -620,8 +620,7 @@ public class Generate {
                 }
 
                 //Setup cleanDir
-                String version = "2.0.0"; //temp solution
-                String cleanDir = cleanProductLocation + product;// + "-" + version;
+                String cleanDir = cleanProductLocation + product;
 
                 if (Files.exists(Paths.get(diffDir))) {
                     apply(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
@@ -649,10 +648,6 @@ public class Generate {
         //Compressing directory and returning file path
         zip(targetLocation);
         return "out/dockerConfig.zip";
-        
-//        Path p = Paths.get("knowledge-base/");
-//        
-//        return p.toAbsolutePath().toString();//
     }
     
     private static String zip(String targetLocation) {

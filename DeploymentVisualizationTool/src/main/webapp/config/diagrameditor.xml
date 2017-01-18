@@ -82,9 +82,16 @@
 				</mxCell>
 			</Image>
 		</add>
-		<add as="WSO2_API_Manager">
+		<add as="WSO2_API_Manager_2.0.0">
 			<Image label="" href="">
 				<mxCell vertex="1" style="wso2am-2.0.0">
+					<mxGeometry as="geometry" width="80" height="80"/>
+				</mxCell>
+			</Image>
+		</add>
+		<add as="WSO2_API_Manager_2.1.0">
+			<Image label="" href="">
+				<mxCell vertex="1" style="wso2am-2.1.0">
 					<mxGeometry as="geometry" width="80" height="80"/>
 				</mxCell>
 			</Image>
@@ -294,7 +301,12 @@
 			<add as="wso2am-2.0.0">
 				<add as="shape" value="image"/>
 				<add as="perimeter" value="rectanglePerimeter"/>
-				<add as="image" value="images/wso2/wso2-am.png"/>
+				<add as="image" value="images/wso2/wso2-am-2.0.0.png"/>
+			</add>
+			<add as="wso2am-2.1.0">
+				<add as="shape" value="image"/>
+				<add as="perimeter" value="rectanglePerimeter"/>
+				<add as="image" value="images/wso2/wso2-am-2.1.0.png"/>
 			</add>
 			<add as="wso2-complex-event-processor">
 				<add as="shape" value="image"/>
@@ -432,7 +444,8 @@
 		<add as="Mobile Phone" template="Mobile_Phone" icon="images/wso2/mobile_phone.png"/>
 		<add as="User" template="User" icon="images/wso2/user.png"/>
 		<add as="Web Page" template="Web_Page" icon="images/wso2/web_page.png"/>
-		<add as="WSO2 API Manager" template="WSO2_API_Manager" icon="images/wso2/wso2-am.png"/>
+		<add as="WSO2 API Manager 2.0.0" template="WSO2_API_Manager_2.0.0" icon="images/wso2/wso2-am-2.0.0.png"/>
+		<add as="WSO2 API Manager 2.1.0" template="WSO2_API_Manager_2.1.0" icon="images/wso2/wso2-am-2.1.0.png"/>
 		<add as="WSO2 Complex Event Processor" template="WSO2_Complex_Event_Processor" icon="images/wso2/wso2_complex_event_processor.png"/>
 		<add as="WSO2 Enterprise Service Bus" template="WSO2_Enterprise_Service_Bus" icon="images/wso2/wso2-esb.png"/>
 		<add as="WSO2 Identity Server" template="WSO2_Identity_Server" icon="images/wso2/wso2-is.png"/>

@@ -40,7 +40,7 @@
 
             for (var i in profiles) {
 
-                html += '<label><input type="checkbox" onclick="validateProfileSelection(\'wso2am\', \'' + i + '\', \'' +
+                html += '<label><input type="checkbox" onclick="validateProfileSelection(\'' + product + '\', \'' + i + '\', \'' +
                     profiles + '\')" style="margin-right: 5px;" id="check' + i + '" value="' + profiles[i] + '"';
 
                 //If a profile is added already, check the checkbox by default
@@ -51,12 +51,6 @@
             }
 
             html += '</div><div style="margin-top: 15px; font-weight: bold;"></div>';
-
-            //Selecting version
-            html += '<hr>Select Version<select id="versionSelect" style="width: 100%;">' +
-                '<option style="padding: 2px;" value="2.0.0">2.0.0</option>' +
-                '<option style="padding: 2px;" value="2.1.0">2.1.0</option>' +
-                '</select>'
 
         }
 
@@ -119,8 +113,9 @@
             mergeData = JSON.parse(readFile(mergeDocPath));
 
         for (var i=0; i<profiles.length; i++) {
-            if (document.getElementById("check" + i).checked)
-                validateProfileSelection(product, i, ""+profiles)
+            if (document.getElementById("check" + i).checked) {
+                validateProfileSelection(product, i, "" + profiles)
+            }
         }
     };
 
@@ -147,7 +142,7 @@
 
             var profile = profiles[id];
 
-            if (mergeData[product][profile]) {
+            if (typeof mergeData[product][profile] != 'undefined') {
                 var mergeableProfiles = mergeData[product][profile];
                 for (var i in profiles) {
                     if ((i != id) && (!mergeableProfiles.includes(profiles[i]))) {
@@ -361,6 +356,7 @@
                 }
             }
         });
+        editor.graph.container.focus();
     };
 
     //Check if two services have a connection
@@ -407,6 +403,7 @@
         //select all edges
         editor.graph.selectCells(false, true);
         editor.graph.removeCells();
+        editor.graph.container.focus();
     };
 
     //Load predefine diagram
