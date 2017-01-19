@@ -225,6 +225,10 @@
                     source: null,
                     target: null
                 };
+
+                //variable to store each versions of produccts
+                var versionData = {};
+
                 // </editor-fold>
 
                 // <editor-fold defaultstate="collapsed" desc="Mouse listeners added here">
@@ -314,9 +318,68 @@
                     }
                 });
 
-                //add listener for drop icon event to trigger suggestions
+                //add listener for drag and drop cell event to avoid version-mixes
                 editor.graph.addListener(mxEvent.ADD_CELLS, function (sender, me)
-                {});
+                {
+                    var style = me.properties.cells[0].style;
+
+                    //Check if the cell is a vertex and have a product with a version (check for a dot in style)
+                    if (me.properties.cells[0].vertex && (style.indexOf(".") !== -1)) {
+                        //separate product and version
+                        var temp = style.split("-");
+                        var product = temp[0];
+                        if (temp.length > 2) {
+                            for (var i=1; i<temp.length-1; i++) {
+                                product += "-" + temp[1];
+                            }
+                        }
+                        var version = temp[temp.length-1];
+
+                        //Remove newly added cell if it's version doesn't match
+                        if (versionData[product] != null && version != versionData[product]) {
+                            editor.graph.removeCells([me.properties.cells[0]]);
+                            editor.graph.container.focus();
+                            alert("Cannot use multiple versions of the same product together!");
+                        } else {
+                            //Save each product version on first time
+                            versionData[product] = version;
+                        }
+                    }
+
+                });
+
+                //add listener for delete cell event to update versionData
+                editor.graph.addListener(mxEvent.REMOVE_CELLS, function (sender, me)
+                {
+                    var style = me.properties.cells[0].style;
+
+                    //Check if the cell is a vertex and have a product with a version (check for a dot in style)
+                    if (me.properties.cells[0].vertex && (style.indexOf(".") !== -1)) {
+                        //separate product and version
+                        var temp = style.split("-");
+                        var product = temp[0];
+                        if (temp.length > 2) {
+                            for (var i=1; i<temp.length-1; i++) {
+                                product += "-" + temp[1];
+                            }
+                        }
+                        var version = temp[temp.length-1];
+
+                        //Loop through all cells to find out if the deleted cell is last of it's kind
+                        var cells = sender.model.cells;
+                        var isLastProduct = true;
+                        for (var i in cells) {
+                            if (cells[i].style == product + "-" + version) {
+                                isLastProduct = false;
+                                break;
+                            }
+                        }
+
+                        //If the cell was the last one, update the version data
+                        if (isLastProduct)
+                            versionData[product] = null;
+                    }
+                });
 
                 //Listener for connections - change edge color according to source or target
                 editor.graph.addListener(mxEvent.CELL_CONNECTED, function (sender, evt)
