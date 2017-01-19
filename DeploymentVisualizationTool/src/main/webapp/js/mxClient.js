@@ -32138,12 +32138,12 @@ mxGraphAbstractHierarchyCell.prototype.nextLayerConnectedCells = null;
 mxGraphAbstractHierarchyCell.prototype.previousLayerConnectedCells = null;
 
 /**
- * Variable: temp
+ * Variable: resetVersionData
  * 
  * Temporary variable for general use. Generally, try to avoid
  * carrying information between stages. Currently, the longest
- * path layering sets temp to the rank position in fixRanks()
- * and the crossing reduction uses this. This meant temp couldn't
+ * path layering sets resetVersionData to the rank position in fixRanks()
+ * and the crossing reduction uses this. This meant resetVersionData couldn't
  * be used for hashing the nodes in the model dfs and so hashCode
  * was created
  */
@@ -32192,7 +32192,7 @@ mxGraphAbstractHierarchyCell.prototype.isVertex = function()
 /**
  * Function: getGeneralPurposeVariable
  * 
- * Gets the value of temp for the specified layer
+ * Gets the value of resetVersionData for the specified layer
  */
 mxGraphAbstractHierarchyCell.prototype.getGeneralPurposeVariable = function(layer)
 {
@@ -32202,7 +32202,7 @@ mxGraphAbstractHierarchyCell.prototype.getGeneralPurposeVariable = function(laye
 /**
  * Function: setGeneralPurposeVariable
  * 
- * Set the value of temp for the specified layer
+ * Set the value of resetVersionData for the specified layer
  */
 mxGraphAbstractHierarchyCell.prototype.setGeneralPurposeVariable = function(layer, value)
 {
@@ -32417,7 +32417,7 @@ mxGraphHierarchyNode.prototype.isVertex = function()
 /**
  * Function: getGeneralPurposeVariable
  * 
- * Gets the value of temp for the specified layer
+ * Gets the value of resetVersionData for the specified layer
  */
 mxGraphHierarchyNode.prototype.getGeneralPurposeVariable = function(layer)
 {
@@ -32427,7 +32427,7 @@ mxGraphHierarchyNode.prototype.getGeneralPurposeVariable = function(layer)
 /**
  * Function: setGeneralPurposeVariable
  * 
- * Set the value of temp for the specified layer
+ * Set the value of resetVersionData for the specified layer
  */
 mxGraphHierarchyNode.prototype.setGeneralPurposeVariable = function(layer, value)
 {
@@ -32637,7 +32637,7 @@ mxGraphHierarchyEdge.prototype.isEdge = function()
 /**
  * Function: getGeneralPurposeVariable
  * 
- * Gets the value of temp for the specified layer
+ * Gets the value of resetVersionData for the specified layer
  */
 mxGraphHierarchyEdge.prototype.getGeneralPurposeVariable = function(layer)
 {
@@ -32647,7 +32647,7 @@ mxGraphHierarchyEdge.prototype.getGeneralPurposeVariable = function(layer)
 /**
  * Function: setGeneralPurposeVariable
  * 
- * Set the value of temp for the specified layer
+ * Set the value of resetVersionData for the specified layer
  */
 mxGraphHierarchyEdge.prototype.setGeneralPurposeVariable = function(layer, value)
 {
@@ -32771,7 +32771,7 @@ function mxGraphHierarchyModel(layout, vertices, roots, parent, tightenToSource)
 			}
 		}
 
-		// Use the temp variable in the internal nodes to mark this
+		// Use the resetVersionData variable in the internal nodes to mark this
 		// internal vertex as having been visited.
 		internalVertices[i].temp[0] = 1;
 	}
@@ -32932,7 +32932,7 @@ mxGraphHierarchyModel.prototype.createInternalCells = function(layout, vertices,
 			}
 		}
 
-		// Ensure temp variable is cleared from any previous use
+		// Ensure resetVersionData variable is cleared from any previous use
 		internalVertices[i].temp[0] = 0;
 	}
 };
@@ -33135,7 +33135,7 @@ mxGraphHierarchyModel.prototype.fixRanks = function()
 			node.maxRank = node.temp[0];
 			node.minRank = node.temp[0];
 
-			// Set temp[0] to the nodes position in the rank
+			// Set resetVersionData[0] to the nodes position in the rank
 			node.temp[0] = rankList[node.maxRank].length - 1;
 		}
 
@@ -33290,7 +33290,7 @@ mxGraphHierarchyModel.prototype.extendedDfs = function(parent, root, connectingE
 	// meant there is a cycle in the graph and this information is passed
 	// to the visitor.visit() in the seen parameter. The HashSet clone was
 	// very expensive on CPU so a custom hash was developed using primitive
-	// types. temp[] couldn't be used so hashCode[] was added to each node.
+	// types. resetVersionData[] couldn't be used so hashCode[] was added to each node.
 	// Each new child adds another int to the array, copying the prefix
 	// from its parent. Child of the same parent add different ints (the
 	// limit is therefore 2^32 children per parent...). If a node has a
@@ -33452,7 +33452,7 @@ function mxSwimlaneModel(layout, vertices, roots, parent, tightenToSource)
 			}
 		}
 
-		// Use the temp variable in the internal nodes to mark this
+		// Use the resetVersionData variable in the internal nodes to mark this
 		// internal vertex as having been visited.
 		internalVertices[i].temp[0] = 1;
 	}
@@ -33631,7 +33631,7 @@ mxSwimlaneModel.prototype.createInternalCells = function(layout, vertices, inter
 			}
 		}
 
-		// Ensure temp variable is cleared from any previous use
+		// Ensure resetVersionData variable is cleared from any previous use
 		internalVertices[i].temp[0] = 0;
 	}
 };
@@ -33795,7 +33795,7 @@ mxSwimlaneModel.prototype.initialRank = function()
 //	{
 //		var internalNode = this.vertexMapper[key];
 //		// Mark the node as not having had a layer assigned
-//		internalNode.temp[0] -= this.maxRank;
+//		internalNode.resetVersionData[0] -= this.maxRank;
 //	}
 	
 	// Tighten the rank 0 nodes as far as possible
@@ -33809,9 +33809,9 @@ mxSwimlaneModel.prototype.initialRank = function()
 //		{
 //			var internalEdge = layerDeterminingEdges[j];
 //			var otherNode = internalEdge.target;
-//			internalNode.temp[0] = Math.max(currentMaxLayer,
-//					otherNode.temp[0] + 1);
-//			currentMaxLayer = internalNode.temp[0];
+//			internalNode.resetVersionData[0] = Math.max(currentMaxLayer,
+//					otherNode.resetVersionData[0] + 1);
+//			currentMaxLayer = internalNode.resetVersionData[0];
 //		}
 //	}
 };
@@ -33917,7 +33917,7 @@ mxSwimlaneModel.prototype.fixRanks = function()
 			node.maxRank = node.temp[0];
 			node.minRank = node.temp[0];
 
-			// Set temp[0] to the nodes position in the rank
+			// Set resetVersionData[0] to the nodes position in the rank
 			node.temp[0] = rankList[node.maxRank].length - 1;
 		}
 
@@ -34072,7 +34072,7 @@ mxSwimlaneModel.prototype.extendedDfs = function(parent, root, connectingEdge, v
 	// meant there is a cycle in the graph and this information is passed
 	// to the visitor.visit() in the seen parameter. The HashSet clone was
 	// very expensive on CPU so a custom hash was developed using primitive
-	// types. temp[] couldn't be used so hashCode[] was added to each node.
+	// types. resetVersionData[] couldn't be used so hashCode[] was added to each node.
 	// Each new child adds another int to the array, copying the prefix
 	// from its parent. Child of the same parent add different ints (the
 	// limit is therefore 2^32 children per parent...). If a node has a
@@ -34733,7 +34733,7 @@ mxMedianHybridCrossingReduction.prototype.medianRank = function(rankValue, downw
 	medianValues.sort(MedianCellSorter.prototype.compare);
 	
 	// Set the new position of each node within the rank using
-	// its temp variable
+	// its resetVersionData variable
 	for (var i = 0; i < numCellsForRank; i++)
 	{
 		if (reservedPositions[i] == null)
@@ -35536,7 +35536,7 @@ mxCoordinateAssignment.prototype.rankMedianPosition = function(rankValue, model,
 	weightedValues.sort(WeightedCellSorter.prototype.compare);
 
 	// Set the new position of each node within the rank using
-	// its temp variable
+	// its resetVersionData variable
 	
 	for (var i = 0; i < weightedValues.length; i++)
 	{

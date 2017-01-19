@@ -81,12 +81,12 @@ mxGraphAbstractHierarchyCell.prototype.nextLayerConnectedCells = null;
 mxGraphAbstractHierarchyCell.prototype.previousLayerConnectedCells = null;
 
 /**
- * Variable: temp
+ * Variable: resetVersionData
  * 
  * Temporary variable for general use. Generally, try to avoid
  * carrying information between stages. Currently, the longest
- * path layering sets temp to the rank position in fixRanks()
- * and the crossing reduction uses this. This meant temp couldn't
+ * path layering sets resetVersionData to the rank position in fixRanks()
+ * and the crossing reduction uses this. This meant resetVersionData couldn't
  * be used for hashing the nodes in the model dfs and so hashCode
  * was created
  */
@@ -135,7 +135,7 @@ mxGraphAbstractHierarchyCell.prototype.isVertex = function()
 /**
  * Function: getGeneralPurposeVariable
  * 
- * Gets the value of temp for the specified layer
+ * Gets the value of resetVersionData for the specified layer
  */
 mxGraphAbstractHierarchyCell.prototype.getGeneralPurposeVariable = function(layer)
 {
@@ -145,7 +145,7 @@ mxGraphAbstractHierarchyCell.prototype.getGeneralPurposeVariable = function(laye
 /**
  * Function: setGeneralPurposeVariable
  * 
- * Set the value of temp for the specified layer
+ * Set the value of resetVersionData for the specified layer
  */
 mxGraphAbstractHierarchyCell.prototype.setGeneralPurposeVariable = function(layer, value)
 {

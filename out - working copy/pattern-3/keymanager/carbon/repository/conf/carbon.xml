@@ -484,7 +484,7 @@
         <Interval>10</Interval>
 
         <!--
-          The maximum time in *minutes*, temp files are allowed to live
+          The maximum time in *minutes*, resetVersionData files are allowed to live
           in the system. Files/directories which were modified more than
           "MaxTempFileLifetime" minutes ago will be removed by the
           house-keeping task

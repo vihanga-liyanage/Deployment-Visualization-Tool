@@ -576,7 +576,7 @@ mxCoordinateAssignment.prototype.rankMedianPosition = function(rankValue, model,
 	weightedValues.sort(WeightedCellSorter.prototype.compare);
 
 	// Set the new position of each node within the rank using
-	// its temp variable
+	// its resetVersionData variable
 	
 	for (var i = 0; i < weightedValues.length; i++)
 	{

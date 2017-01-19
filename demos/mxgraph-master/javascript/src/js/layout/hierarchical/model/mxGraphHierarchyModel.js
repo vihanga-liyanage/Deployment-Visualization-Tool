@@ -101,7 +101,7 @@ function mxGraphHierarchyModel(layout, vertices, roots, parent, tightenToSource)
 			}
 		}
 
-		// Use the temp variable in the internal nodes to mark this
+		// Use the resetVersionData variable in the internal nodes to mark this
 		// internal vertex as having been visited.
 		internalVertices[i].temp[0] = 1;
 	}
@@ -262,7 +262,7 @@ mxGraphHierarchyModel.prototype.createInternalCells = function(layout, vertices,
 			}
 		}
 
-		// Ensure temp variable is cleared from any previous use
+		// Ensure resetVersionData variable is cleared from any previous use
 		internalVertices[i].temp[0] = 0;
 	}
 };
@@ -465,7 +465,7 @@ mxGraphHierarchyModel.prototype.fixRanks = function()
 			node.maxRank = node.temp[0];
 			node.minRank = node.temp[0];
 
-			// Set temp[0] to the nodes position in the rank
+			// Set resetVersionData[0] to the nodes position in the rank
 			node.temp[0] = rankList[node.maxRank].length - 1;
 		}
 
@@ -620,7 +620,7 @@ mxGraphHierarchyModel.prototype.extendedDfs = function(parent, root, connectingE
 	// meant there is a cycle in the graph and this information is passed
 	// to the visitor.visit() in the seen parameter. The HashSet clone was
 	// very expensive on CPU so a custom hash was developed using primitive
-	// types. temp[] couldn't be used so hashCode[] was added to each node.
+	// types. resetVersionData[] couldn't be used so hashCode[] was added to each node.
 	// Each new child adds another int to the array, copying the prefix
 	// from its parent. Child of the same parent add different ints (the
 	// limit is therefore 2^32 children per parent...). If a node has a

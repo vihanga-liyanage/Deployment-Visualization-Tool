@@ -101,7 +101,7 @@ function mxSwimlaneModel(layout, vertices, roots, parent, tightenToSource)
 			}
 		}
 
-		// Use the temp variable in the internal nodes to mark this
+		// Use the resetVersionData variable in the internal nodes to mark this
 		// internal vertex as having been visited.
 		internalVertices[i].temp[0] = 1;
 	}
@@ -280,7 +280,7 @@ mxSwimlaneModel.prototype.createInternalCells = function(layout, vertices, inter
 			}
 		}
 
-		// Ensure temp variable is cleared from any previous use
+		// Ensure resetVersionData variable is cleared from any previous use
 		internalVertices[i].temp[0] = 0;
 	}
 };
@@ -444,7 +444,7 @@ mxSwimlaneModel.prototype.initialRank = function()
 //	{
 //		var internalNode = this.vertexMapper[key];
 //		// Mark the node as not having had a layer assigned
-//		internalNode.temp[0] -= this.maxRank;
+//		internalNode.resetVersionData[0] -= this.maxRank;
 //	}
 	
 	// Tighten the rank 0 nodes as far as possible
@@ -458,9 +458,9 @@ mxSwimlaneModel.prototype.initialRank = function()
 //		{
 //			var internalEdge = layerDeterminingEdges[j];
 //			var otherNode = internalEdge.target;
-//			internalNode.temp[0] = Math.max(currentMaxLayer,
-//					otherNode.temp[0] + 1);
-//			currentMaxLayer = internalNode.temp[0];
+//			internalNode.resetVersionData[0] = Math.max(currentMaxLayer,
+//					otherNode.resetVersionData[0] + 1);
+//			currentMaxLayer = internalNode.resetVersionData[0];
 //		}
 //	}
 };
@@ -566,7 +566,7 @@ mxSwimlaneModel.prototype.fixRanks = function()
 			node.maxRank = node.temp[0];
 			node.minRank = node.temp[0];
 
-			// Set temp[0] to the nodes position in the rank
+			// Set resetVersionData[0] to the nodes position in the rank
 			node.temp[0] = rankList[node.maxRank].length - 1;
 		}
 
@@ -721,7 +721,7 @@ mxSwimlaneModel.prototype.extendedDfs = function(parent, root, connectingEdge, v
 	// meant there is a cycle in the graph and this information is passed
 	// to the visitor.visit() in the seen parameter. The HashSet clone was
 	// very expensive on CPU so a custom hash was developed using primitive
-	// types. temp[] couldn't be used so hashCode[] was added to each node.
+	// types. resetVersionData[] couldn't be used so hashCode[] was added to each node.
 	// Each new child adds another int to the array, copying the prefix
 	// from its parent. Child of the same parent add different ints (the
 	// limit is therefore 2^32 children per parent...). If a node has a

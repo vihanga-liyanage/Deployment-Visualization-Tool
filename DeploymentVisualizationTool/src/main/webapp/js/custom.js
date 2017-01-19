@@ -8,6 +8,8 @@
     var mergeDocPath = KNOWLEDGE_BASE_LOCATION + "merge.json";
     var mergeData = null;//JSON.parse(readFile(mergeDocPath));
 
+    //variable to store each versions of produccts
+    var versionData = {};
 
     var serviceNode = function ()
     {
@@ -456,6 +458,7 @@
             var dec = new mxCodec(doc);
             dec.decode(doc.documentElement, editor.graph.getModel());
 
+            resetVersionData(editor);
             genLinks(editor);
             editor.graph.container.focus();
         };
@@ -528,4 +531,89 @@
         editor.graph.view.refresh();
 
         genLinks(editor);
+    };
+
+    //Validate the product versions when dropping them
+    var validateProductVersion = function (editor, sender, me)
+    {
+        var style = me.properties.cells[0].style;
+
+        //Check if the cell is a vertex and have a product with a version (check for a dot in style)
+        if (me.properties.cells[0].vertex && (style.indexOf(".") !== -1)) {
+            //separate product and version
+            var temp = style.split("-");
+            var product = temp[0];
+            if (temp.length > 2) {
+                for (var i=1; i<temp.length-1; i++) {
+                    product += "-" + temp[1];
+                }
+            }
+            var version = temp[temp.length-1];
+
+            //Remove newly added cell if it's version doesn't match
+            if (versionData[product] != null && version != versionData[product]) {
+                editor.graph.removeCells([me.properties.cells[0]]);
+                editor.graph.container.focus();
+                alert("Cannot use multiple versions of " + product + " together!");
+            } else {
+                //Save each product version on first time
+                versionData[product] = version;
+            }
+        }
+    };
+
+    //Update the versionDate when removing vertices
+    var updateVersionData = function (sender, me)
+    {
+        var style = me.properties.cells[0].style;
+
+        //Check if the cell is a vertex and have a product with a version (check for a dot in style)
+        if (me.properties.cells[0].vertex && (style.indexOf(".") !== -1)) {
+            //separate product and version
+            var temp = style.split("-");
+            var product = temp[0];
+            if (temp.length > 2) {
+                for (var i=1; i<temp.length-1; i++) {
+                    product += "-" + temp[1];
+                }
+            }
+            var version = temp[temp.length-1];
+
+            //Loop through all cells to find out if the deleted cell is last of it's kind
+            var cells = sender.model.cells;
+            var isLastProduct = true;
+            for (var i in cells) {
+                if (cells[i].style == product + "-" + version) {
+                    isLastProduct = false;
+                    break;
+                }
+            }
+
+            //If the cell was the last one, update the version data
+            if (isLastProduct)
+                versionData[product] = null;
+        }
+    };
+
+    //Reset the version data when user load a predefined diagram
+    var resetVersionData = function (editor)
+    {
+        versionData = {};
+        var cells = editor.graph.model.cells;
+        for (var i in cells) {
+            //Apply only if it's a product with versions
+            if (cells[i].vertex && (cells[i].style.indexOf(".") !== -1)) {
+                //separate product and version
+                var temp = cells[i].style.split("-");
+                var product = temp[0];
+                if (temp.length > 2) {
+                    for (var i=1; i<temp.length-1; i++) {
+                        product += "-" + temp[1];
+                    }
+                }
+                var version = temp[temp.length-1];
+                if (versionData[product] == null)
+                    versionData[product] = version;
+            }
+        }
     };

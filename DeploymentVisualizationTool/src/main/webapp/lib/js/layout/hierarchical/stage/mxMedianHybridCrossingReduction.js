@@ -556,7 +556,7 @@ mxMedianHybridCrossingReduction.prototype.medianRank = function(rankValue, downw
 	medianValues.sort(MedianCellSorter.prototype.compare);
 	
 	// Set the new position of each node within the rank using
-	// its temp variable
+	// its resetVersionData variable
 	for (var i = 0; i < numCellsForRank; i++)
 	{
 		if (reservedPositions[i] == null)

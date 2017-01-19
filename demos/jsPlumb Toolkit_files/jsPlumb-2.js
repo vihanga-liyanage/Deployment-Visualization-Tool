@@ -9292,7 +9292,7 @@
                 }
 
                 // now that continuous anchors have been placed, paint all the endpoints for this element
-                // TODO performance: add the endpoint ids to a temp array, and then when iterating in the next
+                // TODO performance: add the endpoint ids to a resetVersionData array, and then when iterating in the next
                 // loop, check that we didn't just paint that endpoint. we can probably shave off a few more milliseconds this way.
                 for (i = 0; i < ep.length; i++) {
                     ep[i].paint({ timestamp: timestamp, offset: myOffset, dimensions: myOffset.s, recalc: doNotRecalcEndpoint !== true });

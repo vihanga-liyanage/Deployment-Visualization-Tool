@@ -154,7 +154,7 @@ mxGraphHierarchyEdge.prototype.isEdge = function()
 /**
  * Function: getGeneralPurposeVariable
  * 
- * Gets the value of temp for the specified layer
+ * Gets the value of resetVersionData for the specified layer
  */
 mxGraphHierarchyEdge.prototype.getGeneralPurposeVariable = function(layer)
 {
@@ -164,7 +164,7 @@ mxGraphHierarchyEdge.prototype.getGeneralPurposeVariable = function(layer)
 /**
  * Function: setGeneralPurposeVariable
  * 
- * Set the value of temp for the specified layer
+ * Set the value of resetVersionData for the specified layer
  */
 mxGraphHierarchyEdge.prototype.setGeneralPurposeVariable = function(layer, value)
 {
