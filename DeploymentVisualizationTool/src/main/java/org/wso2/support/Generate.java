@@ -1,13 +1,10 @@
 package org.wso2.support;
 
-import difflib.DiffUtils;
-import difflib.Patch;
-import difflib.PatchFailedException;
-import java.io.File;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -20,21 +17,28 @@ import java.util.logging.Logger;
  */
 public class Generate {
     public static final String DIFF = ".diff";
-    public static final String KNOELEDGE_BASE_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/knowledge-base/";
+    public static final String CLEAN_PRODUCT_LOCATION = "/home/vihanga/Downloads/Compare/";
+    public static final String KNOWLEDGE_BASE_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/knowledge-base/";
+    public static final String TARGET_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
+    
+    /**
+     * Generate and compress a complete docker configurations folder for a given graph,
+     * by reading the XML generated in the  source view of the graph UI. <br>If gen is true, links in
+     * the XML will be ignored and regenerated.
+     * @param xmlString XML of the graph
+     * @param gen boolean indicator to specify auto generation of links
+     * @return URI to the created zip archive
+     */
+    public static String getConfigFromXML(String xmlString, boolean gen) throws IOException {
 
-    public static void main(String[] args) throws IOException {
-        String modelPath = "src/resources/model.json";
-        if(args.length!=2){
-            System.err.print("Usage: Generate CLEAN_PRODUCT_LOCATION TARGET_LOCATION");
-            System.exit(25);
+        System.out.println("\n\n\n=====================\n=====================\n=====================\n");
+
+        if (xmlString == null) {
+            return "";
         }
 
-        //Reading arguments
-        String cleanProductLocation = args[0];
-        String targetLocation = args[1];
-
         //Deleting target dir
-        Path rootPath = Paths.get(targetLocation);
+        Path rootPath = Paths.get(TARGET_LOCATION).getParent();
         try {
             Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
                 @Override
@@ -48,24 +52,53 @@ public class Generate {
                     return FileVisitResult.CONTINUE;
                 }
             });
-            System.out.println(targetLocation + " Deleted successfully!");
+            System.out.println(rootPath + " Deleted successfully!");
         } catch(IOException e){
-            System.out.println(targetLocation + " Directory not found!");
+            System.out.println(rootPath + " Directory not found!");
+        }
+
+        //Get JSON model
+        List<String> fileNames = new ArrayList<>();
+        JSONObject model;
+        if (gen) {
+            model = getJSONFromXMLAutoGenLinks(xmlString);
+        } else {
+            model = getJSONFromXML(xmlString);
+        }
+
+        //Get all file names
+        JSONArray services = model.getJSONArray("services");
+        for (int i = 0; i < services.length(); i ++) {
+            fileNames.addAll(toKnowledgeBaseNames(model, i));
         }
 
         //Creating docker compose yaml file
-        Path composeFile = Paths.get(targetLocation + "/docker-compose.yml");
-        String line = "version: '2'\nservices:\n  svnrepo:\n    image: docker.wso2.com/svnrepo\n";
-        Files.createDirectories(Paths.get(targetLocation));
+        Path composeFile = Paths.get(TARGET_LOCATION + "/docker-compose.yml");
+        String line = "version: '2'\nservices:\n";
+        Files.createDirectories(Paths.get(TARGET_LOCATION));
         Files.createFile(composeFile);
         Files.write(composeFile, line.getBytes());
-        
+
+        //Add svnrepo to dockerfile if needed
+        for (int i=0; i<fileNames.size(); i++) {
+            if (fileNames.get(i).startsWith("svnrepo")) {
+                try {
+                    System.out.println("------"+fileNames.get(i));
+                    String svnLine = "  svnrepo:\n    image: docker.wso2.com/svnrepo\n";
+                    Files.write(composeFile, svnLine.getBytes(), StandardOpenOption.APPEND);
+                    break;
+                } catch (IOException ex) {
+                    Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
         //process all file names
-        List<String> fileNames = getAllKnowledgeBaseNames(modelPath);
         fileNames.forEach(fileName -> {
-            //Ignore database, svnrepo and load-balancer
+
+            //Ignore svnrepo and load-balance
             if (!fileName.startsWith("svnrepo") && !fileName.startsWith("load-balancer")) {
-                String diffDir = KNOELEDGE_BASE_LOCATION + fileName, product;
+                String diffDir = KNOWLEDGE_BASE_LOCATION + fileName, product;
 
                 System.out.println(fileName);
                 //Get first service if it's a pair
@@ -76,7 +109,7 @@ public class Generate {
                     addToComposeFile(Paths.get(diffDir + "/dockerfilePart.yml"), fileName, composeFile);
                 }
 
-                String targetDir = targetLocation + fileName;
+                String targetDir = TARGET_LOCATION + fileName;
 
                 //Separate product and profile
                 if (fileName.contains("_")) {
@@ -86,8 +119,7 @@ public class Generate {
                 }
 
                 //Setup cleanDir
-                String version = "2.0.0"; //temp solution
-                String cleanDir = cleanProductLocation + product + "-" + version;
+                String cleanDir = CLEAN_PRODUCT_LOCATION + product;
 
                 if (Files.exists(Paths.get(diffDir))) {
                     apply(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
@@ -97,8 +129,8 @@ public class Generate {
         });
 
         //Coping artifacts folder
-        Path sourcePath = Paths.get(cleanProductLocation + "/artifacts");
-        Path targetPath = Paths.get(targetLocation + "/artifacts/");
+        Path sourcePath = Paths.get(CLEAN_PRODUCT_LOCATION + "/artifacts");
+        Path targetPath = Paths.get(TARGET_LOCATION + "/artifacts/");
         Files.createDirectory(targetPath);
         try {
             Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
@@ -111,20 +143,30 @@ public class Generate {
         } catch(IOException e){
             e.printStackTrace();
         }
-    }
 
+        //Compressing directory and returning file path
+        zip(TARGET_LOCATION);
+        return "out/dockerConfig.zip";
+    }
+    
+    /**
+     * Return a complete set of knowledge-base folders by reading a
+     * JSON model
+     * @param modelPath path to the JSON model file
+     * @return created JSON object by reading the file
+     */
     static List<String> getAllKnowledgeBaseNames(String modelPath) {
         List<String> fileNames = new ArrayList<>();
         JSONObject model = getJSONModel(modelPath);
         JSONArray services = model.getJSONArray("services");
         for (int i = 0; i < services.length(); i ++) {
-            fileNames.addAll(toKnowledgeBaseNames(i, model));
+            fileNames.addAll(toKnowledgeBaseNames(model, i));
         }
-//        print(fileNames);
         return fileNames;
     }
 
     /**
+     * Read the json model file and return a json object
      * @param modelPath path to the JSON model file
      * @return created JSON object by reading the file
      */
@@ -140,34 +182,34 @@ public class Generate {
     }
 
     /**
-     * @param model JSON object with links and nodes
+     * Return a set of knowledge-base folders for a specific service.
+     * @param model JSON object with services and links
+     * @param serviceID Integer id of the service
      * @return list of dir names that can be looked up in KB
      */
-    static List<String> toKnowledgeBaseNames(int serviceID, JSONObject model) {
+    static List<String> toKnowledgeBaseNames(JSONObject model, int serviceID) {
         List<String> fileNames = new ArrayList<>();
         JSONArray services = model.getJSONArray("services");
-
-        //Resolve self object
+        
         JSONObject service = services.getJSONObject(serviceID);
         String type = service.getString("type");
-        JSONArray profiles = service.optJSONArray("profiles");
-        
-//        System.out.println(profiles.toString(4));
+
         String serviceName = type;
+        //Load balancer node will be ignored
         if (!"load-balancer".equals(type))
         {
+            //Resolve self object
+            JSONArray profiles = service.optJSONArray("profiles");
             if (profiles != null) {
                 if (profiles.length() > 0) {
                     for (int k = 0; k < profiles.length(); k++) {
                         serviceName += "_" + profiles.getString(k);
                     }
                 }
-                fileNames.add(serviceName);
-            } else {
-                fileNames.add(type);
             }
+            fileNames.add(serviceName);
+            System.out.println(serviceName);
 
-//            System.out.println("F1:"+fileNames);
             //Resolve links
             JSONArray links = model.getJSONArray("links");
             if (null != links) {
@@ -188,43 +230,34 @@ public class Generate {
                         String linkedType = linkedService.getString("type");
                         if (!"load-balancer".equals(linkedType)) {
                             JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
-
-                            //If original service had more than one profile
-//                            if (profiles.length() > 1) {
-//                                for (int p = 0; p < profiles.length(); p++) {
-//                                    String tempServiceName = withProfile(type, profiles.getString(p));
-//                                    addLinks(linkedServiceProfiles, tempServiceName, fileNames, linkedType);
-//                                }
-//                            } else {
-                                addLinks(linkedServiceProfiles, serviceName, fileNames, linkedType);
-//                            }
+                            //Add links to fileNames list -> Eg: wso2am_publisher,database
+                            System.out.println(linkedServiceProfiles);
+                            if (linkedServiceProfiles != null && linkedServiceProfiles.length() > 0) {
+                                for (int k = 0; k < linkedServiceProfiles.length(); k++) {
+                                    linkedType += "_" + linkedServiceProfiles.getString(k);
+                                }
+                            }
+                            fileNames.add(serviceName + "," + linkedType);
                         }
                     }
                 }
             }
-//            System.out.println("F2:"+fileNames);
         }
 
         Collections.sort(fileNames);
         return fileNames;
     }
 
-    //Add links to fileNames list -> Eg: wso2am_publisher,database
-    private static void addLinks(JSONArray profiles, String serviceName, List<String> fileNames, String linkedType) {
-        if (profiles != null) {
-            if (profiles.length() > 0) {
-                for (int k = 0; k < profiles.length(); k++) {
-                    linkedType += "_" + profiles.getString(k);
-                }
-            }
-            fileNames.add(serviceName + "," + linkedType);
-        }
-    }
-
+    /**
+     * Call the applyDiffNative on each file of a diff directory by traveling recursively
+     * @param level Integer level to initiate recursive call
+     * @param diffDir Path to diff directory
+     * @param cleanDir Path to clean directory
+     * @param targetDir Path to target directory
+     */
     public static void apply(int level, Path diffDir, Path cleanDir, Path targetDir) {
         try {
             Files.list(diffDir).forEach(file -> {
-                int count = diffDir.getNameCount();
                 Path fileName = file.getFileName();
                 if (Files.isDirectory(file)) {
                     Path subCleanDir;
@@ -257,13 +290,19 @@ public class Generate {
         }
     }
 
+    /**
+     * Apply a diff to a single file using linux patch command
+     * @param diffFile Path to diff file
+     * @param cleanFile Path to clean file
+     * @param targetDir Path to target directory
+     */
     private static void applyDiffNative(Path diffFile, Path cleanFile, Path targetDir) {
         try {
             Files.createDirectories(targetDir.getParent());
             if (!Files.isRegularFile(targetDir)) {
                 Files.copy(cleanFile, targetDir);
             }
-            System.out.println("patch -f " + targetDir + " < " + diffFile);
+            System.out.println("\tpatch -f " + targetDir + " < " + diffFile);
             Process process = new ProcessBuilder("patch", "-f", targetDir.toString(), diffFile.toString()).start();
 
             process.waitFor();
@@ -334,10 +373,15 @@ public class Generate {
         }
         result.put("services", services);
         result.put("links", links);
-//        System.out.println(serviceMap);
+        //        System.out.println(serviceMap);
         return result;
     }
-    
+
+    /**
+     * Test
+     * @param xmlString XML of the graph
+     * @return URI to the created zip archive
+     */
     static JSONObject getJSONFromXMLAutoGenLinks(String xmlString) {
         System.out.println("Generate.getJSONFromXMLAutoGenLinks...");
         JSONObject temp = XML.toJSONObject(xmlString);
@@ -362,7 +406,6 @@ public class Generate {
                 //Adding new service into services array
                 services.put(processService((JSONObject)image, serviceMap, i));
             }
-
         } else {
             //Only one image exists
             JSONObject image = root.getJSONObject("Image");
@@ -374,7 +417,7 @@ public class Generate {
 
         //Resolve connectors, i.e links
         JSONArray links = new JSONArray();
-        
+
         Set<Integer> keys = serviceMap.keySet();
         Integer[] keyArray = keys.toArray(new Integer[keys.size()]);
 
@@ -460,7 +503,7 @@ public class Generate {
             e.printStackTrace();
         }
     }
-    
+
     public static String getXMLFromJSON(JSONObject model) {
         String xml = "<mxGraphModel><root><Diagram id=\"0\"><mxCell/></Diagram><Layer id=\"1\"><mxCell parent=\"0\"/></Layer>";
         int elementID = 2;
@@ -529,127 +572,12 @@ public class Generate {
         xml += "</root></mxGraphModel>";
         return xml;
     }
-    
-    public static String getConfigFromXML(String xmlString, boolean gen) throws IOException {
 
-        System.out.println("\n\n\n=====================\n=====================\n=====================\n");
-        String cleanProductLocation = "/home/vihanga/Downloads/Compare/";
-        final String targetLocation = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
-                
-        if (xmlString == null) {
-            return "";
-        }
-        
-        //Deleting target dir
-        Path rootPath = Paths.get(targetLocation).getParent();
-        try {
-            Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.delete(file);
-                    return FileVisitResult.CONTINUE;
-                }
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-            System.out.println(rootPath + " Deleted successfully!");
-        } catch(IOException e){
-            System.out.println(rootPath + " Directory not found!");
-        }
-
-        //Get all file names
-        List<String> fileNames = new ArrayList<>();
-        JSONObject model;
-        if (gen) {
-            model = getJSONFromXMLAutoGenLinks(xmlString);
-        } else {
-            model = getJSONFromXML(xmlString);
-        }
-        JSONArray services = model.getJSONArray("services");
-        for (int i = 0; i < services.length(); i ++) {
-            fileNames.addAll(toKnowledgeBaseNames(i, model));
-        }
-        
-        //Creating docker compose yaml file
-        Path composeFile = Paths.get(targetLocation + "/docker-compose.yml");
-        String line = "version: '2'\nservices:\n";
-        Files.createDirectories(Paths.get(targetLocation));
-        Files.createFile(composeFile);
-        Files.write(composeFile, line.getBytes());
-        
-        //Add svnrepo to dockerfile
-        for (int i=0; i<fileNames.size(); i++) {
-            if (fileNames.get(i).startsWith("svnrepo")) {
-                try {
-                    System.out.println("------"+fileNames.get(i));
-                    String svnLine = "  svnrepo:\n    image: docker.wso2.com/svnrepo\n";
-                    Files.write(composeFile, svnLine.getBytes(), StandardOpenOption.APPEND);
-                    break;
-                } catch (IOException ex) {
-                    Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-        
-        //process all file names
-        fileNames.forEach(fileName -> {
-
-            //Ignore svnrepo and load-balance
-            if (!fileName.startsWith("svnrepo") && !fileName.startsWith("load-balancer")) {
-                String diffDir = KNOELEDGE_BASE_LOCATION + fileName, product;
-
-                System.out.println(fileName);
-                //Get first service if it's a pair
-                if (fileName.contains(",")) {
-                    fileName = fileName.split(",")[0];
-                } else {
-                    //Append details to compose file
-                    addToComposeFile(Paths.get(diffDir + "/dockerfilePart.yml"), fileName, composeFile);
-                }
-
-                String targetDir = targetLocation + fileName;
-
-                //Separate product and profile
-                if (fileName.contains("_")) {
-                    product = fileName.split("_")[0];
-                } else {
-                    product = fileName;
-                }
-
-                //Setup cleanDir
-                String cleanDir = cleanProductLocation + product;
-
-                if (Files.exists(Paths.get(diffDir))) {
-                    apply(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
-                }
-            }
-
-        });
-
-        //Coping artifacts folder
-        Path sourcePath = Paths.get(cleanProductLocation + "/artifacts");
-        Path targetPath = Paths.get(targetLocation + "/artifacts/");
-        Files.createDirectory(targetPath);
-        try {
-            Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.copy(file, targetPath.resolve(file.getFileName()));
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-        
-        //Compressing directory and returning file path
-        zip(targetLocation);
-        return "out/dockerConfig.zip";
-    }
-    
+    /**
+     * Compress a given folder in zip format and return the URI
+     * @param targetLocation path to the folder
+     * @return URI to the created zip archive
+     */
     private static String zip(String targetLocation) {
 
         String zipFile = targetLocation.substring(0, targetLocation.length()-1) + ".zip";
