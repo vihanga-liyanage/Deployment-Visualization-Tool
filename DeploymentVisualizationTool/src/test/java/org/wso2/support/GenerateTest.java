@@ -158,7 +158,7 @@ public class GenerateTest {
         String resultJSONStr = "{\"services\":[{\"type\":\"wso2am\",\"profiles\":[\"publisher\"]}],\"links\":[]}";
         JSONObject resultJSON = new JSONObject(resultJSONStr);
 
-        JSONObject test = Generate.getJSONFromXML(xml);
+        JSONObject test = Generate.getJSONFromXML(xml, false);
         Assert.assertEquals(test.toString(), resultJSON.toString());
     }
 
@@ -176,7 +176,7 @@ public class GenerateTest {
 
         JSONObject resultJSON = new JSONObject(resultJSONStr);
 
-        JSONObject test = Generate.getJSONFromXML(xml);
+        JSONObject test = Generate.getJSONFromXML(xml, false);
         Assert.assertEquals(test.toString(), resultJSON.toString());
     }
 
@@ -193,7 +193,7 @@ public class GenerateTest {
         String resultJSONStr = "{\"services\":[{\"type\":\"wso2am\",\"profiles\":[\"publisher\",\"store\"]}],\"links\":[]}";
         JSONObject resultJSON = new JSONObject(resultJSONStr);
 
-        JSONObject test = Generate.getJSONFromXML(xml);
+        JSONObject test = Generate.getJSONFromXML(xml, false);
         Assert.assertEquals(test.toString(), resultJSON.toString());
 
         //Extended test with multiple profiles
@@ -207,7 +207,7 @@ public class GenerateTest {
                 + ",\"profiles\":[\"keymanager\",\"traffic-manager\"]}],\"links\":[{\"source\":0,\"target\":1}]}";
         resultJSON = new JSONObject(resultJSONStr);
 
-        test = Generate.getJSONFromXML(xml);
+        test = Generate.getJSONFromXML(xml, false);
         Assert.assertEquals(test.toString(), resultJSON.toString());
     }
 
@@ -234,7 +234,7 @@ public class GenerateTest {
 
         JSONObject resultJSON = new JSONObject(resultJSONStr);
 
-        JSONObject test = Generate.getJSONFromXML(xml);
+        JSONObject test = Generate.getJSONFromXML(xml, false);
         Assert.assertEquals(test.toString(), resultJSON.toString());
     }
 
@@ -253,7 +253,7 @@ public class GenerateTest {
 
         JSONObject resultJSON = new JSONObject(resultJSONStr);
 
-        JSONObject test = Generate.getJSONFromXML(xml);
+        JSONObject test = Generate.getJSONFromXML(xml, false);
         Assert.assertEquals(test.toString(), resultJSON.toString());
     }
 

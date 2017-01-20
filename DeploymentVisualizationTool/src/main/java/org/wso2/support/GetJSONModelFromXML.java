@@ -37,7 +37,7 @@ public class GetJSONModelFromXML extends HttpServlet {
         PrintWriter out = response.getWriter();
         System.out.println("servelete - GetJSONModelFromXML");
         if (xml.contains("Image")) {
-            JSONObject json = Generate.getJSONFromXMLAutoGenLinks(xml);
+            JSONObject json = Generate.getJSONFromXML(xml, true);
             out.write(json.toString(4));
         } else {
             out.write("Diagram is empty!");

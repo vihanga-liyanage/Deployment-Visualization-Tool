@@ -16,20 +16,20 @@ import java.util.logging.Logger;
  * Main class to generate docker compose artifacts form model json
  */
 public class Generate {
-    public static final String DIFF = ".diff";
-    public static final String CLEAN_PRODUCT_LOCATION = "/home/vihanga/Downloads/Compare/";
-    public static final String KNOWLEDGE_BASE_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/knowledge-base/";
-    public static final String TARGET_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
-    
+    private static final String DIFF = ".diff";
+    private static final String CLEAN_PRODUCT_LOCATION = "/home/vihanga/Downloads/Compare/";
+    private static final String KNOWLEDGE_BASE_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/knowledge-base/";
+    private static final String TARGET_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
+
     /**
      * Generate and compress a complete docker configurations folder for a given graph,
      * by reading the XML generated in the  source view of the graph UI. <br>If gen is true, links in
      * the XML will be ignored and regenerated.
      * @param xmlString XML of the graph
-     * @param gen boolean indicator to specify auto generation of links
+     * @param autoGen boolean indicator to specify auto generation of links
      * @return URI to the created zip archive
      */
-    public static String getConfigFromXML(String xmlString, boolean gen) throws IOException {
+    public static String getConfigFromXML(String xmlString, boolean autoGen) throws IOException {
 
         System.out.println("\n\n\n=====================\n=====================\n=====================\n");
 
@@ -59,12 +59,7 @@ public class Generate {
 
         //Get JSON model
         List<String> fileNames = new ArrayList<>();
-        JSONObject model;
-        if (gen) {
-            model = getJSONFromXMLAutoGenLinks(xmlString);
-        } else {
-            model = getJSONFromXML(xmlString);
-        }
+        JSONObject model = getJSONFromXML(xmlString, autoGen);
 
         //Get all file names
         JSONArray services = model.getJSONArray("services");
@@ -148,10 +143,9 @@ public class Generate {
         zip(TARGET_LOCATION);
         return "out/dockerConfig.zip";
     }
-    
+
     /**
-     * Return a complete set of knowledge-base folders by reading a
-     * JSON model
+     * Get a JSON model and return a complete set of knowledge-base folders
      * @param modelPath path to the JSON model file
      * @return created JSON object by reading the file
      */
@@ -190,7 +184,7 @@ public class Generate {
     static List<String> toKnowledgeBaseNames(JSONObject model, int serviceID) {
         List<String> fileNames = new ArrayList<>();
         JSONArray services = model.getJSONArray("services");
-        
+
         JSONObject service = services.getJSONObject(serviceID);
         String type = service.getString("type");
 
@@ -208,7 +202,6 @@ public class Generate {
                 }
             }
             fileNames.add(serviceName);
-            System.out.println(serviceName);
 
             //Resolve links
             JSONArray links = model.getJSONArray("links");
@@ -231,7 +224,6 @@ public class Generate {
                         if (!"load-balancer".equals(linkedType)) {
                             JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
                             //Add links to fileNames list -> Eg: wso2am_publisher,database
-                            System.out.println(linkedServiceProfiles);
                             if (linkedServiceProfiles != null && linkedServiceProfiles.length() > 0) {
                                 for (int k = 0; k < linkedServiceProfiles.length(); k++) {
                                     linkedType += "_" + linkedServiceProfiles.getString(k);
@@ -255,7 +247,7 @@ public class Generate {
      * @param cleanDir Path to clean directory
      * @param targetDir Path to target directory
      */
-    public static void apply(int level, Path diffDir, Path cleanDir, Path targetDir) {
+    private static void apply(int level, Path diffDir, Path cleanDir, Path targetDir) {
         try {
             Files.list(diffDir).forEach(file -> {
                 Path fileName = file.getFileName();
@@ -277,7 +269,7 @@ public class Generate {
                         try {
                             Files.createDirectories(targetDir);
                             Files.copy(file, targetDir.resolve(fileNameStr));
-                            System.out.println("cp " + file + " " + targetDir.resolve(fileNameStr));
+                            System.out.println("|\tcp " + file + " " + targetDir.resolve(fileNameStr));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -302,7 +294,7 @@ public class Generate {
             if (!Files.isRegularFile(targetDir)) {
                 Files.copy(cleanFile, targetDir);
             }
-            System.out.println("\tpatch -f " + targetDir + " < " + diffFile);
+            System.out.println("|\tpatch -f " + targetDir + " < " + diffFile);
             Process process = new ProcessBuilder("patch", "-f", targetDir.toString(), diffFile.toString()).start();
 
             process.waitFor();
@@ -311,7 +303,14 @@ public class Generate {
         }
     }
 
-    static JSONObject getJSONFromXML(String xmlString) {
+    /**
+     * Process a given mxGraph graph XML string and generate the JSON model<bR>
+     * If autoGen is passed true, links in the XML will be ignored and 
+     * consider n^2 connections to build the JSON model
+     * @param xmlString XML of the graph
+     * @param autoGen boolean indicator to auto generate links
+     */
+    static JSONObject getJSONFromXML(String xmlString, boolean autoGen) {
         System.out.println("Generate.getJSONFromXML...");
         JSONObject temp = XML.toJSONObject(xmlString);
 
@@ -342,100 +341,60 @@ public class Generate {
 
             //Adding new service into services array
             services.put(processService((JSONObject)image, serviceMap, 0));
-
         }
 
         //Resolve connectors, i.e links
         JSONArray links = new JSONArray();
-        if (root.has("Connector")) {
-            if (root.get("Connector") instanceof JSONArray) {
-                //More than one images exists
-                JSONArray connectors = root.getJSONArray("Connector");
+        if (autoGen) {
+            
+            Set<Integer> keys = serviceMap.keySet();
+            Integer[] keyArray = keys.toArray(new Integer[keys.size()]);
 
-                for (int i = 0; i < connectors.length(); i++) {
-                    JSONObject connector = connectors.getJSONObject(i);
+            //Add a connection for each pair of services.
+            for (int i=0; i<serviceMap.size(); i++) {
+                for (int j=i+1; j<serviceMap.size(); j++) {
+                    JSONObject link = new JSONObject();
+                    link.put("source", serviceMap.get(keyArray[i]));
+                    link.put("target", serviceMap.get(keyArray[j]));
+                    links.put(link);
+                }
+            }
+        } else {
+            
+            if (root.has("Connector")) {
+                if (root.get("Connector") instanceof JSONArray) {
+                    //More than one images exists
+                    JSONArray connectors = root.getJSONArray("Connector");
+
+                    for (int i = 0; i < connectors.length(); i++) {
+                        JSONObject connector = connectors.getJSONObject(i);
+
+                        //Adding new service into services array
+                        JSONObject obj = processLink((JSONObject) connector, serviceMap);
+                        if (obj != null) {
+                            links.put(obj);
+                        }
+                    }
+                } else {
+                    //Only one image exists
+                    JSONObject connector = root.getJSONObject("Connector");
 
                     //Adding new service into services array
-                    JSONObject obj = processLink((JSONObject) connector, serviceMap);
-                    if (obj != null) {
-                        links.put(obj);
-                    }
+                    links.put(processLink((JSONObject) connector, serviceMap));
                 }
-
-            } else {
-                //Only one image exists
-                JSONObject connector = root.getJSONObject("Connector");
-
-                //Adding new service into services array
-                links.put(processLink((JSONObject) connector, serviceMap));
-
             }
         }
         result.put("services", services);
         result.put("links", links);
-        //        System.out.println(serviceMap);
         return result;
     }
 
     /**
-     * Test
-     * @param xmlString XML of the graph
-     * @return URI to the created zip archive
+     * Process image object retrieved from the graph XML and return a service
+     * @param image JSON object of XML graph image
+     * @param serviceMap Map to store service IDs and their model indexes
+     * @param serviceID Model ID of the service to be created
      */
-    static JSONObject getJSONFromXMLAutoGenLinks(String xmlString) {
-        System.out.println("Generate.getJSONFromXMLAutoGenLinks...");
-        JSONObject temp = XML.toJSONObject(xmlString);
-
-        JSONObject result = new JSONObject();
-
-        JSONObject mxGraphModel = temp.getJSONObject("mxGraphModel");
-        JSONObject root = mxGraphModel.getJSONObject("root");
-
-        //Map to store service IDs and their model indexes -> serviceID:modelIndex
-        Map<Integer, Integer> serviceMap = new HashMap<>();
-
-        //Resolve images, i.e services
-        JSONArray services = new JSONArray();
-        if (root.get("Image") instanceof JSONArray) {
-            //More than one images exists
-            JSONArray images = root.getJSONArray("Image");
-
-            for (int i = 0; i < images.length(); i ++) {
-                JSONObject image = images.getJSONObject(i);
-
-                //Adding new service into services array
-                services.put(processService((JSONObject)image, serviceMap, i));
-            }
-        } else {
-            //Only one image exists
-            JSONObject image = root.getJSONObject("Image");
-
-            //Adding new service into services array
-            services.put(processService((JSONObject)image, serviceMap, 0));
-
-        }
-
-        //Resolve connectors, i.e links
-        JSONArray links = new JSONArray();
-
-        Set<Integer> keys = serviceMap.keySet();
-        Integer[] keyArray = keys.toArray(new Integer[keys.size()]);
-
-        //Add a connection for each pair of services.
-        for (int i=0; i<serviceMap.size(); i++) {
-            for (int j=i+1; j<serviceMap.size(); j++) {
-                JSONObject link = new JSONObject();
-                link.put("source", serviceMap.get(keyArray[i]));
-                link.put("target", serviceMap.get(keyArray[j]));
-                links.put(link);
-            }
-        }
-
-        result.put("services", services);
-        result.put("links", links);
-        return result;
-    }
-
     private static JSONObject processService(JSONObject image, Map serviceMap, int serviceID) {
         //Constructing new service
         JSONObject mxCell = image.getJSONObject("mxCell");
@@ -463,6 +422,11 @@ public class Generate {
         return service;
     }
 
+    /**
+     * Process connector object retrieved from the graph XML and return a link
+     * @param connector JSON object of XML graph connector
+     * @param serviceMap Map to store service IDs and their model indexes
+     */
     private static JSONObject processLink(JSONObject connector, Map serviceMap) {
         JSONObject mxCell = connector.getJSONObject("mxCell");
         if (mxCell.has("source") && mxCell.has("target")) {
@@ -486,8 +450,13 @@ public class Generate {
         }
     }
 
-    //Add new entry to docker compose file
-    public static void addToComposeFile(Path partFile, String dirname, Path out){
+    /**
+     * Append new entry to docker compose yml file
+     * @param partFile Path to the compose file part relevant to the service
+     * @param dirname string to replace the $dirname in compose part file. i.e docker service name
+     * @param composeFile File to append the part
+     */
+    public static void addToComposeFile(Path partFile, String dirname, Path composeFile){
 
         try {
             List<String> lines = Files.readAllLines(partFile);
@@ -496,7 +465,7 @@ public class Generate {
                     line = line.replace("$dirname", dirname);
                 }
                 line += "\n";
-                Files.write(out, line.getBytes(), StandardOpenOption.APPEND);
+                Files.write(composeFile, line.getBytes(), StandardOpenOption.APPEND);
 
             }
         } catch (IOException e) {
@@ -504,6 +473,33 @@ public class Generate {
         }
     }
 
+    /**
+     * Compress a given folder in .zip format and return the URI
+     * @param targetLocation path to the folder
+     * @return URI to the created zip archive
+     */
+    private static String zip(String targetLocation) {
+
+        String zipFile = targetLocation.substring(0, targetLocation.length()-1) + ".zip";
+
+        try {
+            System.out.println("zip -r " + zipFile + " " + ".");
+            Process process = null;
+            ProcessBuilder p = new ProcessBuilder("zip", "-r", zipFile, ".");
+            p.directory(new File(targetLocation));
+            process = p.start();
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return zipFile;
+    }
+    
+    /*
+    * Reverse engineering code
+    */
+    
     public static String getXMLFromJSON(JSONObject model) {
         String xml = "<mxGraphModel><root><Diagram id=\"0\"><mxCell/></Diagram><Layer id=\"1\"><mxCell parent=\"0\"/></Layer>";
         int elementID = 2;
@@ -571,28 +567,5 @@ public class Generate {
         }
         xml += "</root></mxGraphModel>";
         return xml;
-    }
-
-    /**
-     * Compress a given folder in zip format and return the URI
-     * @param targetLocation path to the folder
-     * @return URI to the created zip archive
-     */
-    private static String zip(String targetLocation) {
-
-        String zipFile = targetLocation.substring(0, targetLocation.length()-1) + ".zip";
-
-        try {
-            System.out.println("zip -r " + zipFile + " " + ".");
-            Process process = null;
-            ProcessBuilder p = new ProcessBuilder("zip", "-r", zipFile, ".");
-            p.directory(new File(targetLocation));
-            process = p.start();
-            process.waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return zipFile;
     }
 }
