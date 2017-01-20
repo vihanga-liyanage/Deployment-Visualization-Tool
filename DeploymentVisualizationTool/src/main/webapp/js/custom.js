@@ -1,11 +1,28 @@
+/*
+*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+*  WSO2 Inc. licenses this file to you under the Apache License,
+*  Version 2.0 (the "License"); you may not use this file except
+*  in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied.  See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*/
 
     var modelStr = '{"services":[';
     var serviceArray = [];
 
-    var KNOWLEDGE_BASE_LOCATION = "resources/knowledge-base/";
+    var METADATA_LOCATION = "resources/metadata/";
 
     //Variable to store merge meta data
-    var mergeDocPath = KNOWLEDGE_BASE_LOCATION + "merge.json";
+    var mergeDocPath = METADATA_LOCATION + "merge.json";
     var mergeData = null;//JSON.parse(readFile(mergeDocPath));
 
     //variable to store each versions of produccts
@@ -304,8 +321,6 @@
         var node = enc.encode(editor.graph.getModel());
         var xml = mxUtils.getPrettyXml(node);
 
-        console.log(xml);
-
         $.post("GetConfigFromXMLAutoGenLinks", {xml:xml}, function(data) {
             if (data == "Diagram is empty!") {
                 alert(data);
@@ -319,7 +334,7 @@
     var genLinks = function(editor)
     {
         // get the required knowledge to build the links
-        var linksPath = KNOWLEDGE_BASE_LOCATION + "links.json";
+        var linksPath = METADATA_LOCATION + "links.json";
 
         $.getJSON(linksPath, function(json) {
 
@@ -447,7 +462,7 @@
     //Load a given diagram
     var loadDiagram = function (editor, diagram)
     {
-        var diagramPath = KNOWLEDGE_BASE_LOCATION + diagram + ".xml";
+        var diagramPath = METADATA_LOCATION + diagram + ".xml";
         while (diagramPath.includes(" "))
             diagramPath = diagramPath.replace(" ", "-");
 

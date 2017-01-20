@@ -1,10 +1,707 @@
+<!--
+/*
+*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+*  WSO2 Inc. licenses this file to you under the Apache License,
+*  Version 2.0 (the "License"); you may not use this file except
+*  in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied.  See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*/
+-->
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <title>Start Page</title>
+
+        <!--
+        Current working copy with back end - 2017.01.20
+        -->
+
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Deployment Visualizer</title>
+
+        <!--Jquery all-->
+        <link rel="stylesheet" href="css/jquery-ui.min.css">
+        <script src="js/jquery-1.12.4.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+
+        <script src="js/js-yaml.min.js"></script>
+
+        <!--Bootstrap-->
+        <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="screen" />
+
+        <link rel="stylesheet" href="css/wordpress.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
+
+        <script type="text/javascript">
+            var mxBasePath = './lib';
+
+            var urlParams = (function (url)
+            {
+                var result = new Object();
+                var params = window.location.search.slice(1).split('&');
+
+                for (var i = 0; i < params.length; i++)
+                {
+                    idx = params[i].indexOf('=');
+
+                    if (idx > 0)
+                    {
+                        result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
+                    }
+                }
+
+                return result;
+            })(window.location.href);
+
+            var mxLanguage = urlParams['lang'];
+        </script>
+
+        <script type="text/javascript" src="js/custom.js"></script>
+        <script type="text/javascript" src="js/mxClient.js"></script>
+        <script type="text/javascript" src="js/mxApplication.js"></script>
+
+        <script type="text/javascript">
+
+            // <editor-fold defaultstate="collapsed" desc="Defines a new class for all icons">//
+            function mxIconSet(state)
+            {
+                this.images = [];
+                var graph = state.view.graph;
+
+                // Icon1
+                var img = mxUtils.createImage('images/copy.png');
+                img.setAttribute('title', 'Duplicate');
+                img.style.position = 'absolute';
+                img.style.cursor = 'pointer';
+                img.style.width = '16px';
+                img.style.height = '16px';
+                img.style.left = (state.x + state.width - 36) + 'px';
+                img.style.top = (state.y - 16) + 'px';
+
+                mxEvent.addGestureListeners(img,
+                    mxUtils.bind(this, function (evt)
+                    {
+                        var s = graph.gridSize;
+                        graph.setSelectionCells(graph.moveCells([state.cell], s, s, true));
+                        mxEvent.consume(evt);
+                        this.destroy();
+                    })
+                );
+
+                state.view.graph.container.appendChild(img);
+                this.images.push(img);
+
+                // Delete
+                var img = mxUtils.createImage('images/delete2.png');
+                img.setAttribute('title', 'Delete');
+                img.style.position = 'absolute';
+                img.style.cursor = 'pointer';
+                img.style.width = '16px';
+                img.style.height = '16px';
+                img.style.left = (state.x + state.width - 16) + 'px';
+                img.style.top = (state.y - 16) + 'px';
+
+                mxEvent.addGestureListeners(img,
+                    mxUtils.bind(this, function (evt)
+                    {
+                        // Disables dragging the image
+                        mxEvent.consume(evt);
+                    })
+                );
+
+                mxEvent.addListener(img, 'click',
+                    mxUtils.bind(this, function (evt)
+                    {
+                        graph.removeCells([state.cell]);
+                        mxEvent.consume(evt);
+                        this.destroy();
+                    })
+                );
+
+                state.view.graph.container.appendChild(img);
+                this.images.push(img);
+
+                // Add profile
+                var img = mxUtils.createImage('images/plus.png');
+                img.setAttribute('title', 'Set Profile');
+                img.style.position = 'absolute';
+                img.style.cursor = 'pointer';
+                img.style.width = '16px';
+                img.style.height = '16px';
+                img.style.left = (state.x + state.width - 56) + 'px';
+                img.style.top = (state.y - 16) + 'px';
+
+                mxEvent.addGestureListeners(img,
+                    mxUtils.bind(this, function (evt)
+                    {
+                        // Disables dragging the image
+                        mxEvent.consume(evt);
+                    })
+                );
+
+                mxEvent.addListener(img, 'click',
+                    mxUtils.bind(this, function (evt)
+                    {
+                        var product = state.cell.style;
+                        showAddProfile(state, evt, product);
+
+                        mxEvent.consume(evt);
+                        this.destroy();
+                    })
+                );
+
+                state.view.graph.container.appendChild(img);
+                this.images.push(img);
+            };
+
+            mxIconSet.prototype.destroy = function ()
+            {
+                if (this.images != null)
+                {
+                    for (var i = 0; i < this.images.length; i++)
+                    {
+                        var img = this.images[i];
+                        img.parentNode.removeChild(img);
+                    }
+                }
+
+                this.images = null;
+            };
+            // </editor-fold>
+
+            // Program starts here. The document.onLoad executes the
+            // mxApplication constructor with a given configuration.
+            // In the config file, the mxEditor.onInit method is
+            // overridden to invoke this global function as the
+            // last step in the editor constructor.
+            function onInit(editor)
+            {
+
+                // <editor-fold defaultstate="collapsed" desc="Variables for graph defined here">
+
+                // Enables rotation handle
+                mxVertexHandler.prototype.rotationEnabled = true;
+
+                // Enables guides
+                mxGraphHandler.prototype.guidesEnabled = true;
+
+                // Alt disables guides
+                mxGuide.prototype.isEnabledForEvent = function (evt)
+                {
+                    return !mxEvent.isAltDown(evt);
+                };
+
+                // Enables snapping waypoints to terminals
+                mxEdgeHandler.prototype.snapToTerminals = true;
+
+                // Defines an icon for creating new connections in the connection handler.
+                // This will automatically disable the highlighting of the source vertex.
+                mxConnectionHandler.prototype.connectImage = new mxImage('images/connector.gif', 16, 16);
+
+                // Enables connections in the graph and disables
+                // reset of zoom and translate on root change
+                // (ie. switch between XML and graphical mode).
+                editor.graph.setConnectable(true);
+
+                // Clones the source if new connection has no target
+                // editor.graph.connectionHandler.setCreateTarget(true);
+
+                // Updates the title if the root changes
+                var title = document.getElementById('title');
+
+                if (title != null)
+                {
+                    var f = function (sender)
+                    {
+                        // title.innerHTML = 'mxDraw - ' + sender.getTitle();
+                    };
+
+                    editor.addListener(mxEvent.ROOT, f);
+                    f(editor);
+                }
+
+                // Defines the tolerance before removing the icons
+                var iconTolerance = 20;
+
+                var textNode = document.getElementById('xml');
+                var graphNode = editor.graph.container;
+                var sourceInput = document.getElementById('source');
+
+                //Variables for cell merging
+                var currentCell = null;
+                var highlighter = new mxCellHighlight(editor.graph, '#ff2d25', 3, 1);
+                var cellMerge =  {
+                    isMergeable: false,
+                    source: null,
+                    target: null
+                };
+
+                // </editor-fold>
+
+                // <editor-fold defaultstate="collapsed" desc="Mouse listeners added here">
+                editor.graph.addMouseListener(
+                {
+                    currentState: null,
+                    currentIconSet: null,
+                    mouseDown: function (sender, me)
+                    {
+                        //if starting to drag a vertex, store it in currentCell
+                        currentCell = me.getCell();
+
+                        // Hides icons on mouse down
+                        if (this.currentState != null)
+                        {
+                            this.dragLeave(me.getEvent(), this.currentState);
+                            this.currentState = null;
+                        }
+                    },
+                    mouseMove: function (sender, me)
+                    {
+                        //init cell merge
+                        if (me.getCell() && currentCell) {
+                            initCellMerge(currentCell, highlighter, me, editor, cellMerge);
+                        } else {
+                            highlighter.hide();
+                            if (cellMerge.isMergeable)
+                                cellMerge.isMergeable = false;
+                        }
+
+                        if (this.currentState != null && (me.getState() == this.currentState ||
+                                me.getState() == null))
+                        {
+                            var tol = iconTolerance;
+                            var tmp = new mxRectangle(me.getGraphX() - tol, me.getGraphY() - tol, 2 * tol, 2 * tol);
+
+                            if (mxUtils.intersects(tmp, this.currentState))
+                            {
+                                return;
+                            }
+                        }
+
+                        var tmp = editor.graph.view.getState(me.getCell());
+
+                        // Ignores everything but vertices
+                        if (editor.graph.isMouseDown || (tmp != null && !editor.graph.getModel().isVertex(tmp.cell)))
+                        {
+                            tmp = null;
+                        }
+
+                        if (tmp != this.currentState)
+                        {
+                            if (this.currentState != null)
+                            {
+                                this.dragLeave(me.getEvent(), this.currentState);
+                            }
+
+                            this.currentState = tmp;
+
+                            if (this.currentState != null)
+                            {
+                                this.dragEnter(me.getEvent(), this.currentState);
+                            }
+                        }
+                    },
+                    mouseUp: function (sender, me)
+                    {
+                        //If a vertex was dragged, now it's dropped, hence null the currentCell
+                        currentCell = null;
+                    },
+                    dragOver: function(evt, cell)
+                    {},
+                    dragEnter: function (evt, state)
+                    {
+                        if (this.currentIconSet == null)
+                        {
+                            this.currentIconSet = new mxIconSet(state);
+                        }
+                    },
+                    dragLeave: function (evt, state)
+                    {
+                        if (this.currentIconSet != null)
+                        {
+                            this.currentIconSet.destroy();
+                            this.currentIconSet = null;
+                        }
+                    }
+                });
+
+                //add listener for drag and drop cell event to avoid version-mixes
+                editor.graph.addListener(mxEvent.ADD_CELLS, function (sender, me)
+                {
+                    validateProductVersion(editor, sender, me);
+                });
+
+                //add listener for delete cell event to update versionData
+                editor.graph.addListener(mxEvent.REMOVE_CELLS, function (sender, me)
+                {
+                    updateVersionData(sender, me);
+                });
+
+                //Listener for connections - change edge color according to source or target
+                editor.graph.addListener(mxEvent.CELL_CONNECTED, function (sender, evt)
+                {
+
+                    var edge = evt.getProperty("edge");
+                    //fires only when a target exits in the connection
+                    if (edge.target != null) {
+                        var edgeID = edge.id;
+                        var sourceStyle = edge.source.style;
+                        var targetStyle = edge.target.style;
+                        var sourceLabel = edge.source.value.getAttribute("label");
+
+                        //Get the cell from the graph model
+                        var edgeCell = sender.model.getCell(edgeID);
+
+                        //Decide style base on source or target
+                        if (sourceStyle == "load-balancer") {
+                            edgeCell.setStyle("startArrow=classic;");
+                        } else if (sourceStyle == "database" || targetStyle == "database") {
+                            edgeCell.setStyle("strokeColor=orange;startArrow=classic;");
+                        } else if (sourceStyle == "wso2am-analytics-2.0.0" || targetStyle == "wso2am-analytics-2.0.0") {
+                            edgeCell.setStyle("strokeColor=green;dashed=1;");
+                        } else if (sourceStyle == "svnrepo" || targetStyle == "svnrepo") {
+                            edgeCell.setStyle("strokeColor=lightGreen;");
+                        }  else if (sourceLabel.includes("traffic-manager")) {
+                            edgeCell.setStyle("strokeColor=black;dashed=1;startArrow=classic;");
+                        }
+
+                    }
+                });
+
+                //Move cell event to invoke cell merge
+                editor.graph.addListener(mxEvent.MOVE_CELLS, function (sender, me)
+                {
+                    if (cellMerge.isMergeable) {
+                        mergeCells(editor, cellMerge.source, cellMerge.target);
+                    }
+                    cellMerge.isMergeable = false;
+                });
+
+
+                // </editor-fold>
+
+                // <editor-fold defaultstate="collapsed" desc="Defines a new action to switch between XML and graphical display">
+
+                sourceInput.checked = false;
+
+                var funct = function (editor)
+                {
+                    if (sourceInput.checked)
+                    {
+                        graphNode.style.display = 'none';
+                        textNode.style.display = 'inline';
+
+                        var enc = new mxCodec();
+                        var node = enc.encode(editor.graph.getModel());
+
+                        textNode.value = mxUtils.getPrettyXml(node);
+                        textNode.originalValue = textNode.value;
+                        textNode.focus();
+                    } else
+                    {
+                        graphNode.style.display = '';
+
+                        if (textNode.value != textNode.originalValue)
+                        {
+                            var doc = mxUtils.parseXml(textNode.value);
+                            var dec = new mxCodec(doc);
+                            dec.decode(doc.documentElement, editor.graph.getModel());
+                        }
+
+                        textNode.originalValue = null;
+
+                        // Makes sure nothing is selected in IE
+                        if (mxClient.IS_IE)
+                        {
+                            mxUtils.clearSelection();
+                        }
+
+                        textNode.style.display = 'none';
+
+                        // Moves the focus back to the graph
+                        textNode.blur();
+                        editor.graph.container.focus();
+                    }
+                };
+
+                editor.addAction('switchView', funct);
+
+                mxEvent.addListener(sourceInput, 'click', function ()
+                {
+                    editor.execute('switchView');
+                });
+                // </editor-fold>
+
+                // <editor-fold defaultstate="collapsed" desc="Image and SVG export">
+                // Only adds image and SVG export if backend is available
+                // NOTE: The old image export in mxEditor is not used, the urlImage is used for the new export.
+                if (editor.urlImage != null) {
+                    // Client-side code for image export
+                    var exportImage = function (editor) {
+                        var graph = editor.graph;
+                        var scale = graph.view.scale;
+                        var bounds = graph.getGraphBounds();
+
+                        // New image export
+                        var xmlDoc = mxUtils.createXmlDocument();
+                        var root = xmlDoc.createElement('output');
+                        xmlDoc.appendChild(root);
+
+                        // Renders graph. Offset will be multiplied with state's scale when painting state.
+                        var xmlCanvas = new mxXmlCanvas2D(root);
+                        xmlCanvas.translate(Math.floor(1 / scale - bounds.x), Math.floor(1 / scale - bounds.y));
+                        xmlCanvas.scale(scale);
+
+                        var imgExport = new mxImageExport();
+                        imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
+
+                        // Puts request data together
+                        var w = Math.ceil(bounds.width * scale + 2);
+                        var h = Math.ceil(bounds.height * scale + 2);
+                        var xml = mxUtils.getXml(root);
+
+                        // Requests image if request is valid
+                        if (w > 0 && h > 0) {
+                            var name = 'export.png';
+                            var format = 'png';
+                            var bg = '&bg=#FFFFFF';
+
+                            new mxXmlRequest(editor.urlImage, 'filename=' + name + '&format=' + format +
+                                bg + '&w=' + w + '&h=' + h + '&xml=' + encodeURIComponent(xml)).simulate(document, '_blank');
+                        }
+                    };
+
+                    editor.addAction('exportImage', exportImage);
+
+                    // Client-side code for SVG export
+                    var exportSvg = function (editor) {
+                        var graph = editor.graph;
+                        var scale = graph.view.scale;
+                        var bounds = graph.getGraphBounds();
+
+                        // Prepares SVG document that holds the output
+                        var svgDoc = mxUtils.createXmlDocument();
+                        var root = (svgDoc.createElementNS != null) ?
+                            svgDoc.createElementNS(mxConstants.NS_SVG, 'svg') : svgDoc.createElement('svg');
+
+                        if (root.style != null) {
+                            root.style.backgroundColor = '#FFFFFF';
+                        } else {
+                            root.setAttribute('style', 'background-color:#FFFFFF');
+                        }
+
+                        if (svgDoc.createElementNS == null) {
+                            root.setAttribute('xmlns', mxConstants.NS_SVG);
+                        }
+
+                        root.setAttribute('width', Math.ceil(bounds.width * scale + 2) + 'px');
+                        root.setAttribute('height', Math.ceil(bounds.height * scale + 2) + 'px');
+                        root.setAttribute('xmlns:xlink', mxConstants.NS_XLINK);
+                        root.setAttribute('version', '1.1');
+
+                        // Adds group for anti-aliasing via transform
+                        var group = (svgDoc.createElementNS != null) ?
+                            svgDoc.createElementNS(mxConstants.NS_SVG, 'g') : svgDoc.createElement('g');
+                        group.setAttribute('transform', 'translate(0.5,0.5)');
+                        root.appendChild(group);
+                        svgDoc.appendChild(root);
+
+                        // Renders graph. Offset will be multiplied with state's scale when painting state.
+                        var svgCanvas = new mxSvgCanvas2D(group);
+                        svgCanvas.translate(Math.floor(1 / scale - bounds.x), Math.floor(1 / scale - bounds.y));
+                        svgCanvas.scale(scale);
+
+                        var imgExport = new mxImageExport();
+                        imgExport.drawState(graph.getView().getState(graph.model.root), svgCanvas);
+
+                        var name = 'export.svg';
+                        var xml = encodeURIComponent(mxUtils.getXml(root));
+
+                        new mxXmlRequest(editor.urlEcho, 'filename=' + name + '&format=svg' + '&xml=' + xml).simulate(document, "_blank");
+                    };
+
+                    editor.addAction('exportSvg', exportSvg);
+
+                    buttons.push('exportImage');
+                    buttons.push('exportSvg');
+                }
+                // </editor-fold>
+
+                // <editor-fold defaultstate="collapsed" desc="Create select actions in page">
+                var node = document.getElementById('mainActions');
+                var buttons = ['group', 'ungroup', 'cut', 'copy', 'paste', 'delete', 'undo', 'redo', 'print', 'show'];
+
+                for (var i = 0; i < buttons.length; i++)
+                {
+                    var button = document.createElement('button');
+                    mxUtils.write(button, mxResources.get(buttons[i]));
+
+                    var factory = function (name)
+                    {
+                        return function ()
+                        {
+                            editor.execute(name);
+                        };
+                    };
+
+                    mxEvent.addListener(button, 'click', factory(buttons[i]));
+                    node.appendChild(button);
+                }
+                // </editor-fold>
+
+                // Create select actions in page
+                var node = document.getElementById('selectActions');
+                mxUtils.write(node, 'Select: ');
+                mxUtils.linkAction(node, 'All', editor, 'selectAll');
+                mxUtils.write(node, ', ');
+                mxUtils.linkAction(node, 'None', editor, 'selectNone');
+                mxUtils.write(node, ', ');
+                mxUtils.linkAction(node, 'Vertices', editor, 'selectVertices');
+                mxUtils.write(node, ', ');
+                mxUtils.linkAction(node, 'Edges', editor, 'selectEdges');
+
+                // Create select actions in page
+                var node = document.getElementById('zoomActions');
+                mxUtils.write(node, 'Zoom: ');
+                mxUtils.linkAction(node, 'In', editor, 'zoomIn');
+                mxUtils.write(node, ', ');
+                mxUtils.linkAction(node, 'Out', editor, 'zoomOut');
+                mxUtils.write(node, ', ');
+                mxUtils.linkAction(node, 'Actual', editor, 'actualSize');
+                mxUtils.write(node, ', ');
+                mxUtils.linkAction(node, 'Fit', editor, 'fit');
+
+                //"Get JSON Model" button click action
+                function initGetModel() {
+                    console.log("initGetModel");
+                    getModel(editor);
+                }
+                editor.addAction('getModel', initGetModel);
+                var getModelButton = document.getElementById('getModelButton');
+                mxEvent.addListener(getModelButton, 'click', function ()
+                {
+                    editor.execute('getModel');
+                });
+
+                //"Download Configs" button click action
+                function initGetConfiguration() {
+                    getConfigurations(editor);
+                }
+                editor.addAction('getConfigurations', initGetConfiguration);
+                var getConfigurationButton = document.getElementById('getConfigurationButton');
+                mxEvent.addListener(getConfigurationButton, 'click', function ()
+                {
+                    editor.execute('getConfigurations');
+                });
+
+                //"Download Configs" button click action
+                function initLoadDiagram() {
+                    showLoadDiagramDialog(editor);
+                }
+                editor.addAction('showLoadDiagramDialog', initLoadDiagram);
+                var loadDiagramButton = document.getElementById('loadDiagramButton');
+                mxEvent.addListener(loadDiagramButton, 'click', function ()
+                {
+                    editor.execute('showLoadDiagramDialog');
+                });
+
+                //"Download Configs (autogen links)" button click action
+                function initGenConnections() {
+                    getConfigurationsAutoGenLinks(editor);
+                }
+                editor.addAction('getConfigurationsAutoGenLinks', initGenConnections);
+                var getConfigurationAutoGenLinksButton = document.getElementById('getConfigurationAutoGenLinksButton');
+                mxEvent.addListener(getConfigurationAutoGenLinksButton, 'click', function ()
+                {
+                    editor.execute('getConfigurationsAutoGenLinks');
+                });
+                
+                //"Generate Links" button click action
+                function initGenLinks() {
+                    genLinks(editor);
+                }
+                editor.addAction('genLinks', initGenLinks);
+                var genLinksButton = document.getElementById('genLinksButton');
+                mxEvent.addListener(genLinksButton, 'click', function ()
+                {
+                    editor.execute('genLinks');
+                });
+
+                //"clearLinksButton" button click action
+                function initClearLinksButton() {
+                    clearLinks(editor);
+                }
+                editor.addAction('clearLinks', initClearLinksButton);
+                var clearLinksButton = document.getElementById('clearLinksButton');
+                mxEvent.addListener(clearLinksButton, 'click', function ()
+                {
+                    editor.execute('clearLinks');
+                });
+                
+            }
+
+            window.onbeforeunload = function () {
+                return mxResources.get('changesLost');
+            };
+
+        </script>
     </head>
-    <body>
-        <h1>Hello World!</h1>
+    <body onload="mxApplication('config/diagrameditor.xml');" style="background: #f5f5f5b3;">
+        <div id="page">
+            <div id="header">
+                <div id="headerimg">
+                    WSO2 Deployment Visualizer
+                </div>
+                <div id="selectActions">
+                </div>
+                <div id="mainActions">
+                </div>
+                <div id="zoomActions" style="font-family: monospace;">
+                </div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td id="toolbar" valign="top" class="col-md-3">
+                                <!-- Toolbar Here -->
+                            </td>
+                            <td id="graph_container" valign="top" class="col-md-9">
+                                <div id="legend">
+                                    <img src="images/wso2/http-traffic.png" width="54" style="margin-right: 10px;"/>HTTP Traffic</br>
+                                    <img src="images/wso2/jdbc-connection.png" width="54" style="margin-right: 10px;"/>JDBC Connection</br>
+                                    <img src="images/wso2/thrift-connection.png" width="54" style="margin-right: 10px;"/>Thrift Connection</br>
+                                    <img src="images/wso2/jms-connection.png" width="54" style="margin-right: 10px;"/>JMS Connection</br>
+                                    <img src="images/wso2/svn-connection.png" width="54" style="margin-right: 10px;"/>SVN Connection</br>
+                                </div>
+                                <div id="graph"  tabindex="-1">
+                                    <!-- Graph Here -->
+                                    <center id="splash" style="padding-top:530px;">
+                                        <img src="images/loading.gif">
+                                    </center>
+                                </div>
+                                <textarea id="xml"></textarea>
+                                <input id="source" type="checkbox"/>
+                                View Source
+                                <button id="getModelButton" style="display: none">Get JSON Model</button>
+                                <button id="getConfigurationButton" style="display: none">Download Configs</button>
+                                <button id="loadDiagramButton">Load Predefine Diagram</button>
+                                <button id="getConfigurationAutoGenLinksButton">Download Configurations</button>
+                                <button id="genLinksButton">Generate Links</button>
+                                <button id="clearLinksButton">Clear Links</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </body>
 </html>
