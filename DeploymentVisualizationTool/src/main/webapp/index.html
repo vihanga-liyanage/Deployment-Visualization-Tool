@@ -338,7 +338,7 @@
                 //add listener for drag and drop cell event to avoid version-mixes
                 editor.graph.addListener(mxEvent.ADD_CELLS, function (sender, me)
                 {
-                    validateProductVersion(editor, sender, me);
+                    validateProductVersion(editor, me);
                 });
 
                 //add listener for delete cell event to update versionData

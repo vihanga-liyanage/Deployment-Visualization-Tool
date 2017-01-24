@@ -29,7 +29,7 @@ import org.json.JSONObject;
 
 /**
  *
- * @author Vihanga Liyanage <WSO2.Inc>
+ * @author Vihanga Liyanage  <vihanga@wso2.com>
  */
 @WebServlet(name = "GetJSONModelFromXML", urlPatterns = {"/GetJSONModelFromXML"})
 public class GetJSONModelFromXML extends HttpServlet {

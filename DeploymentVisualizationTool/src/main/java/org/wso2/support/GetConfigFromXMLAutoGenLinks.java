@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Vihanga Liyanage <WSO2.Inc>
+ * @author Vihanga Liyanage  <vihanga@wso2.com>
  */
 @WebServlet(name = "GetConfigFromXMLAutoGenLinks", urlPatterns = {"/GetConfigFromXMLAutoGenLinks"})
 public class GetConfigFromXMLAutoGenLinks extends HttpServlet {
@@ -50,7 +50,11 @@ public class GetConfigFromXMLAutoGenLinks extends HttpServlet {
             
         if (xml.contains("Image")) {
             String downloadURL = Generate.getConfigFromXML(xml, true);
-            out.write(downloadURL);
+            if (downloadURL == null) {
+                out.write("Something went wrong!");
+            } else {
+                out.write(downloadURL);
+            }
         } else {
             out.write("Diagram is empty!");
         }

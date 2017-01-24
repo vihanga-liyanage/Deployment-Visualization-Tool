@@ -32,14 +32,14 @@ import static java.util.Collections.singletonList;
 
 /**
  *
- * @author Vihanga Liyanage <WSO2.Inc>
+ * @author Vihanga Liyanage <vihanga@wso2.com>
  */
 public class GenerateTest {
 
     @Test
     public void testSimpleProduct() throws Exception {
         String model = "{\"services\":[{\"type\":\"database\",\"profiles\":[]}],\"links\":[]}";
-        List<String> dirNames = Generate.toKnowledgeBaseNames(new JSONObject(model), 0);
+        List<String> dirNames = Generate.getKnowledgeBaseNames(new JSONObject(model), 0);
         Assert.assertEquals(dirNames, singletonList("database"));
     }
 
@@ -47,7 +47,7 @@ public class GenerateTest {
     public void testProductWithProfile() throws Exception {
         String model = "{\"services\":[{\"type\":\"database\",\"profiles\":[]},{\"type\":\"wso2am\",\"profiles\""
                 + ":[\"publisher\"]},{\"type\":\"wso2am\",\"profiles\":[\"store\"]}],\"links\":[]}";
-        List<String> dirNames = Generate.toKnowledgeBaseNames(new JSONObject(model), 2);
+        List<String> dirNames = Generate.getKnowledgeBaseNames(new JSONObject(model), 2);
         Assert.assertEquals(dirNames, singletonList("wso2am_store"));
     }
 
@@ -57,7 +57,7 @@ public class GenerateTest {
                 + ":[]}],\"links\":[{\"source\":0,\"target\":1}]}";
         JSONObject modelJson = new JSONObject(model);
 
-        List<String> dirNames = Generate.toKnowledgeBaseNames(modelJson, 0);
+        List<String> dirNames = Generate.getKnowledgeBaseNames(modelJson, 0);
         Assert.assertEquals(dirNames, Arrays.asList("database", "database,wso2am"));
 
     }
@@ -66,7 +66,7 @@ public class GenerateTest {
     public void testProductWithProfiles() throws Exception {
         String model = "{\"services\":[{\"type\":\"database\",\"profiles\":[]},{\"type\":\"wso2am\",\"profiles\":[\""
                 + "publisher\",\"store\"]}],\"links\":[]}";
-        List<String> dirNames = Generate.toKnowledgeBaseNames(new JSONObject(model), 1);
+        List<String> dirNames = Generate.getKnowledgeBaseNames(new JSONObject(model), 1);
         Assert.assertEquals(dirNames, Arrays.asList("wso2am_publisher_store"));
     }
 
@@ -80,7 +80,7 @@ public class GenerateTest {
 //        dirNames = Generate.toKnowledgeBaseNames(0, modelJson);
 //        Assert.assertEquals(dirNames, Arrays.asList("database", "database,wso2am_publisher"));
 
-        dirNames = Generate.toKnowledgeBaseNames(modelJson, 1);
+        dirNames = Generate.getKnowledgeBaseNames(modelJson, 1);
         Assert.assertEquals(dirNames, Arrays.asList("wso2am_publisher", "wso2am_publisher,database"));
     }
 
@@ -92,10 +92,10 @@ public class GenerateTest {
         JSONObject modelJson = new JSONObject(model);
         List<String> dirNames;
 
-        dirNames = Generate.toKnowledgeBaseNames(modelJson, 0);
+        dirNames = Generate.getKnowledgeBaseNames(modelJson, 0);
         Assert.assertEquals(dirNames, Arrays.asList("database", "database,wso2am_publisher", "database,wso2am_store"));
 
-        dirNames = Generate.toKnowledgeBaseNames(modelJson, 1);
+        dirNames = Generate.getKnowledgeBaseNames(modelJson, 1);
         Assert.assertEquals(dirNames, Arrays.asList("wso2am_publisher", "wso2am_publisher,database", "wso2am_publisher,wso2am_store"));
     }
 
@@ -106,7 +106,7 @@ public class GenerateTest {
         JSONObject modelJson = new JSONObject(model);
         List<String> dirNames;
 
-        dirNames = Generate.toKnowledgeBaseNames(modelJson, 0);
+        dirNames = Generate.getKnowledgeBaseNames(modelJson, 0);
         Assert.assertEquals(dirNames, Arrays.asList("database", "database,wso2am_publisher_store"));
     }
 
@@ -117,7 +117,7 @@ public class GenerateTest {
         JSONObject modelJson = new JSONObject(model);
         List<String> dirNames;
 
-        dirNames = Generate.toKnowledgeBaseNames(modelJson, 0);
+        dirNames = Generate.getKnowledgeBaseNames(modelJson, 0);
         Assert.assertEquals(dirNames, Arrays.asList("wso2am_publisher_store", 
                 "wso2am_publisher_store,wso2am_keymanager_traffic-manager"));
     }
@@ -129,7 +129,7 @@ public class GenerateTest {
         JSONObject modelJson = new JSONObject(model);
         List<String> dirNames;
 
-        dirNames = Generate.toKnowledgeBaseNames(modelJson, 1);
+        dirNames = Generate.getKnowledgeBaseNames(modelJson, 1);
         Assert.assertEquals(dirNames, Arrays.asList("wso2am_keymanager_traffic-manager",
                 "wso2am_keymanager_traffic-manager,wso2am_publisher_store"));
     }
@@ -141,14 +141,14 @@ public class GenerateTest {
         JSONObject modelJson = new JSONObject(model);
         List<String> dirNames;
 
-        dirNames = Generate.toKnowledgeBaseNames(modelJson, 0);
+        dirNames = Generate.getKnowledgeBaseNames(modelJson, 0);
         Assert.assertEquals(dirNames, Arrays.asList("wso2am_publisher"));
     }
 
     @Test
     public void testReadJSONModel() throws Exception {
         String modelPath = "src/resources/model.json";
-        JSONObject model = Generate.getJSONModel(modelPath);
+        JSONObject model = Generate.readJSONFile(modelPath);
 
         JSONArray services = model.getJSONArray("services");
         Assert.assertNotNull(services);
