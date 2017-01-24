@@ -32,12 +32,28 @@ import java.util.logging.Logger;
 
 /**
  * Main class to generate docker compose artifacts form model json
- * @author Vihanga Liyanage <WSO2.Inc>
+ * @author Vihanga Liyanage  <vihanga@wso2.com>
  */
 public class Generate {
+    
+    /**
+     * Extension of the diff files
+     */
     private static final String DIFF = ".diff";
+    
+    /**
+     * Directory location where the original WSO2 products can be fine
+     */
     private static final String CLEAN_PRODUCT_LOCATION = "/home/vihanga/Downloads/Compare/";
+    
+    /**
+     * Directory location of the knowledge base
+     */
     private static final String KNOWLEDGE_BASE_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/knowledge-base/";
+    
+    /**
+     * Directory location where the final configuration files will be created
+     */
     private static final String TARGET_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
 
     /**
@@ -47,6 +63,7 @@ public class Generate {
      * @param xmlString XML of the graph
      * @param autoGen boolean indicator to specify auto generation of links
      * @return URI to the created zip archive
+     * @throws IOException
      */
     public static String getConfigFromXML(String xmlString, boolean autoGen) throws IOException {
 
@@ -57,24 +74,8 @@ public class Generate {
         }
 
         //Deleting target dir
-        Path rootPath = Paths.get(TARGET_LOCATION).getParent();
-        try {
-            Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.delete(file);
-                    return FileVisitResult.CONTINUE;
-                }
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-            System.out.println(rootPath + " Deleted successfully!");
-        } catch(IOException e){
-            System.out.println(rootPath + " Directory not found!");
-        }
+        if (!deleteDir(TARGET_LOCATION))
+            return null;
 
         //Get JSON model
         List<String> fileNames = new ArrayList<>();
@@ -83,7 +84,7 @@ public class Generate {
         //Get all file names
         JSONArray services = model.getJSONArray("services");
         for (int i = 0; i < services.length(); i ++) {
-            fileNames.addAll(toKnowledgeBaseNames(model, i));
+            fileNames.addAll(getKnowledgeBaseNames(model, i));
         }
 
         //Creating docker compose yaml file
@@ -136,7 +137,7 @@ public class Generate {
                 String cleanDir = CLEAN_PRODUCT_LOCATION + product;
 
                 if (Files.exists(Paths.get(diffDir))) {
-                    apply(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
+                    initApplyDiff(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
                 }
             }
 
@@ -162,168 +163,36 @@ public class Generate {
         zip(TARGET_LOCATION);
         return "out/dockerConfig.zip";
     }
-
+    
     /**
-     * Get a JSON model and return a complete set of knowledge-base folders
-     * @param modelPath path to the JSON model file
-     * @return created JSON object by reading the file
+     * Delete a given directory recursively 
+     * @param targetLocation Directory location to delete
      */
-    static List<String> getAllKnowledgeBaseNames(String modelPath) {
-        List<String> fileNames = new ArrayList<>();
-        JSONObject model = getJSONModel(modelPath);
-        JSONArray services = model.getJSONArray("services");
-        for (int i = 0; i < services.length(); i ++) {
-            fileNames.addAll(toKnowledgeBaseNames(model, i));
-        }
-        return fileNames;
-    }
-
-    /**
-     * Read the json model file and return a json object
-     * @param modelPath path to the JSON model file
-     * @return created JSON object by reading the file
-     */
-    static JSONObject getJSONModel(String modelPath){
-        String modelStr = null;
+    private static boolean deleteDir(String targetLocation) {
+        Path rootPath = Paths.get(targetLocation).getParent();
         try {
-            modelStr = new String(Files.readAllBytes(Paths.get(modelPath)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return new JSONObject(modelStr);
-    }
-
-    /**
-     * Return a set of knowledge-base folders for a specific service.
-     * @param model JSON object with services and links
-     * @param serviceID Integer id of the service
-     * @return list of dir names that can be looked up in KB
-     */
-    static List<String> toKnowledgeBaseNames(JSONObject model, int serviceID) {
-        List<String> fileNames = new ArrayList<>();
-        JSONArray services = model.getJSONArray("services");
-
-        JSONObject service = services.getJSONObject(serviceID);
-        String type = service.getString("type");
-
-        String serviceName = type;
-        //Load balancer node will be ignored
-        if (!"load-balancer".equals(type))
-        {
-            //Resolve self object
-            JSONArray profiles = service.optJSONArray("profiles");
-            if (profiles != null) {
-                if (profiles.length() > 0) {
-                    for (int k = 0; k < profiles.length(); k++) {
-                        serviceName += "_" + profiles.getString(k);
-                    }
+            Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
                 }
-            }
-            fileNames.add(serviceName);
-
-            //Resolve links
-            JSONArray links = model.getJSONArray("links");
-            if (null != links) {
-                for (int j = 0; j < links.length(); j++) {
-                    JSONObject link = links.getJSONObject(j);
-                    int sourceID = link.getInt("source");
-                    int targetID = link.getInt("target");
-                    JSONObject linkedService = null;
-                    if (sourceID == serviceID) {
-                        //links start from this service
-                        linkedService = services.getJSONObject(targetID);
-                    } else if (targetID == serviceID) {
-                        //links end from this service
-                        linkedService = services.getJSONObject(sourceID);
-                    }
-
-                    if (linkedService != null) {
-                        String linkedType = linkedService.getString("type");
-                        if (!"load-balancer".equals(linkedType)) {
-                            JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
-                            //Add links to fileNames list -> Eg: wso2am_publisher,database
-                            if (linkedServiceProfiles != null && linkedServiceProfiles.length() > 0) {
-                                for (int k = 0; k < linkedServiceProfiles.length(); k++) {
-                                    linkedType += "_" + linkedServiceProfiles.getString(k);
-                                }
-                            }
-                            fileNames.add(serviceName + "," + linkedType);
-                        }
-                    }
-                }
-            }
-        }
-
-        Collections.sort(fileNames);
-        return fileNames;
-    }
-
-    /**
-     * Call the applyDiffNative on each file of a diff directory by traveling recursively
-     * @param level Integer level to initiate recursive call
-     * @param diffDir Path to diff directory
-     * @param cleanDir Path to clean directory
-     * @param targetDir Path to target directory
-     */
-    private static void apply(int level, Path diffDir, Path cleanDir, Path targetDir) {
-        try {
-            Files.list(diffDir).forEach(file -> {
-                Path fileName = file.getFileName();
-                if (Files.isDirectory(file)) {
-                    Path subCleanDir;
-                    if(level==0 && fileName.toString().equals("carbon")){
-                        subCleanDir = cleanDir;
-                    }else{
-                        subCleanDir= cleanDir.resolve(fileName);
-                    }
-                    apply(level + 1, file, subCleanDir, targetDir.resolve(fileName));
-                } else {
-                    String fileNameStr = fileName.toString();
-                    if (fileNameStr.endsWith(DIFF)) {
-                        String fileNameWithoutDiff = fileNameStr.substring(0, fileNameStr.length() - DIFF.length());
-                        applyDiffNative(file, cleanDir.resolve(fileNameWithoutDiff), targetDir.resolve(fileNameWithoutDiff));
-
-                    } else if (!fileNameStr.endsWith("gitignore") && !fileNameStr.endsWith(".yml")){
-                        try {
-                            Files.createDirectories(targetDir);
-                            Files.copy(file, targetDir.resolve(fileNameStr));
-                            System.out.println("|\tcp " + file + " " + targetDir.resolve(fileNameStr));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
                 }
             });
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(rootPath + " Deleted successfully!");
+            return true;
+        } catch(IOException e){
+            System.out.println(rootPath + " Directory not found!");
+            return false;
         }
     }
-
+    
     /**
-     * Apply a diff to a single file using linux patch command
-     * @param diffFile Path to diff file
-     * @param cleanFile Path to clean file
-     * @param targetDir Path to target directory
-     */
-    private static void applyDiffNative(Path diffFile, Path cleanFile, Path targetDir) {
-        try {
-            Files.createDirectories(targetDir.getParent());
-            if (!Files.isRegularFile(targetDir)) {
-                Files.copy(cleanFile, targetDir);
-            }
-            System.out.println("|\tpatch -f " + targetDir + " < " + diffFile);
-            Process process = new ProcessBuilder("patch", "-f", targetDir.toString(), diffFile.toString()).start();
-
-            process.waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Process a given mxGraph graph XML string and generate the JSON model<bR>
+     * Process a given mxGraph graph XML string and generate the JSON model<br>
      * If autoGen is passed true, links in the XML will be ignored and 
      * consider n^2 connections to build the JSON model
      * @param xmlString XML of the graph
@@ -470,6 +339,137 @@ public class Generate {
     }
 
     /**
+     * Return a set of knowledge-base folders for a specific service.
+     * @param model JSON object with services and links
+     * @param serviceID Integer id of the service
+     * @return list of dir names that can be looked up in KB
+     */
+    static List<String> getKnowledgeBaseNames(JSONObject model, int serviceID) {
+        List<String> fileNames = new ArrayList<>();
+        JSONArray services = model.getJSONArray("services");
+
+        JSONObject service = services.getJSONObject(serviceID);
+        String type = service.getString("type");
+
+        String serviceName = type;
+        //Load balancer node will be ignored
+        if (!"load-balancer".equals(type))
+        {
+            //Resolve self object
+            JSONArray profiles = service.optJSONArray("profiles");
+            if (profiles != null) {
+                if (profiles.length() > 0) {
+                    //Using a buffer for better performance 
+                    StringBuffer buf = new StringBuffer();
+                    for (int k = 0; k < profiles.length(); k++) {
+                        buf.append("_" + profiles.getString(k));
+                    }
+                    serviceName += buf.toString();
+                }
+            }
+            fileNames.add(serviceName);
+
+            //Resolve links
+            JSONArray links = model.getJSONArray("links");
+            if (null != links) {
+                for (int j = 0; j < links.length(); j++) {
+                    JSONObject link = links.getJSONObject(j);
+                    int sourceID = link.getInt("source");
+                    int targetID = link.getInt("target");
+                    JSONObject linkedService = null;
+                    if (sourceID == serviceID) {
+                        //links start from this service
+                        linkedService = services.getJSONObject(targetID);
+                    } else if (targetID == serviceID) {
+                        //links end from this service
+                        linkedService = services.getJSONObject(sourceID);
+                    }
+
+                    if (linkedService != null) {
+                        String linkedType = linkedService.getString("type");
+                        if (!"load-balancer".equals(linkedType)) {
+                            JSONArray linkedServiceProfiles = linkedService.optJSONArray("profiles");
+                            //Add links to fileNames list -> Eg: wso2am_publisher,database
+                            if (linkedServiceProfiles != null && linkedServiceProfiles.length() > 0) {
+                                for (int k = 0; k < linkedServiceProfiles.length(); k++) {
+                                    linkedType += "_" + linkedServiceProfiles.getString(k);
+                                }
+                            }
+                            fileNames.add(serviceName + "," + linkedType);
+                        }
+                    }
+                }
+            }
+        }
+
+        Collections.sort(fileNames);
+        return fileNames;
+    }
+
+    /**
+     * Call the applyDiff on each file of a diff directory by traveling recursively
+     * @param level Integer level to initiate recursive call
+     * @param diffDir Path to diff directory
+     * @param cleanDir Path to clean directory
+     * @param targetDir Path to target directory
+     */
+    private static void initApplyDiff(int level, Path diffDir, Path cleanDir, Path targetDir) {
+        try {
+            Files.list(diffDir).forEach(file -> {
+                Path fileName = file.getFileName();
+                if (Files.isDirectory(file)) {
+                    Path subCleanDir;
+                    if(level==0 && fileName.toString().equals("carbon")){
+                        subCleanDir = cleanDir;
+                    }else{
+                        subCleanDir= cleanDir.resolve(fileName);
+                    }
+                    initApplyDiff(level + 1, file, subCleanDir, targetDir.resolve(fileName));
+                } else {
+                    String fileNameStr = fileName.toString();
+                    if (fileNameStr.endsWith(DIFF)) {
+                        String fileNameWithoutDiff = fileNameStr.substring(0, fileNameStr.length() - DIFF.length());
+                        applyDiff(file, cleanDir.resolve(fileNameWithoutDiff), targetDir.resolve(fileNameWithoutDiff));
+
+                    } else if (!fileNameStr.endsWith("gitignore") && !fileNameStr.endsWith(".yml")){
+                        try {
+                            Files.createDirectories(targetDir);
+                            Files.copy(file, targetDir.resolve(fileNameStr));
+                            System.out.println("|\tcp " + file + " " + targetDir.resolve(fileNameStr));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Apply a diff to a single file using linux patch command
+     * @param diffFile Path to diff file
+     * @param cleanFile Path to clean file
+     * @param targetDir Path to target directory
+     */
+    private static void applyDiff(Path diffFile, Path cleanFile, Path targetDir) {
+        try {
+            Files.createDirectories(targetDir.getParent());
+            if (!Files.isRegularFile(targetDir)) {
+                Files.copy(cleanFile, targetDir);
+            }
+            System.out.println("|\tpatch -f " + targetDir + " < " + diffFile);
+            Process process = new ProcessBuilder("patch", "-f", targetDir.toString(), diffFile.toString()).start();
+
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Append new entry to docker compose yml file
      * @param partFile Path to the compose file part relevant to the service
      * @param dirname string to replace the $dirname in compose part file. i.e docker service name
@@ -513,6 +513,37 @@ public class Generate {
         }
 
         return zipFile;
+    }
+    
+    /**
+     * Get a JSON model and return a complete set of knowledge-base folders
+     * @param modelPath path to the JSON model file
+     * @return created JSON object by reading the file
+     */
+    static List<String> getAllKnowledgeBaseNames(String modelPath) {
+        List<String> fileNames = new ArrayList<>();
+        JSONObject model = readJSONFile(modelPath);
+        JSONArray services = model.getJSONArray("services");
+        for (int i = 0; i < services.length(); i ++) {
+            fileNames.addAll(getKnowledgeBaseNames(model, i));
+        }
+        return fileNames;
+    }
+
+    /**
+     * Read a .json file and return a json object
+     * @param modelPath path to the JSON model file
+     * @return created JSON object by reading the file
+     */
+    static JSONObject readJSONFile(String modelPath){
+        String modelStr = null;
+        try {
+            modelStr = new String(Files.readAllBytes(Paths.get(modelPath)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new JSONObject(modelStr);
     }
     
     /*
