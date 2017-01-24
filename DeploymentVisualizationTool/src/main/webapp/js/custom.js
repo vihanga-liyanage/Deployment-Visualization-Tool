@@ -429,6 +429,25 @@ var clearLinks = function (editor)
 };
 
 /**
+ * Function: confirmShowLoadDiagramDialog
+ *
+ * Prompt a confirmation if any graph is exists on the graph view
+ * If confirmed, showLoadDiagramDialog() will be called.
+ *
+ * Parameters:
+ *
+ * editor - mxEditor object to get the graph
+ */
+var confirmShowLoadDiagramDialog = function (editor) {
+    if (editor.graph.model.cells[2] == null) {
+        showLoadDiagramDialog(editor);
+    } else {
+        if (confirm("Current graph will be deleted. Continue anyway?"))
+            showLoadDiagramDialog(editor);
+    }
+};
+
+/**
  * Function: showLoadDiagramDialog
  *
  * Show a Jquery dialog box to select a predefine diagram to load
