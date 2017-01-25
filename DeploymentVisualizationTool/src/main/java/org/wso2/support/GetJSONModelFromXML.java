@@ -20,6 +20,8 @@ package org.wso2.support;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -46,6 +48,7 @@ public class GetJSONModelFromXML extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
        
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Processing request...");
         String xml = request.getParameter("xml");
         PrintWriter out = response.getWriter();
         System.out.println("servelete - GetJSONModelFromXML");

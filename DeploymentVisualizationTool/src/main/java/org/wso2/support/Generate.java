@@ -18,12 +18,14 @@
 
 package org.wso2.support;
 
+import java.io.BufferedReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
@@ -31,7 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Main class to generate docker compose artifacts form model json
+ * Main class to generate docker compose artifacts form model JSON
  * @author Vihanga Liyanage  <vihanga@wso2.com>
  */
 public class Generate {
@@ -49,12 +51,12 @@ public class Generate {
     /**
      * Directory location of the knowledge base
      */
-    private static final String KNOWLEDGE_BASE_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/knowledge-base/";
+    private static final String KNOWLEDGE_BASE_LOCATION = "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/knowledge-base/";
     
     /**
      * Directory location where the final configuration files will be created
      */
-    private static final String TARGET_LOCATION = "/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
+    private static final String TARGET_LOCATION = "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
 
     /**
      * Generate and compress a complete docker configurations folder for a given graph,
@@ -67,7 +69,10 @@ public class Generate {
      */
     public static String getConfigFromXML(String xmlString, boolean autoGen) throws IOException {
 
-        System.out.println("\n\n\n=====================\n=====================\n=====================\n");
+        Logger.getLogger(Generate.class.getName()).log(Level.INFO, "\n=====================\n");
+        
+        Logger.getLogger(Generate.class.getName()).log(Level.INFO, System.getProperty("user.dir"));
+        
 
         if (xmlString == null) {
             return "";
@@ -98,7 +103,7 @@ public class Generate {
         for (int i=0; i<fileNames.size(); i++) {
             if (fileNames.get(i).startsWith("svnrepo")) {
                 try {
-                    System.out.println("------"+fileNames.get(i));
+                    Logger.getLogger(Generate.class.getName()).log(Level.INFO, "------"+fileNames.get(i));
                     String svnLine = "  svnrepo:\n    image: docker.wso2.com/svnrepo\n";
                     Files.write(composeFile, svnLine.getBytes(), StandardOpenOption.APPEND);
                     break;
@@ -115,7 +120,7 @@ public class Generate {
             if (!fileName.startsWith("svnrepo") && !fileName.startsWith("load-balancer")) {
                 String diffDir = KNOWLEDGE_BASE_LOCATION + fileName, product;
 
-                System.out.println(fileName);
+                Logger.getLogger(Generate.class.getName()).log(Level.INFO, fileName);
                 //Get first service if it's a pair
                 if (fileName.contains(",")) {
                     fileName = fileName.split(",")[0];
@@ -156,7 +161,7 @@ public class Generate {
                 }
             });
         } catch(IOException e){
-            e.printStackTrace();
+            Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, e);
         }
 
         //Compressing directory and returning file path
@@ -183,10 +188,10 @@ public class Generate {
                     return FileVisitResult.CONTINUE;
                 }
             });
-            System.out.println(rootPath + " Deleted successfully!");
+            Logger.getLogger(Generate.class.getName()).log(Level.INFO, rootPath + " Deleted successfully!");
             return true;
         } catch(IOException e){
-            System.out.println(rootPath + " Directory not found!");
+            Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, rootPath + " Directory not found!", e);
             return false;
         }
     }
@@ -199,7 +204,6 @@ public class Generate {
      * @param autoGen boolean indicator to auto generate links
      */
     static JSONObject getJSONFromXML(String xmlString, boolean autoGen) {
-        System.out.println("Generate.getJSONFromXML...");
         JSONObject temp = XML.toJSONObject(xmlString);
 
         JSONObject result = new JSONObject();
@@ -435,16 +439,16 @@ public class Generate {
                         try {
                             Files.createDirectories(targetDir);
                             Files.copy(file, targetDir.resolve(fileNameStr));
-                            System.out.println("|\tcp " + file + " " + targetDir.resolve(fileNameStr));
+                            Logger.getLogger(Generate.class.getName()).log(Level.INFO, "|\tcp " + file + " " + targetDir.resolve(fileNameStr));
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, e);
                         }
                     }
                 }
             });
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -460,12 +464,12 @@ public class Generate {
             if (!Files.isRegularFile(targetDir)) {
                 Files.copy(cleanFile, targetDir);
             }
-            System.out.println("|\tpatch -f " + targetDir + " < " + diffFile);
+            Logger.getLogger(Generate.class.getName()).log(Level.INFO, "|\tpatch -f " + targetDir + " < " + diffFile);
             Process process = new ProcessBuilder("patch", "-f", targetDir.toString(), diffFile.toString()).start();
 
             process.waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -488,7 +492,7 @@ public class Generate {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -498,21 +502,26 @@ public class Generate {
      * @return URI to the created zip archive
      */
     private static String zip(String targetLocation) {
-
-        String zipFile = targetLocation.substring(0, targetLocation.length()-1) + ".zip";
+        
+        String parent = Paths.get(targetLocation).getParent().toString();
+        String zipFile = "dockerConfig.zip";
+        String zipFileURI = parent + zipFile;
 
         try {
-            System.out.println("zip -r " + zipFile + " " + ".");
             Process process = null;
-            ProcessBuilder p = new ProcessBuilder("zip", "-r", zipFile, ".");
+            Logger.getLogger(Generate.class.getName()).log(Level.INFO, "zip -r " + "../" + zipFile + " " + targetLocation);
+            ProcessBuilder p = new ProcessBuilder("zip", "-r", "../" + zipFile, ".");
+            
+            //Set command executing directory
             p.directory(new File(targetLocation));
             process = p.start();
+            
             process.waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, e);
         }
 
-        return zipFile;
+        return zipFileURI;
     }
     
     /**
@@ -540,7 +549,7 @@ public class Generate {
         try {
             modelStr = new String(Files.readAllBytes(Paths.get(modelPath)));
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, e);
         }
 
         return new JSONObject(modelStr);

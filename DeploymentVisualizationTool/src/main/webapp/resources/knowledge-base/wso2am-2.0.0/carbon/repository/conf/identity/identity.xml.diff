@@ -1,0 +1,18 @@
+@@ -25,7 +25,7 @@
+             required to skip schema initialization during the server start up, set the
+             following property to "true". -->
+         <!-- <SkipDBSchemaCreation>false</SkipDBSchemaCreation> -->
+-        <!--SessionDataPersist>
++        <SessionDataPersist>
+             <Enable>true</Enable>
+             <Temporary>false</Temporary>
+             <PoolSize>100</PoolSize>
+@@ -38,7 +38,7 @@
+                 <Enable>true</Enable>
+                 <CleanUpPeriod>720</CleanUpPeriod>
+             </OperationDataCleanUp>
+-        </SessionDataPersist-->
++        </SessionDataPersist>
+     </JDBCPersistenceManager>
+     <!-- Time configurations are in minutes -->
+     <TimeConfig>

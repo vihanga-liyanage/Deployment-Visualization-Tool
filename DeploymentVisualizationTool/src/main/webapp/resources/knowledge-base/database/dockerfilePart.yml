@@ -1,0 +1,6 @@
+  $dirname:
+    build:
+      context: .
+      dockerfile: $dirname/Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: root

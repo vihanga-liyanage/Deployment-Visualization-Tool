@@ -344,7 +344,8 @@
                 //add listener for delete cell event to update versionData
                 editor.graph.addListener(mxEvent.REMOVE_CELLS, function (sender, me)
                 {
-                    updateVersionData(sender, me);
+                    if (me.properties.cells.length > 0)
+                        updateVersionData(sender, me);
                 });
 
                 //Listener for connections - change edge color according to source or target
