@@ -18,14 +18,12 @@
 
 package org.wso2.support;
 
-import java.io.BufferedReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
@@ -39,25 +37,30 @@ import java.util.logging.Logger;
 public class Generate {
     
     /**
-     * Extension of the diff files
+     * Extension of the diff files.
      */
-    private static final String DIFF = ".diff";
+    private static String DIFF;
     
     /**
-     * Directory location where the original WSO2 products can be fine
+     * Directory location where the original WSO2 products can be fine.
      */
-    private static final String CLEAN_PRODUCT_LOCATION = "/home/vihanga/Downloads/Compare/";
+    private static String CLEAN_PRODUCT_LOCATION;
     
     /**
      * Directory location of the knowledge base
      */
-    private static final String KNOWLEDGE_BASE_LOCATION = "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/knowledge-base/";
+    private static String KNOWLEDGE_BASE_LOCATION;
     
     /**
-     * Directory location where the final configuration files will be created
+     * Directory location where the final configuration files will be created.
      */
-    private static final String TARGET_LOCATION = "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/";
+    private static String TARGET_LOCATION;
 
+    /**
+     * Boolean indicator that shows all required variables are initialized properly.
+     */
+    private static boolean IS_INIT_DONE = false;
+    
     /**
      * Generate and compress a complete docker configurations folder for a given graph,
      * by reading the XML generated in the  source view of the graph UI. <br>If gen is true, links in
@@ -71,8 +74,13 @@ public class Generate {
 
         Logger.getLogger(Generate.class.getName()).log(Level.INFO, "\n=====================\n");
         
-        Logger.getLogger(Generate.class.getName()).log(Level.INFO, System.getProperty("user.dir"));
-        
+        //Initializing variables if not already done
+        if (!IS_INIT_DONE) {
+            if (!initSystem()) {
+                Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, "Unable to initialize. Terminating all processes...");
+                return "";
+            }
+        }        
 
         if (xmlString == null) {
             return "";
@@ -167,6 +175,36 @@ public class Generate {
         //Compressing directory and returning file path
         zip(TARGET_LOCATION);
         return "out/dockerConfig.zip";
+    }
+    
+    /**
+     * Initialize system variables by reading the config.json file
+     * @return Boolean status, true if success, false otherwise
+     */
+    public static boolean initSystem() {
+        Logger.getLogger(Generate.class.getName()).log(Level.INFO, "Initializing variables");
+        Path path = Paths.get("webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/metadata/config.json");
+        try {
+            //Reading file and creating JSON object
+            List<String> contents = Files.readAllLines(path);
+            String configString = "";
+            for (String s:contents) {
+                configString += s;
+            }
+            JSONObject config = new JSONObject(configString);
+            //Setting variables
+            DIFF = config.get("DIFF").toString();
+            CLEAN_PRODUCT_LOCATION = config.get("CLEAN_PRODUCT_LOCATION").toString();
+            KNOWLEDGE_BASE_LOCATION = config.get("KNOWLEDGE_BASE_LOCATION").toString();
+            TARGET_LOCATION = config.get("TARGET_LOCATION").toString();
+            IS_INIT_DONE = true;
+            
+            return true;
+        } catch (IOException ex) {
+            Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, ex);
+            IS_INIT_DONE = false;
+            return false;
+        }   
     }
     
     /**

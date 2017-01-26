@@ -419,4 +419,9 @@ public class GenerateTest {
         Path out = Paths.get("out.yml");
         Generate.addToComposeFile(partFile, "database", out);
     }
+    
+    @Test
+    public void testinitSystem() throws Exception {
+        //Generate.initSystem();
+    }
 }
