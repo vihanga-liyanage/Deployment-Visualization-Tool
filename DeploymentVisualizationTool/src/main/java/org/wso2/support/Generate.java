@@ -55,11 +55,25 @@ public class Generate {
      * Directory location where the final configuration files will be created.
      */
     private static String TARGET_LOCATION;
+    
+    /**
+     * Define the maximum concurrent hits.
+     * This number also defines the number of separate configuration folders 
+     * that can exists at a time in the server. Each folder may take up
+     * to 10 MB in size depending on the graph. Set this value considering the 
+     * space available in the server.
+     */
+    private static int MAX_CONCURRENT_HITS;
 
     /**
      * Boolean indicator that shows all required variables are initialized properly.
      */
     private static boolean IS_INIT_DONE = false;
+    
+    /**
+     * Used to change the out put directory on each generation to allow concurrent access.
+     */
+    private static int nextOut = 1;
     
     /**
      * Generate and compress a complete docker configurations folder for a given graph,
@@ -78,17 +92,20 @@ public class Generate {
         if (!IS_INIT_DONE) {
             if (!initSystem()) {
                 Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, "Unable to initialize. Terminating all processes...");
-                return "";
+                return null;
             }
         }        
 
+        //Delete old folders
+        if (nextOut > MAX_CONCURRENT_HITS)
+            clearGarbage();
+        
         if (xmlString == null) {
             return "";
         }
 
-        //Deleting target dir
-        if (!deleteDir(TARGET_LOCATION))
-            return null;
+        //Setting custom target directory
+        String targetLocation = TARGET_LOCATION + (nextOut) + "/";
 
         //Get JSON model
         List<String> fileNames = new ArrayList<>();
@@ -101,9 +118,9 @@ public class Generate {
         }
 
         //Creating docker compose yaml file
-        Path composeFile = Paths.get(TARGET_LOCATION + "/docker-compose.yml");
+        Path composeFile = Paths.get(targetLocation + "/docker-compose.yml");
         String line = "version: '2'\nservices:\n";
-        Files.createDirectories(Paths.get(TARGET_LOCATION));
+        Files.createDirectories(Paths.get(targetLocation));
         Files.createFile(composeFile);
         Files.write(composeFile, line.getBytes());
 
@@ -137,7 +154,7 @@ public class Generate {
                     addToComposeFile(Paths.get(diffDir + "/dockerfilePart.yml"), fileName, composeFile);
                 }
 
-                String targetDir = TARGET_LOCATION + fileName;
+                String targetDir = targetLocation + fileName;
 
                 //Separate product and profile
                 if (fileName.contains("_")) {
@@ -153,12 +170,11 @@ public class Generate {
                     initApplyDiff(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
                 }
             }
-
         });
 
         //Coping artifacts folder
         Path sourcePath = Paths.get(CLEAN_PRODUCT_LOCATION + "/artifacts");
-        Path targetPath = Paths.get(TARGET_LOCATION + "/artifacts/");
+        Path targetPath = Paths.get(targetLocation + "/artifacts/");
         Files.createDirectory(targetPath);
         try {
             Files.walkFileTree(sourcePath, new SimpleFileVisitor<Path>() {
@@ -173,8 +189,8 @@ public class Generate {
         }
 
         //Compressing directory and returning file path
-        zip(TARGET_LOCATION);
-        return "out/dockerConfig.zip";
+        zip(targetLocation);
+        return "out/" + (nextOut++) + "/dockerConfig.zip";
     }
     
     /**
@@ -197,6 +213,7 @@ public class Generate {
             CLEAN_PRODUCT_LOCATION = config.get("CLEAN_PRODUCT_LOCATION").toString();
             KNOWLEDGE_BASE_LOCATION = config.get("KNOWLEDGE_BASE_LOCATION").toString();
             TARGET_LOCATION = config.get("TARGET_LOCATION").toString();
+            MAX_CONCURRENT_HITS = Integer.parseInt(config.get("MAX_CONCURRENT_HITS").toString());
             IS_INIT_DONE = true;
             
             return true;
@@ -207,6 +224,15 @@ public class Generate {
         }   
     }
     
+    /**
+     * Delete old configuration folders and reset nextOut
+     */
+    private static void clearGarbage() {
+        for (int i=1; i<MAX_CONCURRENT_HITS; i++) {
+            deleteDir(TARGET_LOCATION + i + "/");
+        }
+        nextOut = 1;
+    }
     /**
      * Delete a given directory recursively 
      * @param targetLocation Directory location to delete
@@ -547,8 +573,8 @@ public class Generate {
 
         try {
             Process process = null;
-            Logger.getLogger(Generate.class.getName()).log(Level.INFO, "zip -r " + "../" + zipFile + " " + targetLocation);
-            ProcessBuilder p = new ProcessBuilder("zip", "-r", "../" + zipFile, ".");
+            Logger.getLogger(Generate.class.getName()).log(Level.INFO, "zip -r " + zipFile + " " + targetLocation);
+            ProcessBuilder p = new ProcessBuilder("zip", "-r", zipFile, ".");
             
             //Set command executing directory
             p.directory(new File(targetLocation));

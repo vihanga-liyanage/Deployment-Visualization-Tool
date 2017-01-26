@@ -2,5 +2,6 @@
     "DIFF": ".diff",
     "CLEAN_PRODUCT_LOCATION": "/home/vihanga/Downloads/Compare/",
     "KNOWLEDGE_BASE_LOCATION": "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/knowledge-base/",
-    "TARGET_LOCATION": "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/out/dockerConfig/"
+    "TARGET_LOCATION": "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/out/",
+    "MAX_CONCURRENT_HITS": "5"
 }
