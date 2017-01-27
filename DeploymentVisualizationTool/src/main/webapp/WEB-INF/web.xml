@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet>
+        <servlet-name>ClearGarbage</servlet-name>
+        <servlet-class>org.wso2.support.ClearGarbage</servlet-class>
+        <servlet-name>GetConfigFromXMLAutoGenLinks</servlet-name>
+        <servlet-class>org.wso2.support.GetConfigFromXMLAutoGenLinks</servlet-class>
+        <servlet-name>GetConfigFromXML</servlet-name>
+        <servlet-class>org.wso2.support.GetConfigFromXML</servlet-class>
+        <servlet-name>GetJSONModelFromXML</servlet-name>
+        <servlet-class>org.wso2.support.GetJSONModelFromXML</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClearGarbage</servlet-name>
+        <url-pattern>/ClearGarbage</url-pattern>
+        <servlet-name>GetConfigFromXML</servlet-name>
+        <url-pattern>/GetConfigFromXML</url-pattern>
+        <servlet-name>GetConfigFromXMLAutoGenLinks</servlet-name>
+        <url-pattern>/GetConfigFromXMLAutoGenLinks</url-pattern>
+        <servlet-name>GetJSONModelFromXML</servlet-name>
+        <url-pattern>/GetJSONModelFromXML</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>

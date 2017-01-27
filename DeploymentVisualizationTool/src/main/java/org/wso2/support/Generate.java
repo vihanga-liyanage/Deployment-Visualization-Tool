@@ -57,23 +57,20 @@ public class Generate {
     private static String TARGET_LOCATION;
     
     /**
-     * Define the maximum concurrent hits.
-     * This number also defines the number of separate configuration folders 
-     * that can exists at a time in the server. Each folder may take up
-     * to 10 MB in size depending on the graph. Set this value considering the 
-     * space available in the server.
+     * Used to change the out put directory on each generation to allow concurrent access.
      */
-    private static int MAX_CONCURRENT_HITS;
+    private static int nextOut = 1;
+    
+    /**
+     * Define the maximum number of nextOut.
+     * Should be a large integer.
+     */
+    private static int MAX_NEXT_OUT;
 
     /**
      * Boolean indicator that shows all required variables are initialized properly.
      */
     private static boolean IS_INIT_DONE = false;
-    
-    /**
-     * Used to change the out put directory on each generation to allow concurrent access.
-     */
-    private static int nextOut = 1;
     
     /**
      * Generate and compress a complete docker configurations folder for a given graph,
@@ -96,9 +93,9 @@ public class Generate {
             }
         }        
 
-        //Delete old folders
-        if (nextOut > MAX_CONCURRENT_HITS)
-            clearGarbage();
+        //Reset nextOut 
+        if (nextOut > MAX_NEXT_OUT)
+            nextOut = 1;
         
         if (xmlString == null) {
             return "";
@@ -190,7 +187,7 @@ public class Generate {
 
         //Compressing directory and returning file path
         zip(targetLocation);
-        return "out/" + (nextOut++) + "/dockerConfig.zip";
+        return "" + (nextOut++);
     }
     
     /**
@@ -199,7 +196,8 @@ public class Generate {
      */
     public static boolean initSystem() {
         Logger.getLogger(Generate.class.getName()).log(Level.INFO, "Initializing variables");
-        Path path = Paths.get("webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/metadata/config.json");
+//        Path path = Paths.get("webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/metadata/config.json");
+        Path path = Paths.get("/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/metadata/config.json");
         try {
             //Reading file and creating JSON object
             List<String> contents = Files.readAllLines(path);
@@ -213,7 +211,11 @@ public class Generate {
             CLEAN_PRODUCT_LOCATION = config.get("CLEAN_PRODUCT_LOCATION").toString();
             KNOWLEDGE_BASE_LOCATION = config.get("KNOWLEDGE_BASE_LOCATION").toString();
             TARGET_LOCATION = config.get("TARGET_LOCATION").toString();
-            MAX_CONCURRENT_HITS = Integer.parseInt(config.get("MAX_CONCURRENT_HITS").toString());
+            MAX_NEXT_OUT = Integer.parseInt(config.get("MAX_NEXT_OUT").toString());
+            
+            //Clear any left over folders in target
+            deleteDir(TARGET_LOCATION);
+            
             IS_INIT_DONE = true;
             
             return true;
@@ -225,20 +227,24 @@ public class Generate {
     }
     
     /**
-     * Delete old configuration folders and reset nextOut
+     * Delete configuration folders.
+     * @param folders Array of folder IDs.
+     * @return Boolean status
      */
-    private static void clearGarbage() {
-        for (int i=1; i<MAX_CONCURRENT_HITS; i++) {
-            deleteDir(TARGET_LOCATION + i + "/");
+    public static boolean clearGarbage(String[] folders) {
+        boolean status = true;
+        for (String f: folders) {
+            status &= deleteDir(TARGET_LOCATION + f + "/");
         }
-        nextOut = 1;
+        return status;
+//        nextOut = 1;
     }
     /**
      * Delete a given directory recursively 
      * @param targetLocation Directory location to delete
      */
     private static boolean deleteDir(String targetLocation) {
-        Path rootPath = Paths.get(targetLocation).getParent();
+        Path rootPath = Paths.get(targetLocation);
         try {
             Files.walkFileTree(rootPath, new SimpleFileVisitor<Path>() {
                 @Override

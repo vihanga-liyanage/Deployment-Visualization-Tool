@@ -47,22 +47,23 @@ public class GetConfigFromXMLAutoGenLinks extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
        
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Processing request...");
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "GetConfigFromXMLAutoGenLinks Processing request...");
         String xml = request.getParameter("xml");
         PrintWriter out = response.getWriter();
-            
-        if (xml.contains("Image")) {
-            String downloadURL = Generate.getConfigFromXML(xml, true);
-            if (downloadURL == null) {
-                out.write("Something went wrong!");
-            } else {
-                out.write(downloadURL);
-            }
-        } else {
-            out.write("Diagram is empty!");
-        }
         
-        out.flush();
+        if (xml != null) {
+            if (xml.contains("Image")) {
+                String downloadURL = Generate.getConfigFromXML(xml, true);
+                if (downloadURL == null) {
+                    out.write("Something went wrong!");
+                } else {
+                    out.write(downloadURL);
+                }
+            } else {
+                out.write("Diagram is empty!");
+            }
+            out.flush();
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

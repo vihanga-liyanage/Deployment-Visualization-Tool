@@ -652,12 +652,14 @@
             }
 
             window.onbeforeunload = function () {
+                //Delete any generated config folder for the client
+                clearGarbage();
                 return mxResources.get('changesLost');
             };
 
         </script>
     </head>
-    <body onload="mxApplication('config/diagrameditor.xml');" style="background: #f5f5f5b3;">
+    <body onload="mxApplication('config/diagrameditor.xml');" style="background: #f5f5f5b3;" ">
         <div id="page">
             <div id="header">
                 <div id="headerimg">

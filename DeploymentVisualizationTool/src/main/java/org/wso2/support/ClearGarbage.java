@@ -1,21 +1,8 @@
 /*
-*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
-
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package org.wso2.support;
 
 import java.io.IOException;
@@ -23,17 +10,15 @@ import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Vihanga Liyanage  <vihanga@wso2.com>
+ * @author Vihanga Liyanage <WSO2.Inc>
  */
-@WebServlet(name = "GetConfigFromXML", urlPatterns = {"/GetConfigFromXML"})
-public class GetConfigFromXML extends HttpServlet {
+public class ClearGarbage extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,20 +31,15 @@ public class GetConfigFromXML extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "GetConfigFromXML Processing request...");
-        String xml = request.getParameter("xml");
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Clearing garbage...");
+        String[] folders = request.getParameter("folders").split(",");
+        
         PrintWriter out = response.getWriter();
             
-        if (xml.contains("Image")) {
-            String downloadURL = Generate.getConfigFromXML(xml, false);
-            if (downloadURL == null) {
-                out.write("Something went wrong!");
-            } else {
-                out.write(downloadURL);
-            }
+        if (Generate.clearGarbage(folders)) {
+            out.write("Successfully deleted.");
         } else {
-            out.write("Diagram is empty!");
+            out.write("Error!");
         }
         
         out.flush();

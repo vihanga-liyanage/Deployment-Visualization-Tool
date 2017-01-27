@@ -3,5 +3,5 @@
     "CLEAN_PRODUCT_LOCATION": "/home/vihanga/Downloads/Compare/",
     "KNOWLEDGE_BASE_LOCATION": "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/knowledge-base/",
     "TARGET_LOCATION": "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/out/",
-    "MAX_CONCURRENT_HITS": "5"
+    "MAX_NEXT_OUT": "100000"
 }

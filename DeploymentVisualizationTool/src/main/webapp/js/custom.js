@@ -262,8 +262,6 @@ var getConfigurations = function(editor)
     var node = enc.encode(editor.graph.getModel());
     var xml = mxUtils.getPrettyXml(node);
 
-    console.log(xml);
-
     $.post("GetConfigFromXML", {xml:xml}, function(data) {
         window.open(data, '_blank');
     });
@@ -280,18 +278,49 @@ var getConfigurations = function(editor)
  */
 var getConfigurationsAutoGenLinks = function(editor)
 {
-    console.log(editor);
     var enc = new mxCodec();
     var node = enc.encode(editor.graph.getModel());
     var xml = mxUtils.getPrettyXml(node);
 
+    //Make ajax request to back end. Will receive the output folder id as data on success.
     $.post("GetConfigFromXMLAutoGenLinks", {xml:xml}, function(data) {
-        if (data == "Diagram is empty!") {
-            alert(data);
-        } else {
-            window.open(data, '_blank');
+        if(data) {
+            if (isNumeric(data)) {
+                var url = "out/" + data + "/dockerConfig.zip";
+                // Check browser support
+                if (typeof(Storage) !== "undefined") {
+                    // Store folder ids of the client in browser, to clear them later
+                    var oldFolderIds;
+                    if (localStorage.getItem("oldFolderIds")) {
+                        oldFolderIds = localStorage.getItem("oldFolderIds");
+                        oldFolderIds += "," + data;
+                    } else {
+                        oldFolderIds = "" + data;
+                    }
+                    localStorage.setItem("oldFolderIds", oldFolderIds);
+                }
+                window.open(url, '_blank');
+            } else {
+                alert(data);
+            }
         }
     });
+};
+
+/**
+ * Function: isNumeric
+ *
+ * Return true if n is a number
+ *
+ * Parameters:
+ *
+ * n - String to check
+ *
+ * Return: {boolean}
+ */
+var isNumeric = function(n)
+{
+    return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
 /**
@@ -722,6 +751,28 @@ var resetVersionData = function (editor)
         }
     }
 };
+
+/**
+ * Function: clearGarbage
+ *
+ * Make an ajax call to backend to delete any generated folders for the client.
+ * These folder IDs are stored in browser storage when each download request.
+ * Reset the local storage when done.
+ */
+var clearGarbage = function () {
+    // Check browser support
+    if (typeof(Storage) !== "undefined") {
+        if (localStorage.getItem("oldFolderIds")) {
+            //Get folder array to send in ajax call
+            var folders = localStorage.getItem("oldFolderIds");
+            $.post("ClearGarbage", {folders:folders}, function(data) {
+                localStorage.setItem("oldFolderIds", "");
+            });
+        }
+    }
+};
+
+
 
 /**
 * Reverse Engineering code - Need to review
