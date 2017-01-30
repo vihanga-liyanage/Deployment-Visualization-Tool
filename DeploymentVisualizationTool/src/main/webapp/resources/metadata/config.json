@@ -1,6 +1,6 @@
 {
     "DIFF": ".diff",
-    "CLEAN_PRODUCT_LOCATION": "/home/vihanga/Downloads/Compare/",
+    "CLEAN_PRODUCT_LOCATION": "/home/ubuntu/Downloads/clean-products/",
     "KNOWLEDGE_BASE_LOCATION": "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/knowledge-base/",
     "TARGET_LOCATION": "webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/out/",
     "MAX_NEXT_OUT": "100000"

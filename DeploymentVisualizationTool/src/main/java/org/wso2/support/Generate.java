@@ -170,7 +170,7 @@ public class Generate {
         });
 
         //Coping artifacts folder
-        Path sourcePath = Paths.get(CLEAN_PRODUCT_LOCATION + "/artifacts");
+        Path sourcePath = Paths.get(KNOWLEDGE_BASE_LOCATION + "/artifacts");
         Path targetPath = Paths.get(targetLocation + "/artifacts/");
         Files.createDirectory(targetPath);
         try {
@@ -197,7 +197,7 @@ public class Generate {
     public static boolean initSystem() {
         Logger.getLogger(Generate.class.getName()).log(Level.INFO, "Initializing variables");
 //        Path path = Paths.get("webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/metadata/config.json");
-        Path path = Paths.get("/var/www/html/Deployment-Visualization-Tool/DeploymentVisualizationTool/target/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/metadata/config.json");
+        Path path = Paths.get("webapps/DeploymentVisualizationTool-1.0-SNAPSHOT/resources/metadata/config.json");
         try {
             //Reading file and creating JSON object
             List<String> contents = Files.readAllLines(path);
