@@ -85,11 +85,14 @@ public class Generate {
 
         Logger.getLogger(Generate.class.getName()).log(Level.INFO, "\n=====================\n");
         
+        //Variable to store and return any error messages
+        String errorMsg = "";
+        
         //Initializing variables if not already done
         if (!IS_INIT_DONE) {
             if (!initSystem()) {
                 Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, "Unable to initialize. Terminating all processes...");
-                return null;
+                return "Unable to initialize. Terminating all processes...";
             }
         }        
 
@@ -102,7 +105,7 @@ public class Generate {
         }
 
         //Setting custom target directory
-        String targetLocation = TARGET_LOCATION + (nextOut) + "/";
+        String targetLocation = TARGET_LOCATION + nextOut + "/";
 
         //Get JSON model
         List<String> fileNames = new ArrayList<>();
@@ -113,6 +116,7 @@ public class Generate {
         for (int i = 0; i < services.length(); i ++) {
             fileNames.addAll(getKnowledgeBaseNames(model, i));
         }
+        Logger.getLogger(Generate.class.getName()).log(Level.INFO, "All file names received successefully...");
 
         //Creating docker compose yaml file
         Path composeFile = Paths.get(targetLocation + "/docker-compose.yml");
@@ -134,9 +138,11 @@ public class Generate {
                 }
             }
         }
+        Logger.getLogger(Generate.class.getName()).log(Level.INFO, "docker-compose yaml file created successefully...");
 
         //process all file names
-        fileNames.forEach(fileName -> {
+        for (int i=0; i<fileNames.size(); i++) {
+            String fileName = fileNames.get(i);
 
             //Ignore svnrepo and load-balance
             if (!fileName.startsWith("svnrepo") && !fileName.startsWith("load-balancer")) {
@@ -147,8 +153,15 @@ public class Generate {
                 if (fileName.contains(",")) {
                     fileName = fileName.split(",")[0];
                 } else {
-                    //Append details to compose file
-                    addToComposeFile(Paths.get(diffDir + "/dockerfilePart.yml"), fileName, composeFile);
+                    //Append details to compose file 
+                    try {
+                        addToComposeFile(Paths.get(diffDir + "/dockerfilePart.yml"), fileName, composeFile);
+                    } catch (UnsupportedOperationException e) {
+                        //Return error if unsupported component found
+                        if (errorMsg == "")
+                            errorMsg += "We're sorry! System doesn't support these components yet.\n";
+                        errorMsg += "\t" + e.getMessage() + "\n";
+                    }
                 }
 
                 String targetDir = targetLocation + fileName;
@@ -167,7 +180,7 @@ public class Generate {
                     initApplyDiff(0, Paths.get(diffDir), Paths.get(cleanDir), Paths.get(targetDir));
                 }
             }
-        });
+        }
 
         //Coping artifacts folder
         Path sourcePath = Paths.get(KNOWLEDGE_BASE_LOCATION + "/artifacts");
@@ -185,9 +198,15 @@ public class Generate {
             Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, e);
         }
 
-        //Compressing directory and returning file path
-        zip(targetLocation);
-        return "" + (nextOut++);
+        //check for any errors
+        if (errorMsg == "") {
+            //Compressing directory and returning file path
+            zip(targetLocation);
+            return "" + (nextOut++);
+        } else {
+            deleteDir(targetLocation);
+            return errorMsg;
+        }
     }
     
     /**
@@ -548,8 +567,9 @@ public class Generate {
      * @param partFile Path to the compose file part relevant to the service
      * @param dirname string to replace the $dirname in compose part file. i.e docker service name
      * @param composeFile File to append the part
+     * @throws UnsupportedOperationException Mainly when knowledge base doesn't have the requesting folder
      */
-    public static void addToComposeFile(Path partFile, String dirname, Path composeFile){
+    public static void addToComposeFile(Path partFile, String dirname, Path composeFile) throws UnsupportedOperationException{
 
         try {
             List<String> lines = Files.readAllLines(partFile);
@@ -563,6 +583,7 @@ public class Generate {
             }
         } catch (IOException e) {
             Logger.getLogger(Generate.class.getName()).log(Level.SEVERE, null, e);
+            throw new UnsupportedOperationException(dirname);
         }
     }
 
