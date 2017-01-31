@@ -54,11 +54,7 @@ public class GetConfigFromXMLAutoGenLinks extends HttpServlet {
         if (xml != null) {
             if (xml.contains("Image")) {
                 String downloadURL = Generate.getConfigFromXML(xml, true);
-                if (downloadURL == null) {
-                    out.write("Something went wrong!");
-                } else {
-                    out.write(downloadURL);
-                }
+                out.write(downloadURL);
             } else {
                 out.write("Diagram is empty!");
             }

@@ -53,11 +53,7 @@ public class GetConfigFromXML extends HttpServlet {
             
         if (xml.contains("Image")) {
             String downloadURL = Generate.getConfigFromXML(xml, false);
-            if (downloadURL == null) {
-                out.write("Something went wrong!");
-            } else {
-                out.write(downloadURL);
-            }
+            out.write(downloadURL);
         } else {
             out.write("Diagram is empty!");
         }
